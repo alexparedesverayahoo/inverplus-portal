@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -15,12 +15,267 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
 body{margin:0;background:#1C1B1A;-webkit-font-smoothing:antialiased}
 a{color:#A9492A}a:hover{color:#23221F}
-button,input{font-family:inherit}
-input::placeholder{color:inherit;opacity:.45}
+button,input,select,textarea{font-family:inherit}
+button{-webkit-tap-highlight-color:transparent}
+input::placeholder,textarea::placeholder{color:inherit;opacity:.45}
 @keyframes pfade{from{opacity:0}to{opacity:1}}
-@keyframes pcaret{50%{opacity:0}}
+@keyframes psheet{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* ---------- utilidades ---------- */
+.ser{font-family:'Cormorant Garamond',serif;font-weight:500;font-variant-numeric:lining-nums}
+.lbl{display:block;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6A665F}
+.mut{color:#6A665F}.t12{font-size:12px}.b{font-weight:600}.r{text-align:right}.blk{display:block}.ac{color:var(--ac,#A9492A)}.nw{white-space:nowrap}
+.card{background:#FBFAF7;border:1px solid #D9D4CA}
+.inp{display:block;width:100%;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;border-radius:0;background:#FFFFFF;font-size:14px;color:#23221F;outline:none}
+.inp:focus{border-color:#23221F}
+select.inp{-webkit-appearance:none;appearance:none;padding-right:30px;background:#FFFFFF url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2323221F'/%3E%3C/svg%3E") no-repeat right 12px center}
+textarea.inp{height:auto;min-height:78px;padding:10px 12px;line-height:1.45;resize:vertical}
+.inp.s{height:36px;padding:0 8px;font-size:13px}
+select.inp.s{padding-right:24px;background-position:right 8px center}
+.btn{height:44px;padding:0 20px;border:0;background:#23221F;color:#FFFFFF;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:background .2s;white-space:nowrap}
+.btn:hover{background:var(--ac,#A9492A)}
+.btn-o{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 20px;border:1px solid #23221F;background:transparent;color:#23221F;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.btn-o:hover{background:#23221F;color:#FFFFFF}
+.lnk{padding:0;border:0;background:none;color:var(--ac,#A9492A);font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.lnk:hover{color:#23221F}
+.chip{height:30px;padding:0 12px;border:1px solid #CFC9BD;background:transparent;color:#23221F;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.chip.ok{border-color:#23221F;background:#23221F;color:#FFFFFF}
+.pdf{display:inline-block;padding:2px 8px;border:1px solid #CFC9BD;font-size:12px}
+.bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 16px;margin-bottom:14px}
+.fbox{padding:18px;margin-bottom:14px}
+.fbox .btn{margin-top:14px}
+.note{margin:0;font-size:13px;color:#6A665F}
+
+/* ---------- estructura de trabajo ---------- */
+.work{min-height:calc(var(--vh,1vh)*100);display:flex;background:#F3F0EA;animation:pfade .5s both}
+.rail{flex:0 0 224px;position:sticky;top:0;align-self:flex-start;height:calc(var(--vh,1vh)*100);display:flex;flex-direction:column;background:#1C1B1A;color:#F3F0EA;overflow-y:auto}
+.rail-x,.mtop,.mtabs,.scrim,.peek,.sheet-x{display:none}
+.main{flex:1;min-width:0;padding:clamp(20px,3vw,44px)}
+.nav-g{padding:12px 12px 4px;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#B5B0A6}
+.nav-b{display:block;width:100%;min-height:38px;padding:8px 12px 8px 24px;border:0;border-left:2px solid transparent;background:transparent;color:#F3F0EA;font-size:13px;font-weight:500;text-align:left;cursor:pointer}
+.nav-b:hover{background:rgba(243,240,234,.1)}
+.nav-b.on{border-left-color:var(--ac,#A9492A);background:rgba(243,240,234,.12);font-weight:700}
+.nav-b.top{padding-left:12px}
+.ph{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid #D9D4CA}
+.crumb{font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--ac,#A9492A)}
+.pt{margin:6px 0 0;font-size:clamp(36px,3.8vw,58px);line-height:1}
+.ph-n{font-size:12px;color:#6A665F}
+
+/* ---------- indicadores ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;margin-bottom:26px;background:#FBFAF7;border:1px solid #D9D4CA}
+.kpi{position:relative;display:block;width:100%;padding:18px 20px;border:0;background:#FBFAF7;box-shadow:0 0 0 1px #D9D4CA;color:#23221F;font-size:14px;line-height:1.5;text-align:left}
+button.kpi{cursor:pointer;transition:background .2s,color .2s}
+button.kpi::after{content:'Ver \2192';position:absolute;top:18px;right:18px;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ac,#A9492A)}
+button.kpi:hover{background:#F3F0EA}
+button.kpi.on{background:#23221F;color:#F3F0EA}
+button.kpi.on .lbl,button.kpi.on .mut{color:#D8D3C9}
+button.kpi.on::after{content:'Filtrando';color:#D9B36A}
+button.kpi .lbl{padding-right:58px}
+.kpi-v{display:block;margin-top:6px;font-size:32px;line-height:1.1;white-space:nowrap}
+.kpi-s{display:block;margin-top:2px;font-size:12px}
+
+/* ---------- pestañas ---------- */
+.seg{display:flex;flex-wrap:wrap;margin-bottom:22px;border-bottom:1px solid #D9D4CA}
+.seg-b{position:relative;height:44px;padding:0 18px;border:0;background:transparent;color:#6A665F;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.seg-b:hover{color:#23221F}
+.seg-b.on{color:#23221F}
+.seg-b.on::after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--ac,#A9492A)}
+.seg-n{margin-left:6px;font-weight:500;opacity:.7}
+
+/* ---------- lista de precios ---------- */
+.pl{display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start}
+.pl-map{flex:2 1 420px;min-width:0}
+.pbar{display:flex;height:8px;gap:2px;margin-bottom:12px}
+.leg{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.leg-b{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 12px;border:1px solid #D9D4CA;background:#FBFAF7;color:#23221F;font-size:12px;font-weight:500;cursor:pointer;transition:border-color .2s}
+.leg-b:hover{border-color:#23221F}
+.leg-b.on{border-color:#23221F;background:#23221F;color:#F3F0EA}
+.leg-x{height:34px;padding:0 6px;border:0;background:none;color:var(--ac,#A9492A);font-size:12px;font-weight:600;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.sw{width:12px;height:12px;flex:0 0 12px}
+.fl{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.fl-n{flex:0 0 58px;font-size:11px;font-weight:500;color:#6A665F;white-space:nowrap}
+.fl-u{flex:1;min-width:0;display:grid;gap:4px}
+.u{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;border:1px solid;outline-offset:2px;cursor:pointer;line-height:1.15;transition:opacity .2s}
+.u-id{font-size:12px;font-weight:700}
+.u-pk{font-size:10px;font-weight:500}
+.pl-det{flex:1 1 280px;position:sticky;top:24px;padding:26px}
+.kv{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-top:1px solid #E6E1D8}
+.kv.tot{border-top:1px solid #23221F;border-bottom:1px solid #23221F;font-size:15px;font-weight:700}
+.money{display:flex;align-items:center;gap:8px;font-weight:600}
+.money .inp{width:118px;text-align:right}
+
+/* ---------- tablas ---------- */
+.tw{overflow-x:auto}
+.hd,.row{display:grid;gap:12px;align-items:center}
+.hd{padding:14px 18px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F}
+.row{width:100%;min-height:52px;padding:8px 18px;border:0;border-top:1px solid #E6E1D8;background:transparent;color:#23221F;font-size:13px;line-height:1.5;text-align:left;font-variant-numeric:tabular-nums}
+.row>*{min-width:0}
+button.row{cursor:pointer}
+button.row:hover,.row.on{background:#F3F0EA}
+.row.tot{font-weight:700;border-top-color:#D9D4CA}
+.chev{font-size:18px;color:var(--ac,#A9492A)}
+.sub{padding:6px 18px 22px 58px;background:#F3F0EA}
+.sub .hd,.sub .row{padding-left:0;padding-right:0}
+.sub .hd{padding-top:12px;padding-bottom:8px}
+.sub .row{min-height:0;padding-top:8px;padding-bottom:8px;border-top-color:#D9D4CA}
+.sub .seg{margin:6px 0 14px}
+.sub .seg-b{height:40px;padding:0 14px;font-size:11px}
+.g-cli{grid-template-columns:28px 1.7fr 1fr .7fr .45fr 1.1fr .95fr 1fr 1fr 1.3fr}
+.g-let{grid-template-columns:1.3fr .95fr .9fr .95fr .95fr 1fr .85fr 1fr}
+.g-inm{grid-template-columns:1.8fr 1fr 1fr 1fr}
+.g-bol{grid-template-columns:1fr .9fr 1.5fr .8fr 1.5fr 1fr 1fr 1fr}
+.g-com{grid-template-columns:.8fr 1.2fr 1fr 84px .9fr 1.5fr 1.5fr}
+.g-mes{grid-template-columns:112px minmax(40px,1fr) 124px 132px}
+.g-gas{grid-template-columns:minmax(0,1fr) 138px 104px}
+.g-prov{grid-template-columns:28px 1.9fr 1fr 1.2fr .9fr 1.1fr 1fr}
+.g-val{grid-template-columns:1.1fr .85fr .9fr 1.2fr 150px .9fr}
+.g-ped{grid-template-columns:28px .8fr 1.6fr 1.6fr .9fr .9fr 1.5fr 1.3fr}
+.g-pag{grid-template-columns:1.4fr 160px 1fr 1fr}
+.g-flt{grid-template-columns:1fr 1fr 1fr 1fr 1.2fr}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px 16px;align-items:end}
+.fld{display:flex;flex-direction:column;gap:6px;min-width:0}
+.fld.wide{grid-column:span 2}
+.fld.full{grid-column:1/-1}
+.payf{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:10px 12px;align-items:end;margin:4px 0 12px;padding:14px;background:#FBFAF7;border:1px solid #D9D4CA}
+.payf .hint{grid-column:1/-1;font-size:12px;color:#6A665F}
+.addv{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid #D9D4CA}
+.addv>.inp{flex:1 1 150px}
+.part{display:grid;grid-template-columns:auto 1fr;gap:0 10px;align-items:baseline}
+.part .inp{grid-column:1/-1;max-width:170px;margin-top:4px}
+.rates{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px 16px;margin:16px 0}
+.pct{display:flex;align-items:center;gap:6px}
+.pct .inp{font-size:16px;font-weight:600}
+.sel-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px 32px;padding:24px 22px 20px}
+.sel-k{display:flex;flex-wrap:wrap;gap:12px 32px}
+.big{font-size:30px;line-height:1.1;white-space:nowrap}
+.acc{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;min-height:48px;padding:8px 22px;border:0;border-top:1px solid #E6E1D8;background:transparent;color:#23221F;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-align:left;cursor:pointer}
+.acc:hover{background:#F3F0EA}
+.yn-i{display:inline-flex;align-items:center;gap:10px}
+
+/* ---------- construcción / pedidos ---------- */
+.terr{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 28px;margin-bottom:20px;padding:20px 24px;background:#2E2E2E;color:#F3F0EA}
+.tip{display:flex;flex-wrap:wrap;gap:14px 40px;margin-top:16px}
+.sbar{display:flex;height:6px;background:#E6E1D8;overflow:hidden}
+.sbar>span{display:block;height:100%}
+.cons{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.gform{display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 18px}
+.mats{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1px;margin-top:14px;padding:1px}
+.mat{padding:14px 16px;background:#FBFAF7;box-shadow:0 0 0 1px #E6E1D8}
+.yn{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin-top:14px;padding-top:14px;border-top:1px solid #D9D4CA}
+.hub-r{display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s}
+.hub-r:hover{background:#2E2E2E;color:#F3F0EA;padding-left:26px}
+
+/* ---------- celular ---------- */
+@media (max-width:860px){
+  html{scrollbar-width:none}
+  html::-webkit-scrollbar{display:none}
+  .inp,.inp.s{font-size:16px}
+  .work{display:block;padding-top:56px;padding-bottom:calc(58px + env(safe-area-inset-bottom))}
+  .main{padding:18px 16px 28px}
+  .main.has-peek{padding-bottom:96px}
+  .mtop{display:flex;position:fixed;top:0;left:0;right:0;z-index:50;height:56px;align-items:center;gap:4px;padding:0 16px 0 4px;background:#1C1B1A;color:#F3F0EA}
+  .mtop-b{flex:0 0 48px;height:48px;display:flex;align-items:center;justify-content:center;border:0;background:transparent;color:#F3F0EA;cursor:pointer}
+  .bars{display:flex;flex-direction:column;gap:5px;width:20px}
+  .bars i{display:block;height:2px;background:currentColor}
+  .mtop-t{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:0;border:0;background:transparent;color:#F3F0EA;text-align:left;cursor:pointer}
+  .mtop-k{font-size:9px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#B5B0A6}
+  .mtop-n{font-size:22px;line-height:1;letter-spacing:.04em}
+  .mtop-l{height:20px;width:auto}
+  .rail{position:fixed;left:0;top:0;bottom:0;z-index:80;flex:none;width:min(86vw,320px);height:auto;transform:translateX(-102%);transition:transform .32s cubic-bezier(.2,.7,.2,1)}
+  .rail.open{transform:none}
+  .rail-x{display:flex;align-items:center;justify-content:center;width:44px;height:44px;margin:-10px -10px -10px 0;border:0;background:transparent;color:#F3F0EA;font-size:18px;cursor:pointer}
+  .nav-b{min-height:46px;font-size:15px}
+  .scrim{display:block;position:fixed;inset:0;z-index:70;background:rgba(28,27,26,.6);opacity:0;pointer-events:none;transition:opacity .3s}
+  .scrim.open{opacity:1;pointer-events:auto}
+  .mtabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;padding-bottom:env(safe-area-inset-bottom);background:#1C1B1A}
+  .mtab{flex:1 1 0;min-width:0;height:58px;padding:0 2px;border:0;border-top:2px solid transparent;background:transparent;color:#B5B0A6;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+  .mtab.on{border-top-color:var(--ac,#A9492A);color:#F3F0EA}
+  .ph{margin-bottom:18px;padding-bottom:16px}
+  .pt{font-size:36px}
+  .ph-n{display:none}
+  .kpis{grid-template-columns:1fr 1fr;margin-bottom:20px}
+  .kpi{padding:14px}
+  .kpi .lbl{font-size:10px;letter-spacing:.1em}
+  .kpi-v{font-size:22px}
+  button.kpi::after{position:static;display:block;margin-top:6px}
+  button.kpi .lbl{padding-right:0}
+  .seg{flex-wrap:nowrap;overflow-x:auto;margin-bottom:18px;scrollbar-width:none}
+  .seg::-webkit-scrollbar{display:none}
+  .seg-b{padding:0 14px}
+  .pl{display:block}
+  .leg{gap:6px;margin-bottom:16px}
+  .leg-b{padding:0 10px}
+  .fl{gap:6px}
+  .fl-n{flex-basis:46px;font-size:10px}
+  .fl-u{gap:3px}
+  .u-pk{font-size:9px}
+  .pl-det{display:none}
+  .pl-det.open{display:block;position:fixed;inset:0;z-index:90;overflow-y:auto;padding:64px 22px 40px;border:0;animation:psheet .3s both}
+  .sheet-x{display:block;position:absolute;top:12px;right:12px;height:40px;padding:0 14px;border:1px solid #CFC9BD;background:transparent;color:#23221F;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+  .peek{display:flex;position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));z-index:45;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:10px 16px;border:0;border-top:2px solid #23221F;background:#FBFAF7;color:#23221F;text-align:left;cursor:pointer}
+  .tw>div{min-width:0!important}
+  .hd{display:none}
+  .row{position:relative;grid-template-columns:1fr 1fr!important;gap:10px 14px;align-items:start;padding:14px 16px}
+  .row>*{text-align:left!important}
+  .row>.full{grid-column:1/-1;order:-1;padding-right:30px}
+  .row>.chev{position:absolute;top:10px;right:16px}
+  .row>.x0{display:none}
+  .row [data-l]::before{content:attr(data-l);display:block;margin-bottom:2px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F}
+  .sub{padding:4px 14px 18px}
+  .sub .row{padding:12px 0}
+  .row>.wide2{grid-column:1/-1}
+  .row.g-let{grid-template-columns:1fr 1fr 1.15fr!important;gap:8px 10px}
+  .row.g-let>.full{grid-column:1/3;order:0;padding-right:0;font-weight:600}
+  .row.g-let.tot>.full{grid-column:1/-1}
+  .row.g-let>.es{order:0;text-align:right!important}
+  .row.g-let>.es::before{display:none}
+  .row.g-let>[data-l]:not(.es){order:1;font-size:12px;white-space:nowrap}
+  .row.g-let [data-l]::before{letter-spacing:.03em}
+  .rates{grid-template-columns:1fr 1fr}
+  .rates .lbl{font-size:10px;letter-spacing:.06em}
+  .acc{padding:8px 16px}
+  .hd.keep{display:grid;padding:12px 14px;font-size:10px;letter-spacing:.06em}
+  .row.keep{align-items:center;gap:8px;padding:10px 14px;font-size:12px}
+  .row.keep>*{text-align:inherit!important}
+  .row.keep>.r{text-align:right!important}
+  .g-mes{grid-template-columns:78px minmax(14px,1fr) auto auto!important}
+  .g-gas{grid-template-columns:minmax(0,1fr) 112px auto!important}
+  .g-gas .inp{font-size:13px}
+  .fgrid{grid-template-columns:1fr 1fr;gap:12px}
+  .fld.wide{grid-column:1/-1}
+  .payf{grid-template-columns:1fr}
+  .part .inp{max-width:none}
+  .sel-h{padding:18px 16px 14px}
+  .big{font-size:24px}
+  .terr{padding:16px}
+  .cons{display:block}
+  .cons>section+section{margin-top:18px}
+  .gform{padding:0 14px 14px}
+  .mats{grid-template-columns:1fr 1fr}
+  .bar>.btn-o{width:100%}
+  .lg-ph{flex:1 1 100%!important;min-height:calc(var(--vh,1vh)*40)!important}
+  .lg-fm{flex:1 1 100%!important;padding:26px 24px 36px!important}
+  .sel-row{gap:14px!important;padding:6px 16px 28px!important;overflow:visible!important}
+  .sel-card{flex:1 1 0!important;width:auto!important;min-width:0!important;margin:0!important}
+  .sel-st{display:none!important}
+  .sel-ln{display:block!important}
+  .sel-nm{font-size:21px!important;letter-spacing:.02em!important}
+  .sel-ar{display:none}
+  .hub-ph{min-height:calc(var(--vh,1vh)*44)!important}
+  .hub-st{display:grid!important;grid-template-columns:repeat(4,auto);gap:8px 14px!important}
+  .hub-st>div>div:first-child{font-size:28px!important}
+  .hub-st>div>div:last-child{font-size:9px!important;letter-spacing:.08em!important}
+  .hub-r{grid-template-columns:26px minmax(0,1fr) 18px;gap:2px 12px;padding:14px 6px}
+  .hub-r:hover{padding-left:6px}
+  .hub-v{grid-column:2;grid-row:2;text-align:left!important;font-size:12px!important;color:var(--ac,#A9492A)}
+  .hub-a{grid-column:3;grid-row:1}
+}
+@media (max-width:520px){
+  .fgrid{grid-template-columns:1fr}
+}
 </style>
 </helmet>
 <div style="min-height:calc(var(--vh,1vh)*100);font-family:'Montserrat',sans-serif;font-size:14px;line-height:1.5;color:#23221F;background:#1C1B1A">
@@ -28,7 +283,7 @@ input::placeholder{color:inherit;opacity:.45}
 <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
 
 <div data-screen-label="Ingreso 1" style="min-height:calc(var(--vh,1vh)*100);display:flex;flex-wrap:wrap;animation:pfade .6s both">
-  <div style="flex:1 1 520px;min-height:calc(var(--vh,1vh)*56);display:flex;gap:2px">
+  <div class="lg-ph" style="flex:1 1 520px;min-height:calc(var(--vh,1vh)*56);display:flex;gap:2px">
     <div style="flex:1 1 0;min-width:0;position:relative;overflow:hidden;background:#2E2E2E">
       <img src="assets/eclat-angulo.jpg" alt="Edificio ECLAT" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:35% 36%;transform:scale(1.17);transform-origin:10% 42%">
       <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,27,26,0) 72%,rgba(28,27,26,.8) 100%)"></div>
@@ -46,7 +301,7 @@ input::placeholder{color:inherit;opacity:.45}
       </div>
     </div>
   </div>
-  <div style="flex:0 1 296px;display:flex;flex-direction:column;justify-content:center;padding:28px;color:#F3F0EA">
+  <div class="lg-fm" style="flex:0 1 296px;display:flex;flex-direction:column;justify-content:center;padding:28px;color:#F3F0EA">
     <form onSubmit="{{ onSubmit }}" style="width:100%;display:flex;flex-direction:column;gap:18px">
       <img src="assets/logo-blanco.png" alt="Inverplus+ Inmobiliaria" style="height:42px;width:auto;align-self:flex-start;margin-bottom:14px">
       <div>
@@ -105,18 +360,20 @@ input::placeholder{color:inherit;opacity:.45}
   </div>
 </sc-if>
 <sc-if value="{{ selTarjetas }}" hint-placeholder-val="{{ false }}">
-<div style="flex:1;display:flex;align-items:flex-start;gap:clamp(56px,18vw,300px);padding:6px clamp(20px,3vw,40px) 48px;overflow-x:auto;scroll-snap-type:x mandatory">
-  <button type="button" onClick="{{ openEclat }}" style="flex:0 0 auto;width:clamp(240px,min(32vw,calc(var(--vh,1vh)*46)),460px);margin-left:auto;padding:0;border:0;background:transparent;color:#F3F0EA;text-align:left;cursor:pointer;scroll-snap-align:center;transition:transform .35s cubic-bezier(.2,.7,.2,1)" style-hover="transform:translateY(-6px)">
+<div class="sel-row" style="flex:1;display:flex;align-items:flex-start;gap:clamp(56px,18vw,300px);padding:6px clamp(20px,3vw,40px) 48px;overflow-x:auto;scroll-snap-type:x mandatory">
+  <button type="button" class="sel-card" onClick="{{ openEclat }}" style="flex:0 0 auto;width:clamp(240px,min(32vw,calc(var(--vh,1vh)*46)),460px);margin-left:auto;padding:0;border:0;background:transparent;color:#F3F0EA;text-align:left;cursor:pointer;scroll-snap-align:center;transition:transform .35s cubic-bezier(.2,.7,.2,1)" style-hover="transform:translateY(-6px)">
     <span style="display:block;position:relative;aspect-ratio:4/5;overflow:hidden;background:#2E2E2E"><img src="assets/eclat-angulo.jpg" alt="Edificio ECLAT" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 0%;transform:scale(1.15);transform-origin:8% 0%"></span>
     <span style="display:block;margin-top:14px;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase">+ Proyecto 01</span>
-    <span style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:6px"><span style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(28px,calc(var(--vh,1vh)*4.4),46px);line-height:1;letter-spacing:.04em">ECLAT</span><span style="font-size:20px">→</span></span>
-    <span style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(243,240,234,.3)"><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ eS.total }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Dptos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ eS.v }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Vendidos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ eS.s }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Separados</span></span></span>
+    <span style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:6px"><span class="sel-nm" style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(28px,calc(var(--vh,1vh)*4.4),46px);line-height:1;letter-spacing:.04em">ECLAT</span><span class="sel-ar" style="font-size:20px">→</span></span>
+    <span class="sel-st" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(243,240,234,.3)"><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ eS.total }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Dptos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ eS.v }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Vendidos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ eS.s }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Separados</span></span></span>
+  <span class="sel-ln" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(243,240,234,.3);font-size:12px;line-height:1.5;color:#D8D3C9">{{ eclatStats }}</span>
   </button>
-  <button type="button" onClick="{{ openEss }}" style="flex:0 0 auto;width:clamp(240px,min(32vw,calc(var(--vh,1vh)*46)),460px);margin-right:auto;padding:0;border:0;background:transparent;color:#F3F0EA;text-align:left;cursor:pointer;scroll-snap-align:center;transition:transform .35s cubic-bezier(.2,.7,.2,1)" style-hover="transform:translateY(-6px)">
+  <button type="button" class="sel-card" onClick="{{ openEss }}" style="flex:0 0 auto;width:clamp(240px,min(32vw,calc(var(--vh,1vh)*46)),460px);margin-right:auto;padding:0;border:0;background:transparent;color:#F3F0EA;text-align:left;cursor:pointer;scroll-snap-align:center;transition:transform .35s cubic-bezier(.2,.7,.2,1)" style-hover="transform:translateY(-6px)">
     <span style="display:block;position:relative;aspect-ratio:4/5;overflow:hidden;background:#2E2E2E"><img src="assets/essenziale-angulo.jpg" alt="Edificio ESSENZIALE" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 5%"></span>
     <span style="display:block;margin-top:14px;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase">+ Proyecto 02</span>
-    <span style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:6px"><span style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(28px,calc(var(--vh,1vh)*4.4),46px);line-height:1;letter-spacing:.04em">ESSENZIALE</span><span style="font-size:20px">→</span></span>
-    <span style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(243,240,234,.3)"><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ zS.total }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Dptos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ zS.v }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Vendidos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ zS.s }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Separados</span></span></span>
+    <span style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:6px"><span class="sel-nm" style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(28px,calc(var(--vh,1vh)*4.4),46px);line-height:1;letter-spacing:.04em">ESSENZIALE</span><span class="sel-ar" style="font-size:20px">→</span></span>
+    <span class="sel-st" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(243,240,234,.3)"><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ zS.total }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Dptos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ zS.v }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Vendidos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ zS.s }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Separados</span></span></span>
+  <span class="sel-ln" style="display:none;margin-top:10px;padding-top:10px;border-top:1px solid rgba(243,240,234,.3);font-size:12px;line-height:1.5;color:#D8D3C9">{{ essStats }}</span>
   </button>
 </div>
 </sc-if>
@@ -130,7 +387,7 @@ input::placeholder{color:inherit;opacity:.45}
 
 <sc-if value="{{ isHub }}" hint-placeholder-val="{{ false }}">
 <div data-screen-label="Módulos del proyecto" style="min-height:calc(var(--vh,1vh)*100);display:flex;flex-wrap:wrap;background:#F3F0EA;animation:pfade .6s both">
-  <div style="flex:1 1 360px;min-height:calc(var(--vh,1vh)*52);position:relative;overflow:hidden;background:#2E2E2E;color:#F3F0EA">
+  <div class="hub-ph" style="flex:1 1 360px;min-height:calc(var(--vh,1vh)*52);position:relative;overflow:hidden;background:#2E2E2E;color:#F3F0EA">
     <sc-if value="{{ isEclat }}" hint-placeholder-val="{{ false }}"><img src="assets/eclat-frente.jpg" alt="Edificio ECLAT" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 34%"></sc-if><sc-if value="{{ isEss }}" hint-placeholder-val="{{ false }}"><img src="assets/essenziale-frente.jpg" alt="Edificio ESSENZIALE" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 34%"></sc-if>
     <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,27,26,.6) 0%,rgba(28,27,26,0) 28%,rgba(28,27,26,.94) 100%)"></div>
     <div style="position:absolute;top:22px;left:clamp(20px,3vw,40px);right:clamp(20px,3vw,40px);display:flex;justify-content:space-between;align-items:center;gap:12px">
@@ -140,7 +397,7 @@ input::placeholder{color:inherit;opacity:.45}
     <div style="position:absolute;left:clamp(20px,3vw,40px);right:clamp(20px,3vw,40px);bottom:clamp(22px,3vw,40px)">
       <div style="font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase">+ Proyecto {{ P.num }}</div>
       <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(52px,6.6vw,108px);line-height:.95;letter-spacing:.03em;margin-top:8px">{{ P.name }}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:22px;padding-top:18px;border-top:1px solid rgba(243,240,234,.35)">
+      <div class="hub-st" style="display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:22px;padding-top:18px;border-top:1px solid rgba(243,240,234,.35)">
         <div><div style="font-family:'Cormorant Garamond',serif;font-size:36px;line-height:1">{{ st.total }}</div><div style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-top:4px">Departamentos</div></div>
         <div><div style="font-family:'Cormorant Garamond',serif;font-size:36px;line-height:1">{{ st.v }}</div><div style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-top:4px">Vendidos</div></div>
         <div><div style="font-family:'Cormorant Garamond',serif;font-size:36px;line-height:1">{{ st.s }}</div><div style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-top:4px">Separados</div></div>
@@ -154,53 +411,31 @@ input::placeholder{color:inherit;opacity:.45}
       <span style="display:flex;align-items:center;gap:16px;font-size:12px;color:#6A665F"><span>{{ email }}</span><button type="button" onClick="{{ logout }}" style="padding:0;border:0;background:transparent;color:#23221F;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;cursor:pointer" style-hover="color:var(--ac,#A9492A)">Salir</button></span>
     </div>
     <div style="display:flex;flex-direction:column;border-bottom:1px solid #D9D4CA">
-      <button type="button" onClick="{{ goPrecios }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
-        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">01</span>
-        <span style="min-width:0"><span style="display:block;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;opacity:.75">Ventas</span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Lista de Precios</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">Total de departamentos, vendidos y separados</span></span>
-        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.precios }}</span>
-        <span style="font-size:18px;text-align:right">→</span>
-      </button>
-      <button type="button" onClick="{{ goClientes }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
-        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">02</span>
-        <span style="min-width:0"><span style="display:block;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;opacity:.75">Ventas</span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Clientes</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">Inmueble comprado, vendedora, monto pagado y letras por pagar</span></span>
-        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.clientes }}</span>
-        <span style="font-size:18px;text-align:right">→</span>
-      </button>
-      <button type="button" onClick="{{ goVendedoras }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
-        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">03</span>
-        <span style="min-width:0"><span style="display:block;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;opacity:.75">Ventas</span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Vendedoras</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">Departamentos vendidos, % de comisión y comisión a pagar</span></span>
-        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.vendedoras }}</span>
-        <span style="font-size:18px;text-align:right">→</span>
-      </button>
-      <button type="button" onClick="{{ goConstruccion }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
-        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">04</span>
-        <span style="min-width:0"><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Construcción</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">Compra del terreno, gastos del mes, acumulado y gastos diarios</span></span>
-        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.construccion }}</span>
-        <span style="font-size:18px;text-align:right">→</span>
-      </button>
-      <button type="button" onClick="{{ goProveedores }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
-        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">05</span>
-        <span style="min-width:0"><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Proveedores</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">Contratistas, valorización y factura, presupuesto, pagado y saldo</span></span>
-        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.proveedores }}</span>
-        <span style="font-size:18px;text-align:right">→</span>
-      </button>
-      <button type="button" onClick="{{ goPerfil }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
-        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">06</span>
-        <span style="min-width:0"><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Perfil Económico</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">{{ P.ventasLabel }} − Compra de terreno y construcción = Utilidad</span></span>
-        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.perfil }}</span>
-        <span style="font-size:18px;text-align:right">→</span>
-      </button>
+      <sc-for list="{{ hubRows }}" as="m" hint-placeholder-count="8">
+        <button type="button" class="hub-r" onClick="{{ m.go }}">
+          <span style="font-size:12px;font-weight:600;letter-spacing:.12em">{{ m.num }}</span>
+          <span style="min-width:0"><span style="display:block;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;opacity:.75">{{ m.grp }}</span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.3vw,32px);line-height:1.1">{{ m.title }}</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">{{ m.desc }}</span></span>
+          <span class="hub-v" style="font-size:13px;font-weight:600;text-align:right">{{ m.val }}</span>
+          <span class="hub-a" style="font-size:18px;text-align:right">→</span>
+        </button>
+      </sc-for>
     </div>
   </div>
 </div>
 </sc-if>
 
 <sc-if value="{{ isWork }}" hint-placeholder-val="{{ false }}">
-<div data-screen-label="Módulo" style="min-height:calc(var(--vh,1vh)*100);display:flex;background:#F3F0EA;animation:pfade .5s both">
+<div data-screen-label="Módulo" class="work">
   <sc-if value="{{ showRail }}" hint-placeholder-val="{{ true }}">
-  <aside style="flex:0 0 224px;position:sticky;top:0;align-self:flex-start;height:calc(var(--vh,1vh)*100);display:flex;flex-direction:column;background:#1C1B1A;color:#F3F0EA;overflow-y:auto">
-    <div style="padding:22px 20px 20px"><img src="assets/logo-blanco.png" alt="Inverplus+ Inmobiliaria" style="display:block;height:26px;width:auto"></div>
-    <button type="button" onClick="{{ ctxGo }}" style="flex:0 0 132px;position:relative;display:block;margin:0 12px;padding:0;border:0;overflow:hidden;background:#2E2E2E;color:#F3F0EA;text-align:left;cursor:pointer">
+  <div class="mtop">
+    <button type="button" class="mtop-b" onClick="{{ openMenu }}" aria-label="Abrir menú"><span class="bars"><i></i><i></i><i></i></span></button>
+    <button type="button" class="mtop-t" onClick="{{ ctxGo }}"><span class="mtop-k">{{ ctxKind }}</span><span class="mtop-n ser">{{ ctxName }}</span></button>
+    <img src="assets/logo-blanco.png" alt="Inverplus+ Inmobiliaria" class="mtop-l">
+  </div>
+  <div class="scrim {{ menuCls }}" onClick="{{ closeMenu }}"></div>
+  <aside class="rail {{ menuCls }}">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:22px 20px 20px"><img src="assets/logo-blanco.png" alt="Inverplus+ Inmobiliaria" style="display:block;height:26px;width:auto"><button type="button" class="rail-x" onClick="{{ closeMenu }}" aria-label="Cerrar menú">✕</button></div>
+    <button type="button" onClick="{{ ctxGo }}" style="flex:0 0 112px;position:relative;display:block;margin:0 12px;padding:0;border:0;overflow:hidden;background:#2E2E2E;color:#F3F0EA;text-align:left;cursor:pointer">
       <sc-if value="{{ ctxEclat }}" hint-placeholder-val="{{ false }}"><img src="assets/eclat-frente.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%"></sc-if><sc-if value="{{ ctxEss }}" hint-placeholder-val="{{ false }}"><img src="assets/essenziale-frente.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%"></sc-if>
       <span style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,27,26,.1),rgba(28,27,26,.9))"></span>
       <span style="position:absolute;left:14px;right:14px;bottom:12px">
@@ -208,116 +443,175 @@ input::placeholder{color:inherit;opacity:.45}
         <span style="display:block;font-family:'Cormorant Garamond',serif;font-size:26px;line-height:1.05;letter-spacing:.03em">{{ ctxName }}</span>
       </span>
     </button>
-    <nav style="flex:1;display:flex;flex-direction:column;gap:2px;padding:16px 12px">
-      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
-        <sc-if value="{{ n.isGroup }}" hint-placeholder-val="{{ false }}"><div style="padding:12px 12px 4px;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#B5B0A6">{{ n.label }}</div></sc-if>
-        <sc-if value="{{ n.isLink }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ n.go }}" style="display:block;width:100%;min-height:40px;padding:8px 12px 8px {{ n.pl }};border:0;border-left:2px solid {{ n.bar }};background:{{ n.bg }};color:#F3F0EA;font-size:13px;font-weight:{{ n.fw }};text-align:left;cursor:pointer" style-hover="background:rgba(243,240,234,.1)">{{ n.label }}</button></sc-if>
+    <nav style="flex:1;display:flex;flex-direction:column;gap:2px;padding:12px">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="8">
+        <sc-if value="{{ n.isGroup }}" hint-placeholder-val="{{ false }}"><div class="nav-g">{{ n.label }}</div></sc-if>
+        <sc-if value="{{ n.isLink }}" hint-placeholder-val="{{ true }}"><button type="button" class="nav-b {{ n.cls }}" onClick="{{ n.go }}">{{ n.label }}</button></sc-if>
       </sc-for>
     </nav>
     <div style="display:flex;flex-direction:column;gap:2px;padding:12px;border-top:1px solid rgba(243,240,234,.14)">
-      <button type="button" onClick="{{ goSelect }}" style="display:block;width:100%;min-height:38px;padding:8px 12px;border:0;background:transparent;color:#F3F0EA;font-size:13px;font-weight:500;text-align:left;cursor:pointer" style-hover="background:rgba(243,240,234,.1)">← Proyectos</button>
-      <button type="button" onClick="{{ goBalance }}" style="display:block;width:100%;min-height:38px;padding:8px 12px;border:0;background:transparent;color:#F3F0EA;font-size:13px;font-weight:500;text-align:left;cursor:pointer" style-hover="background:rgba(243,240,234,.1)">Balance Empresa</button>
+      <button type="button" class="nav-b top" onClick="{{ goSelect }}">← Proyectos</button>
+      <button type="button" class="nav-b top" onClick="{{ goBalance }}">Balance Empresa</button>
       <div style="padding:10px 12px 2px;font-size:11px;color:#B5B0A6;overflow:hidden;text-overflow:ellipsis">{{ email }}</div>
-      <button type="button" onClick="{{ logout }}" style="display:block;width:100%;min-height:38px;padding:8px 12px;border:0;background:transparent;color:#F3F0EA;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;text-align:left;cursor:pointer" style-hover="background:rgba(243,240,234,.1)">Salir</button>
+      <button type="button" class="nav-b top" onClick="{{ logout }}" style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase">Salir</button>
     </div>
   </aside>
+  <nav class="mtabs">
+    <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5"><button type="button" class="mtab {{ t.cls }}" onClick="{{ t.go }}">{{ t.label }}</button></sc-for>
+  </nav>
   </sc-if>
 
-  <main style="flex:1;min-width:0;padding:clamp(20px,3vw,44px)">
-    <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid #D9D4CA">
+  <main class="main {{ mainCls }}">
+    <header class="ph">
       <div>
-        <div style="font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--ac,#A9492A)">+ {{ crumb }}</div>
-        <h1 style="margin:6px 0 0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(36px,3.8vw,58px);line-height:1">{{ modTitle }}</h1>
+        <div class="crumb">+ {{ crumb }}</div>
+        <h1 class="ser pt">{{ modTitle }}</h1>
       </div>
-      <div style="font-size:12px;color:#6A665F">Datos de ejemplo · 24 nov 2026</div>
+      <div class="ph-n">Datos de ejemplo · {{ hoy }}</div>
     </header>
 
     <sc-if value="{{ hasKpis }}" hint-placeholder-val="{{ false }}">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;margin-bottom:26px;background:#FBFAF7;border:1px solid #D9D4CA">
+    <div class="kpis">
       <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
-        <div style="padding:18px 20px;background:#FBFAF7;box-shadow:0 0 0 1px #D9D4CA">
-          <div style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6A665F">{{ k.label }}</div>
-          <div style="margin-top:6px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:32px;line-height:1.1;font-variant-numeric:lining-nums;white-space:nowrap">{{ k.value }}</div>
-          <div style="margin-top:2px;font-size:12px;color:#6A665F">{{ k.sub }}</div>
-        </div>
+        <sc-if value="{{ k.isBtn }}" hint-placeholder-val="{{ false }}"><button type="button" class="kpi {{ k.cls }}" onClick="{{ k.go }}"><span class="lbl">{{ k.label }}</span><span class="ser kpi-v">{{ k.value }}</span><span class="mut kpi-s">{{ k.sub }}</span></button></sc-if>
+        <sc-if value="{{ k.isDiv }}" hint-placeholder-val="{{ true }}"><div class="kpi"><span class="lbl">{{ k.label }}</span><span class="ser kpi-v">{{ k.value }}</span><span class="mut kpi-s">{{ k.sub }}</span></div></sc-if>
       </sc-for>
     </div>
     </sc-if>
 
     <sc-if value="{{ isPrecios }}" hint-placeholder-val="{{ false }}">
-    <div style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
-      <div style="flex:2 1 420px;min-width:0">
-        <div style="display:flex;height:8px;gap:2px;margin-bottom:10px">
-          <div style="width:{{ st.wv }};background:var(--ac,#A9492A)"></div>
-          <div style="width:{{ st.ws }};background:#D9B36A"></div>
+    <div class="seg">
+      <sc-for list="{{ tipos }}" as="t" hint-placeholder-count="3"><button type="button" class="seg-b {{ t.cls }}" onClick="{{ t.go }}">{{ t.label }}<span class="seg-n">{{ t.n }}</span></button></sc-for>
+    </div>
+    <div class="pl">
+      <div class="pl-map">
+        <div class="pbar">
+          <div style="width:{{ lst.wv }};background:var(--ac,#A9492A)"></div>
+          <div style="width:{{ lst.ws }};background:#D9B36A"></div>
           <div style="flex:1;background:#FBFAF7;border:1px solid #CFC9BD"></div>
         </div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:22px;font-size:12px;font-weight:500">
-          <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:var(--ac,#A9492A)"></span>Vendido</span>
-          <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#D9B36A"></span>Separado</span>
-          <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#FBFAF7;border:1px solid #CFC9BD"></span>Disponible</span>
+        <div class="leg">
+          <sc-for list="{{ legend }}" as="l" hint-placeholder-count="3"><button type="button" class="leg-b {{ l.cls }}" onClick="{{ l.go }}"><span class="sw" style="background:{{ l.bg }};border:1px solid {{ l.bd }}"></span><span>{{ l.label }} · {{ l.n }}</span></button></sc-for>
+          <sc-if value="{{ hasFlt }}" hint-placeholder-val="{{ false }}"><button type="button" class="leg-x" onClick="{{ clearFlt }}">Ver todos</button></sc-if>
         </div>
         <sc-for list="{{ floors }}" as="f" hint-placeholder-count="10">
-          <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px">
-            <span style="flex:0 0 50px;font-size:11px;font-weight:500;color:#6A665F;white-space:nowrap">Piso {{ f.n }}</span>
-            <div style="flex:1;min-width:0;display:grid;grid-template-columns:repeat({{ perFloor }},minmax(0,1fr));gap:4px">
+          <div class="fl">
+            <span class="fl-n">{{ f.n }}</span>
+            <div class="fl-u" style="grid-template-columns:repeat({{ perFloor }},minmax(0,1fr))">
               <sc-for list="{{ f.units }}" as="u" hint-placeholder-count="6">
-                <button type="button" onClick="{{ u.sel }}" title="{{ u.title }}" style="height:{{ cellH }}px;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;border:1px solid {{ u.bd }};background:{{ u.bg }};color:{{ u.fg }};outline:{{ u.ring }};outline-offset:2px;cursor:pointer;line-height:1.15">
-                  <span style="font-size:12px;font-weight:700">{{ u.id }}</span>
-                  <span style="font-size:10px;font-weight:500">{{ u.pk }}</span>
-                </button>
+                <button type="button" class="u" onClick="{{ u.sel }}" title="{{ u.title }}" style="height:{{ cellH }}px;border-color:{{ u.bd }};background:{{ u.bg }};color:{{ u.fg }};outline:{{ u.ring }};opacity:{{ u.op }}"><span class="u-id">{{ u.id }}</span><span class="u-pk">{{ u.pk }}</span></button>
               </sc-for>
             </div>
           </div>
         </sc-for>
+        <sc-if value="{{ hasFlt }}" hint-placeholder-val="{{ false }}">
+          <div class="card" style="margin-top:22px">
+            <div style="padding:16px 18px 4px"><span class="lbl">{{ fltTitle }}</span></div>
+            <div class="hd g-flt keep"><span>{{ fltCol }}</span><span>Nivel</span><span>Área</span><span>Vista</span><span class="r">Precio de venta</span></div>
+            <sc-for list="{{ fltRows }}" as="x" hint-placeholder-count="6">
+              <button type="button" class="row g-flt keep" onClick="{{ x.sel }}"><span class="b">{{ x.id }}</span><span>{{ x.niv }}</span><span>{{ x.m2 }}</span><span>{{ x.vista }}</span><span class="r b">{{ x.pv }}</span></button>
+            </sc-for>
+          </div>
+        </sc-if>
       </div>
-      <aside style="flex:1 1 280px;position:sticky;top:24px;padding:26px;background:#FBFAF7;border:1px solid #D9D4CA">
-        <div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#6A665F">Departamento</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:64px;line-height:1;font-variant-numeric:lining-nums;margin:4px 0 18px">{{ su.id }}</div>
-        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #E6E1D8"><span style="color:#6A665F">Piso</span><span style="font-weight:600">{{ su.piso }}</span></div>
-        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #E6E1D8"><span style="color:#6A665F">Área</span><span style="font-weight:600">{{ su.m2 }}</span></div>
-        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #E6E1D8"><span style="color:#6A665F">Vista</span><span style="font-weight:600">{{ su.vista }}</span></div>
-        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #E6E1D8;border-bottom:1px solid #E6E1D8"><span style="color:#6A665F">Precio de lista</span><span style="font-weight:700">{{ su.price }}</span></div>
-        <div style="margin:20px 0 8px;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#6A665F">Estado</div>
+      <aside class="pl-det card {{ sheetCls }}">
+        <button type="button" class="sheet-x" onClick="{{ closeSheet }}">Cerrar</button>
+        <div class="lbl" style="letter-spacing:.2em">{{ su.kind }}</div>
+        <div class="ser" style="font-size:64px;line-height:1;margin:4px 0 18px">{{ su.id }}</div>
+        <sc-for list="{{ su.rows }}" as="x" hint-placeholder-count="3"><div class="kv"><span class="mut">{{ x.k }}</span><span class="b">{{ x.v }}</span></div></sc-for>
+        <div class="kv"><span class="mut">Precio de lista</span><span style="font-weight:700">{{ su.price }}</span></div>
+        <label class="kv"><span class="mut">Descuento <span class="t12">{{ su.descPct }}</span></span><span class="money"><span>{{ cur }}</span><input class="inp s" type="number" min="0" step="500" inputMode="numeric" value="{{ su.desc }}" onChange="{{ su.onDesc }}" placeholder="0" aria-label="Descuento"></span></label>
+        <div class="kv tot"><span>Precio de venta</span><span>{{ su.pv }}</span></div>
+        <div class="lbl" style="margin:20px 0 8px;letter-spacing:.2em">Estado</div>
         <div style="display:flex;gap:6px">
           <sc-for list="{{ stOpts }}" as="o" hint-placeholder-count="3">
             <button type="button" onClick="{{ o.set }}" style="flex:1;min-width:0;height:44px;padding:0 4px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:12px;font-weight:600;cursor:pointer">{{ o.label }}</button>
           </sc-for>
         </div>
-        <sc-if value="{{ su.sold }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-top:20px;padding-top:16px;border-top:1px solid #E6E1D8">
-            <div style="display:flex;justify-content:space-between;gap:12px;padding:4px 0"><span style="color:#6A665F">Cliente</span><span style="font-weight:600;text-align:right">{{ su.cliente }}</span></div>
-            <div style="display:flex;justify-content:space-between;gap:12px;padding:4px 0"><span style="color:#6A665F">Vendedora</span><span style="font-weight:600;text-align:right">{{ su.vendedora }}</span></div>
+        <sc-if value="{{ su.hasInfo }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:20px;padding-top:12px;border-top:1px solid #E6E1D8">
+            <sc-for list="{{ su.info }}" as="x" hint-placeholder-count="2"><div style="display:flex;justify-content:space-between;gap:12px;padding:4px 0"><span class="mut">{{ x.k }}</span><span class="b r">{{ x.v }}</span></div></sc-for>
+            <button type="button" class="lnk" onClick="{{ su.goCli }}" style="margin-top:10px">Ver ficha del cliente →</button>
           </div>
         </sc-if>
+        <sc-if value="{{ su.note }}" hint-placeholder-val="{{ false }}"><p class="note" style="margin-top:16px">{{ su.note }}</p></sc-if>
       </aside>
     </div>
+    <sc-if value="{{ showRail }}" hint-placeholder-val="{{ false }}">
+      <button type="button" class="peek" onClick="{{ openSheet }}">
+        <span><span class="ser blk" style="font-size:24px;line-height:1.1">{{ peek.id }}</span><span class="mut t12 blk">{{ peek.sub }}</span></span>
+        <span class="r"><span class="b blk">{{ su.pv }}</span><span class="ac t12 b blk">Ver ficha →</span></span>
+      </button>
+    </sc-if>
     </sc-if>
 
     <sc-if value="{{ isClientes }}" hint-placeholder-val="{{ false }}">
-    <div style="overflow-x:auto;background:#FBFAF7;border:1px solid #D9D4CA">
-      <div style="min-width:var(--tw,980px)">
-        <div style="display:grid;grid-template-columns:28px 1.7fr .8fr .7fr 1.2fr 1fr .5fr 1fr 1.4fr;gap:12px;padding:14px 18px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F">
-          <span></span><span>Cliente</span><span>Inmueble</span><span>Vista</span><span>Vendedora</span><span style="text-align:right">Precio de venta</span><span style="text-align:right">m²</span><span style="text-align:right">Monto pagado</span><span style="text-align:right">Letras por pagar</span>
-        </div>
+    <div class="tw card">
+      <div style="min-width:var(--tw,1120px)">
+        <div class="hd g-cli"><span></span><span>Cliente</span><span>Inmueble</span><span>Vista</span><span class="r">m²</span><span>Vendedora</span><span>Venta</span><span class="r">Precio de venta</span><span class="r">Monto pagado</span><span class="r">Letras por pagar</span></div>
         <sc-for list="{{ clients }}" as="c" hint-placeholder-count="6">
-          <div style="border-top:1px solid #E6E1D8">
-            <button type="button" onClick="{{ c.toggle }}" style="display:grid;grid-template-columns:28px 1.7fr .8fr .7fr 1.2fr 1fr .5fr 1fr 1.4fr;gap:12px;align-items:center;width:100%;min-height:52px;padding:8px 18px;border:0;background:{{ c.bg }};color:#23221F;font-size:13px;text-align:left;cursor:pointer;font-variant-numeric:tabular-nums" style-hover="background:#F3F0EA">
-              <span style="font-size:18px;color:var(--ac,#A9492A)">{{ c.chev }}</span>
-              <span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.name }}</span>
-              <span>{{ c.unit }}</span><span>{{ c.vista }}</span><span>{{ c.seller }}</span>
-              <span style="text-align:right">{{ c.price }}</span><span style="text-align:right">{{ c.m2 }}</span>
-              <span style="text-align:right;font-weight:600">{{ c.pagado }}</span><span style="text-align:right">{{ c.porPagar }}</span>
+          <div>
+            <button type="button" class="row g-cli {{ c.cls }}" onClick="{{ c.toggle }}">
+              <span class="chev">{{ c.chev }}</span>
+              <span class="full"><span class="b blk" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.name }}</span><span class="mut t12 blk" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.doc }}</span></span>
+              <span data-l="Inmueble"><span class="blk">{{ c.unit }}</span><span class="mut t12 blk">{{ c.extra }}</span></span>
+              <span data-l="Vista">{{ c.vista }}</span>
+              <span data-l="m²" class="r">{{ c.m2 }}</span>
+              <span data-l="Vendedora">{{ c.seller }}</span>
+              <span data-l="Venta">{{ c.forma }}</span>
+              <span data-l="Precio de venta" class="r">{{ c.price }}</span>
+              <span data-l="Monto pagado" class="r b">{{ c.pagado }}</span>
+              <span data-l="Letras por pagar" class="r">{{ c.porPagar }}</span>
             </button>
             <sc-if value="{{ c.open }}" hint-placeholder-val="{{ false }}">
-              <div style="padding:6px 18px 22px 58px;background:#F3F0EA">
-                <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr .8fr;gap:12px;padding:12px 0 8px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F"><span>Concepto</span><span>Vencimiento</span><span style="text-align:right">Monto</span><span>N° Boleta</span><span>Estado</span></div>
-                <sc-for list="{{ c.letras }}" as="l" hint-placeholder-count="4">
-                  <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr .8fr;gap:12px;padding:8px 0;border-top:1px solid #D9D4CA;font-size:13px;font-variant-numeric:tabular-nums">
-                    <span>{{ l.c }}</span><span>{{ l.vence }}</span><span style="text-align:right">{{ l.monto }}</span><span>{{ l.boleta }}</span>
-                    <span style="font-weight:600;color:{{ l.fg }}">{{ l.estado }}</span>
-                  </div>
-                </sc-for>
+              <div class="sub">
+                <div class="seg">
+                  <sc-for list="{{ ctabs }}" as="t" hint-placeholder-count="5"><button type="button" class="seg-b {{ t.cls }}" onClick="{{ t.go }}">{{ t.label }}</button></sc-for>
+                </div>
+                <sc-if value="{{ isCrono }}" hint-placeholder-val="{{ false }}">
+                  <div class="hd g-let"><span>Concepto</span><span>Vencimiento</span><span class="r">Monto</span><span>Fecha de pago</span><span class="r">Importe pagado</span><span>N° Boleta</span><span class="r">Detracción</span><span>Estado</span></div>
+                  <sc-for list="{{ c.letras }}" as="l" hint-placeholder-count="4">
+                    <div class="row g-let">
+                      <span class="full">{{ l.c }}</span>
+                      <span data-l="Vencimiento">{{ l.vence }}</span>
+                      <span data-l="Monto" class="r">{{ l.monto }}</span>
+                      <span data-l="Fecha de pago">{{ l.fPago }}</span>
+                      <span data-l="Pagado" class="r">{{ l.pagado }}</span>
+                      <span data-l="N° Boleta">{{ l.boleta }}</span>
+                      <span data-l="Detracción" class="r">{{ l.det }}</span>
+                      <span data-l="Estado" class="es"><sc-if value="{{ l.paid }}" hint-placeholder-val="{{ false }}"><span class="b mut">Pagada</span></sc-if><sc-if value="{{ l.due }}" hint-placeholder-val="{{ false }}"><button type="button" class="lnk" onClick="{{ l.pay }}">{{ l.payLbl }}</button></sc-if></span>
+                    </div>
+                    <sc-if value="{{ l.form }}" hint-placeholder-val="{{ false }}">
+                      <form class="payf" onSubmit="{{ l.save }}">
+                        <label class="fld"><span class="lbl">Fecha de pago</span><input class="inp" type="date" value="{{ payF.f }}" onChange="{{ onPayF }}"></label>
+                        <label class="fld"><span class="lbl">Importe pagado</span><input class="inp" type="number" min="0" step="0.01" inputMode="decimal" value="{{ payF.m }}" onChange="{{ onPayM }}"></label>
+                        <label class="fld"><span class="lbl">N° de boleta</span><input class="inp" list="bol-pend" value="{{ payF.b }}" onChange="{{ onPayB }}" placeholder="B001-000000" autoComplete="off"></label>
+                        <datalist id="bol-pend">{{ l.bolOpts }}</datalist>
+                        <button type="submit" class="btn">Guardar pago</button>
+                        <sc-if value="{{ l.hasChips }}" hint-placeholder-val="{{ false }}"><div class="hint" style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><span>Boletas de este cliente sin asignar:</span><sc-for list="{{ l.chips }}" as="k" hint-placeholder-count="1"><button type="button" class="chip" onClick="{{ k.pick }}">{{ k.lbl }}</button></sc-for></div></sc-if>
+                        <div class="hint">{{ l.hint }}</div>
+                      </form>
+                    </sc-if>
+                  </sc-for>
+                  <div class="row g-let tot"><span class="full">Total</span><span class="x0"></span><span data-l="Monto" class="r">{{ c.totMonto }}</span><span class="x0"></span><span data-l="Pagado" class="r">{{ c.pagado }}</span><span class="x0"></span><span data-l="Detracción" class="r">{{ c.totDet }}</span><span class="x0"></span></div>
+                </sc-if>
+                <sc-if value="{{ isFicha }}" hint-placeholder-val="{{ false }}">{{ c.form }}</sc-if>
+                <sc-if value="{{ isVenta }}" hint-placeholder-val="{{ false }}">
+                  {{ c.form }}
+                  <sc-if value="{{ c.usd }}" hint-placeholder-val="{{ false }}"><p class="note" style="margin-top:12px">{{ c.usd }}</p></sc-if>
+                  <div class="lbl" style="margin:24px 0 2px">Inmuebles de esta venta</div>
+                  <div class="hd g-inm"><span>Inmueble</span><span class="r">Precio de lista</span><span class="r">Descuento</span><span class="r">Precio de venta</span></div>
+                  <sc-for list="{{ c.inm }}" as="i" hint-placeholder-count="2">
+                    <div class="row g-inm"><span class="full"><span class="b blk">{{ i.name }}</span><span class="mut t12 blk">{{ i.note }}</span></span><span data-l="Precio de lista" class="r">{{ i.lista }}</span><span data-l="Descuento" class="r">{{ i.desc }}</span><span data-l="Precio de venta" class="r b">{{ i.pv }}</span></div>
+                  </sc-for>
+                  <div class="row g-inm tot"><span class="full">Total de la venta</span><span class="x0"></span><span class="x0"></span><span class="r">{{ c.price }}</span></div>
+                  <form class="card fbox" onSubmit="{{ c.addExtra }}" style="margin:18px 0 0">
+                    <div class="lbl" style="margin-bottom:4px">Agregar estacionamiento o depósito</div>
+                    <p class="note" style="margin-bottom:14px">También cuando lo compran meses después: se registra con su propio precio y sus letras.</p>
+                    {{ c.exForm }}
+                    <button type="submit" class="btn">Agregar a la venta</button>
+                  </form>
+                </sc-if>
               </div>
             </sc-if>
           </div>
@@ -326,103 +620,185 @@ input::placeholder{color:inherit;opacity:.45}
     </div>
     </sc-if>
 
-    <sc-if value="{{ isVendedoras }}" hint-placeholder-val="{{ false }}">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;align-items:start">
-      <sc-for list="{{ sellers }}" as="s" hint-placeholder-count="3">
-        <section style="background:#FBFAF7;border:1px solid #D9D4CA">
-          <div style="padding:24px 22px 20px">
-            <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:30px;line-height:1.1">{{ s.name }}</div>
-            <div style="margin-top:4px;font-size:13px;color:#6A665F">{{ s.count }} departamentos vendidos · {{ s.ventas }}</div>
-            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-top:22px">
-              <label style="display:flex;flex-direction:column;gap:6px">
-                <span style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6A665F">% Comisión</span>
-                <span style="display:flex;align-items:center;gap:6px"><input type="number" step="0.1" min="0" value="{{ s.pct }}" onChange="{{ s.onPct }}" style="width:84px;height:44px;padding:0 10px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:16px;font-weight:600;color:#23221F;outline:none" style-focus="border-color:#23221F"><span style="font-weight:600">%</span></span>
-              </label>
-              <div style="text-align:right">
-                <div style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6A665F">Comisión a pagar</div>
-                <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:34px;line-height:1.1;font-variant-numeric:lining-nums;color:var(--ac,#A9492A);white-space:nowrap">{{ s.com }}</div>
-              </div>
-            </div>
+    <sc-if value="{{ isBoletas }}" hint-placeholder-val="{{ false }}">
+    <div class="bar">
+      <label style="display:flex;align-items:center;gap:8px"><span class="lbl">Tasa de detracción</span><input class="inp s" type="number" min="0" step="0.5" inputMode="decimal" value="{{ tasa }}" onChange="{{ onTasa }}" style="width:76px;text-align:right" aria-label="Tasa de detracción"><span class="b">%</span></label>
+      <button type="button" class="btn-o" onClick="{{ toggleBolForm }}">+ Registrar boleta</button>
+    </div>
+    <sc-if value="{{ bolForm }}" hint-placeholder-val="{{ false }}">
+      <form class="card fbox" onSubmit="{{ addBol }}">
+        {{ bolFields }}
+        <button type="submit" class="btn">Guardar boleta</button>
+      </form>
+    </sc-if>
+    <div style="margin-bottom:14px"><input class="inp" value="{{ bq }}" onChange="{{ onBq }}" placeholder="Buscar por N° de boleta, cliente o departamento" aria-label="Buscar boleta"></div>
+    <div class="tw card">
+      <div style="min-width:var(--tw,1040px)">
+        <div class="hd g-bol"><span>N° Boleta</span><span>Fecha</span><span>Cliente</span><span>Inmueble</span><span>Concepto</span><span class="r">Importe</span><span class="r">Detracción</span><span>Constancia</span></div>
+        <sc-for list="{{ boletas }}" as="b" hint-placeholder-count="8">
+          <div class="row g-bol">
+            <span class="full b">{{ b.n }}</span>
+            <span data-l="Fecha">{{ b.fecha }}</span>
+            <span data-l="Cliente">{{ b.cli }}</span>
+            <span data-l="Inmueble">{{ b.unit }}</span>
+            <span data-l="Concepto"><span class="blk">{{ b.concepto }}</span><span class="ac t12 b blk">{{ b.est }}</span></span>
+            <span data-l="Importe" class="r">{{ b.monto }}</span>
+            <span data-l="Detracción" class="r b">{{ b.det }}</span>
+            <span data-l="Constancia">{{ b.cons }}</span>
           </div>
-          <div style="display:grid;grid-template-columns:.8fr 1fr 1fr;gap:10px;padding:10px 22px;border-top:1px solid #E6E1D8;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F"><span>Dpto vendido</span><span style="text-align:right">Precio de venta</span><span style="text-align:right">Comisión</span></div>
-          <div style="max-height:336px;overflow-y:auto">
+        </sc-for>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px">{{ bolNote }}</p>
+    </sc-if>
+
+    <sc-if value="{{ isVendedoras }}" hint-placeholder-val="{{ false }}">
+    <section class="card" style="margin-bottom:20px;padding:22px">
+      <div class="lbl">% de comisión pactado</div>
+      <p class="note" style="margin-top:4px">Depende de la vista del departamento y de la forma de venta. Además, cada venta puede llevar su propio %.</p>
+      <div class="rates">
+        <sc-for list="{{ rates }}" as="x" hint-placeholder-count="4">
+          <label class="fld"><span class="lbl">{{ x.label }}</span><span class="pct"><input class="inp" type="number" min="0" step="0.1" inputMode="decimal" value="{{ x.v }}" onChange="{{ x.on }}"><span class="b">%</span></span></label>
+        </sc-for>
+      </div>
+      <p class="note">Pago de la comisión en dos partes: <strong>60% a la firma de minuta</strong> y <strong>40% al desembolso del cliente</strong>. En cada parte se anota su fecha de pago.</p>
+    </section>
+    <sc-for list="{{ sellers }}" as="s" hint-placeholder-count="3">
+      <section class="card" style="margin-bottom:20px">
+        <div class="sel-h">
+          <div>
+            <div class="ser" style="font-size:30px;line-height:1.1">{{ s.name }}</div>
+            <div class="mut" style="margin-top:4px;font-size:13px">{{ s.count }} departamentos vendidos · {{ s.ventas }}</div>
+          </div>
+          <div class="sel-k">
+            <div><div class="lbl">Comisión total</div><div class="ser big ac">{{ s.com }}</div></div>
+            <div><div class="lbl">Pagado</div><div class="ser big">{{ s.pag }}</div></div>
+            <div><div class="lbl">Por pagar</div><div class="ser big">{{ s.pend }}</div></div>
+          </div>
+        </div>
+        <button type="button" class="acc" onClick="{{ s.toggle }}"><span>{{ s.togLbl }}</span><span class="chev">{{ s.chev }}</span></button>
+        <sc-if value="{{ s.open }}" hint-placeholder-val="{{ true }}">
+        <div class="tw">
+          <div style="min-width:var(--tw,1000px)">
+            <div class="hd g-com" style="border-top:1px solid #E6E1D8"><span>Dpto vendido</span><span>Vista · Venta</span><span class="r">Precio de venta</span><span>% Comisión</span><span class="r">Comisión</span><span>60% · Firma de minuta</span><span>40% · Desembolso</span></div>
             <sc-for list="{{ s.rows }}" as="r" hint-placeholder-count="4">
-              <div style="display:grid;grid-template-columns:.8fr 1fr 1fr;gap:10px;padding:10px 22px;border-top:1px solid #E6E1D8;font-size:13px;font-variant-numeric:tabular-nums"><span style="font-weight:600">{{ r.unit }}</span><span style="text-align:right">{{ r.price }}</span><span style="text-align:right;font-weight:600">{{ r.com }}</span></div>
+              <div class="row g-com">
+                <span class="full b">{{ r.unit }}</span>
+                <span data-l="Vista · Venta">{{ r.cond }}</span>
+                <span data-l="Precio de venta" class="r">{{ r.price }}</span>
+                <span data-l="% Comisión"><input class="inp s" type="number" min="0" step="0.1" inputMode="decimal" value="{{ r.pct }}" onChange="{{ r.onPct }}" aria-label="% de comisión"></span>
+                <span data-l="Comisión" class="r b">{{ r.com }}</span>
+                <span data-l="60% · Firma de minuta" class="wide2"><span class="part"><span class="b">{{ r.m1 }}</span><span class="mut t12">{{ r.h1 }}</span><input class="inp s" type="date" value="{{ r.f1 }}" onChange="{{ r.onF1 }}" aria-label="Fecha de pago del 60%"></span></span>
+                <span data-l="40% · Desembolso" class="wide2"><span class="part"><span class="b">{{ r.m2 }}</span><span class="mut t12">{{ r.h2 }}</span><input class="inp s" type="date" value="{{ r.f2 }}" onChange="{{ r.onF2 }}" aria-label="Fecha de pago del 40%"></span></span>
+              </div>
             </sc-for>
           </div>
-        </section>
-      </sc-for>
-    </div>
+        </div>
+        </sc-if>
+      </section>
+    </sc-for>
     </sc-if>
 
     <sc-if value="{{ isConstruccion }}" hint-placeholder-val="{{ false }}">
-    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
-      <section style="flex:1.3 1 440px;min-width:0;background:#FBFAF7;border:1px solid #D9D4CA">
-        <div style="display:grid;grid-template-columns:96px minmax(40px,1fr) 124px 132px;gap:12px;padding:14px 18px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F"><span>Mes</span><span></span><span style="text-align:right">Gastos del mes</span><span style="text-align:right">Acumulado</span></div>
-        <div style="display:grid;grid-template-columns:96px minmax(40px,1fr) 124px 132px;gap:12px;align-items:center;padding:14px 18px;border-top:1px solid #E6E1D8;font-size:13px;font-variant-numeric:tabular-nums;background:#2E2E2E;color:#F3F0EA"><span style="font-weight:600">Terreno</span><span>Compra del terreno · {{ cons.terrFecha }}</span><span style="text-align:right">{{ cons.terreno }}</span><span style="text-align:right;font-weight:600">{{ cons.terreno }}</span></div>
+    <section class="terr">
+      <div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#D9B36A">+ Terreno · gasto aparte</div>
+        <div style="margin-top:4px;font-size:13px;color:#D8D3C9">Compra del terreno · {{ cons.terrFecha }}. No se suma a los gastos de construcción.</div>
+      </div>
+      <div class="ser" style="font-size:36px;line-height:1.1;white-space:nowrap">{{ cons.terreno }}</div>
+    </section>
+    <section class="card" style="margin-bottom:20px;padding:22px">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 20px"><span class="lbl">Construcción por tipo de gasto</span><span class="mut t12">Los tres tipos suman al total de construcción del Perfil Económico</span></div>
+      <div class="sbar" style="height:12px;margin-top:14px">
+        <sc-for list="{{ cons.tipos }}" as="t" hint-placeholder-count="3"><span style="flex:{{ t.fx }} 1 0%;background:{{ t.col }}"></span></sc-for>
+      </div>
+      <div class="tip">
+        <sc-for list="{{ cons.tipos }}" as="t" hint-placeholder-count="3">
+          <div><div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600"><span class="sw" style="background:{{ t.col }}"></span>{{ t.t }} · {{ t.p }}</div><div class="ser" style="font-size:26px;line-height:1.2;white-space:nowrap">{{ t.v }}</div></div>
+        </sc-for>
+      </div>
+    </section>
+    <div class="cons">
+      <section class="card" style="flex:1.3 1 440px;min-width:0">
+        <div class="hd g-mes keep"><span>Mes</span><span></span><span class="r">Gastos del mes</span><span class="r">Acumulado</span></div>
         <sc-for list="{{ cons.months }}" as="m" hint-placeholder-count="8">
-          <button type="button" onClick="{{ m.sel }}" style="display:grid;grid-template-columns:96px minmax(40px,1fr) 124px 132px;gap:12px;align-items:center;width:100%;min-height:46px;padding:8px 18px;border:0;border-top:1px solid #E6E1D8;background:{{ m.bg }};color:#23221F;font-size:13px;font-weight:{{ m.fw }};text-align:left;cursor:pointer;font-variant-numeric:tabular-nums" style-hover="background:#EAE5DB">
-            <span>{{ m.label }}</span>
-            <span style="display:block;height:6px;background:#E6E1D8"><span style="display:block;height:6px;width:{{ m.w }};background:var(--ac,#A9492A)"></span></span>
-            <span style="text-align:right">{{ m.total }}</span><span style="text-align:right">{{ m.acum }}</span>
+          <button type="button" class="row g-mes keep {{ m.cls }}" onClick="{{ m.sel }}">
+            <span><span class="b blk">{{ m.n }}</span><span class="mut t12 blk">{{ m.label }}</span></span>
+            <span class="sbar"><span style="width:{{ m.wO }};background:var(--ac,#A9492A)"></span><span style="width:{{ m.wC }};background:#D9B36A"></span><span style="width:{{ m.wA }};background:#8C877E"></span></span>
+            <span class="r">{{ m.total }}</span><span class="r b">{{ m.acum }}</span>
           </button>
         </sc-for>
+        <div class="row g-mes keep tot"><span>Total</span><span></span><span></span><span class="r">{{ cons.total }}</span></div>
       </section>
-      <section style="flex:1 1 340px;min-width:0;background:#FBFAF7;border:1px solid #D9D4CA">
+      <section class="card" id="gastos-dia" style="flex:1 1 360px;min-width:0;scroll-margin-top:72px">
         <div style="padding:20px 20px 16px">
-          <div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#6A665F">Gastos diarios</div>
-          <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:30px;line-height:1.1;margin-top:2px">{{ cons.mesSel }}</div>
+          <div class="lbl" style="letter-spacing:.2em">Gastos diarios</div>
+          <div class="ser" style="font-size:30px;line-height:1.1;margin-top:2px">{{ cons.mesSel }}</div>
         </div>
-        <form onSubmit="{{ addGasto }}" style="display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 18px">
-          <input type="number" min="1" max="31" value="{{ gDia }}" onChange="{{ onGDia }}" placeholder="Día" aria-label="Día" style="flex:0 0 64px;min-width:0;height:44px;padding:0 10px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
-          <input value="{{ gConcepto }}" onChange="{{ onGConcepto }}" placeholder="Concepto del gasto" aria-label="Concepto" style="flex:1 1 150px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
-          <input type="number" min="0" value="{{ gMonto }}" onChange="{{ onGMonto }}" placeholder="Monto" aria-label="Monto" style="flex:1 1 100px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
-          <button type="submit" style="flex:1 1 100%;height:44px;border:0;background:#23221F;color:#FFFFFF;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:background .2s" style-hover="background:var(--ac,#A9492A)">Registrar gasto</button>
+        <form class="gform" onSubmit="{{ addGasto }}">
+          <input class="inp" type="number" min="1" max="31" inputMode="numeric" value="{{ g.dia }}" onChange="{{ onGDia }}" placeholder="Día" aria-label="Día" style="flex:0 0 68px">
+          <input class="inp" value="{{ g.concepto }}" onChange="{{ onGConcepto }}" placeholder="Concepto del gasto" aria-label="Concepto" style="flex:1 1 150px">
+          <select class="inp" value="{{ g.tipo }}" onChange="{{ onGTipo }}" aria-label="Tipo de gasto" style="flex:1 1 130px"><option value="Obra">Obra</option><option value="Comercial">Comercial</option><option value="Administrativo">Administrativo</option></select>
+          <input class="inp" type="number" min="0" step="0.01" inputMode="decimal" value="{{ g.monto }}" onChange="{{ onGMonto }}" placeholder="Monto" aria-label="Monto" style="flex:1 1 100px">
+          <button type="submit" class="btn" style="flex:1 1 100%">Registrar gasto</button>
         </form>
-        <sc-for list="{{ cons.gastos }}" as="g" hint-placeholder-count="5">
-          <div style="display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:12px;padding:11px 20px;border-top:1px solid #E6E1D8;font-size:13px;font-variant-numeric:tabular-nums"><span style="color:#6A665F">{{ g.fecha }}</span><span>{{ g.concepto }}</span><span style="font-weight:600">{{ g.monto }}</span></div>
+        <sc-for list="{{ cons.gastos }}" as="x" hint-placeholder-count="5">
+          <div class="row g-gas keep"><span><span class="blk">{{ x.concepto }}</span><span class="mut t12 blk">{{ x.fecha }}</span></span><select class="inp s" value="{{ x.tipo }}" onChange="{{ x.onTipo }}" aria-label="Tipo de gasto"><option value="Obra">Obra</option><option value="Comercial">Comercial</option><option value="Administrativo">Administrativo</option></select><span class="r b nw">{{ x.monto }}</span></div>
         </sc-for>
-        <div style="display:flex;justify-content:space-between;gap:12px;padding:14px 20px;border-top:1px solid #D9D4CA;font-weight:700"><span>Gastos del mes</span><span>{{ cons.mesTotal }}</span></div>
+        <div class="row g-gas keep tot"><span>Gastos del mes</span><span></span><span class="r nw">{{ cons.mesTotal }}</span></div>
       </section>
     </div>
     </sc-if>
 
     <sc-if value="{{ isProveedores }}" hint-placeholder-val="{{ false }}">
-    <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
-      <button type="button" onClick="{{ toggleProvForm }}" style="height:44px;padding:0 20px;border:1px solid #23221F;background:transparent;color:#23221F;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer" style-hover="background:#23221F;color:#FFFFFF">+ Nuevo contratista</button>
+    <div class="bar" style="justify-content:flex-end">
+      <button type="button" class="btn-o" onClick="{{ toggleProvForm }}">+ Nuevo contratista</button>
     </div>
     <sc-if value="{{ provForm }}" hint-placeholder-val="{{ false }}">
-      <form onSubmit="{{ addProv }}" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;padding:18px;background:#FBFAF7;border:1px solid #D9D4CA">
-        <input value="{{ pNombre }}" onChange="{{ onPNombre }}" placeholder="Contratista" aria-label="Contratista" style="flex:1.4 1 200px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
-        <input value="{{ pPartida }}" onChange="{{ onPPartida }}" placeholder="Partida" aria-label="Partida" style="flex:1.2 1 180px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
-        <input type="number" min="0" value="{{ pPresu }}" onChange="{{ onPPresu }}" placeholder="Presupuesto aprobado" aria-label="Presupuesto aprobado" style="flex:1 1 170px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
-        <button type="submit" style="flex:0 0 auto;height:44px;padding:0 22px;border:0;background:#23221F;color:#FFFFFF;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--ac,#A9492A)">Guardar</button>
+      <form class="card fbox" onSubmit="{{ addProv }}" style="display:flex;flex-wrap:wrap;gap:8px">
+        <input class="inp" value="{{ pv.nombre }}" onChange="{{ onPNombre }}" placeholder="Contratista" aria-label="Contratista" style="flex:1.4 1 200px">
+        <input class="inp" value="{{ pv.partida }}" onChange="{{ onPPartida }}" placeholder="Partida" aria-label="Partida" style="flex:1.2 1 180px">
+        <input class="inp" type="number" min="0" inputMode="decimal" value="{{ pv.presu }}" onChange="{{ onPPresu }}" placeholder="Presupuesto aprobado" aria-label="Presupuesto aprobado" style="flex:1 1 170px">
+        <button type="submit" class="btn" style="margin-top:0">Guardar</button>
       </form>
     </sc-if>
-    <div style="overflow-x:auto;background:#FBFAF7;border:1px solid #D9D4CA">
-      <div style="min-width:var(--tw,940px)">
-        <div style="display:grid;grid-template-columns:28px 1.9fr 1fr 1.2fr .9fr 1fr 1fr;gap:12px;padding:14px 18px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F">
-          <span></span><span>Contratista · Partida</span><span style="text-align:right">Presupuesto aprobado</span><span>Última valorización</span><span>Factura</span><span style="text-align:right">Acumulado pagado</span><span style="text-align:right">Saldo</span>
-        </div>
+    <div class="tw card">
+      <div style="min-width:var(--tw,980px)">
+        <div class="hd g-prov"><span></span><span>Contratista · Partida</span><span class="r">Presupuesto aprobado</span><span>Última valorización</span><span>Factura</span><span class="r">Acumulado pagado</span><span class="r">Saldo</span></div>
         <sc-for list="{{ provs }}" as="p" hint-placeholder-count="6">
-          <div style="border-top:1px solid #E6E1D8">
-            <button type="button" onClick="{{ p.toggle }}" style="display:grid;grid-template-columns:28px 1.9fr 1fr 1.2fr .9fr 1fr 1fr;gap:12px;align-items:center;width:100%;min-height:64px;padding:10px 18px;border:0;background:{{ p.bg }};color:#23221F;font-size:13px;text-align:left;cursor:pointer;font-variant-numeric:tabular-nums" style-hover="background:#F3F0EA">
-              <span style="font-size:18px;color:var(--ac,#A9492A)">{{ p.chev }}</span>
-              <span style="min-width:0"><span style="display:block;font-weight:600">{{ p.nombre }}</span><span style="display:block;font-size:12px;color:#6A665F">{{ p.partida }}</span></span>
-              <span style="text-align:right">{{ p.presu }}</span><span>{{ p.ultVal }}</span><span>{{ p.factura }}</span>
-              <span style="text-align:right"><span style="display:block;font-weight:600">{{ p.pagado }}</span><span style="display:block;height:4px;margin-top:6px;background:#E6E1D8"><span style="display:block;height:4px;width:{{ p.w }};background:var(--ac,#A9492A)"></span></span></span>
-              <span style="text-align:right;font-weight:700">{{ p.saldo }}</span>
+          <div>
+            <button type="button" class="row g-prov {{ p.cls }}" onClick="{{ p.toggle }}" style="min-height:64px">
+              <span class="chev">{{ p.chev }}</span>
+              <span class="full"><span class="b blk">{{ p.nombre }}</span><span class="mut t12 blk">{{ p.partida }}</span></span>
+              <span data-l="Presupuesto aprobado" class="r">{{ p.presu }}</span>
+              <span data-l="Última valorización">{{ p.ultVal }}</span>
+              <span data-l="Factura">{{ p.factura }}</span>
+              <span data-l="Acumulado pagado" class="r"><span class="b blk">{{ p.pagado }}</span><span class="blk" style="height:4px;margin-top:6px;background:#E6E1D8"><span class="blk" style="height:4px;width:{{ p.w }};background:var(--ac,#A9492A)"></span></span><span class="ac t12 blk">{{ p.porPagar }}</span></span>
+              <span data-l="Saldo" class="r" style="font-weight:700">{{ p.saldo }}</span>
             </button>
             <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
-              <div style="padding:6px 18px 20px 58px;background:#F3F0EA">
-                <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:12px;padding:12px 0 8px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F"><span>Valorización</span><span>Fecha</span><span>Factura</span><span style="text-align:right">Monto</span></div>
+              <div class="sub">
+                <div class="hd g-val"><span>Valorización</span><span>Fecha</span><span>Factura</span><span>PDF de la factura</span><span>Fecha de pago</span><span class="r">Monto</span></div>
                 <sc-for list="{{ p.vals }}" as="v" hint-placeholder-count="2">
-                  <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:12px;padding:8px 0;border-top:1px solid #D9D4CA;font-size:13px;font-variant-numeric:tabular-nums"><span>{{ v.n }}</span><span>{{ v.fecha }}</span><span>{{ v.factura }}</span><span style="text-align:right;font-weight:600">{{ v.monto }}</span></div>
+                  <div class="row g-val">
+                    <span class="full b">{{ v.n }}</span>
+                    <span data-l="Fecha">{{ v.fecha }}</span>
+                    <span data-l="Factura">{{ v.factura }}</span>
+                    <span data-l="PDF de la factura">
+                      <sc-if value="{{ v.hasUrl }}" hint-placeholder-val="{{ false }}"><a href="{{ v.url }}" target="_blank" rel="noopener" style="font-weight:600;word-break:break-all">{{ v.pdf }}</a></sc-if>
+                      <sc-if value="{{ v.hasName }}" hint-placeholder-val="{{ false }}"><span class="pdf">{{ v.pdf }}</span></sc-if>
+                      <sc-if value="{{ v.noPdf }}" hint-placeholder-val="{{ false }}"><label class="lnk"><input type="file" accept="application/pdf" onChange="{{ v.onPdf }}" style="display:none">Adjuntar PDF</label></sc-if>
+                    </span>
+                    <span data-l="Fecha de pago"><input class="inp s" type="date" value="{{ v.pago }}" onChange="{{ v.onPago }}" aria-label="Fecha de pago"></span>
+                    <span data-l="Monto" class="r b">{{ v.monto }}</span>
+                  </div>
                 </sc-for>
-                <form onSubmit="{{ p.addVal }}" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid #D9D4CA">
-                  <input value="{{ vFactura }}" onChange="{{ onVFactura }}" placeholder="N° de factura" aria-label="N° de factura" style="flex:1 1 160px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
-                  <input type="number" min="0" value="{{ vMonto }}" onChange="{{ onVMonto }}" placeholder="Monto de la valorización" aria-label="Monto de la valorización" style="flex:1 1 180px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
-                  <button type="submit" style="flex:0 0 auto;height:44px;padding:0 20px;border:0;background:#23221F;color:#FFFFFF;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--ac,#A9492A)">Registrar valorización</button>
+                <form class="addv" onSubmit="{{ p.addVal }}">
+                  <input class="inp" value="{{ val.factura }}" onChange="{{ onVFactura }}" placeholder="N° de factura" aria-label="N° de factura">
+                  <input class="inp" type="number" min="0" step="0.01" inputMode="decimal" value="{{ val.monto }}" onChange="{{ onVMonto }}" placeholder="Monto de la valorización" aria-label="Monto de la valorización">
+                  <label style="flex:1 1 190px;display:flex;align-items:center;gap:8px"><span class="mut t12 nw">Fecha de pago</span><input class="inp" type="date" value="{{ val.pago }}" onChange="{{ onVPago }}"></label>
+                  <label class="btn-o" style="flex:1 1 150px;display:block;line-height:42px;text-align:center;overflow:hidden;text-overflow:ellipsis"><input type="file" accept="application/pdf" onChange="{{ onVPdf }}" style="display:none">{{ vPdfLbl }}</label>
+                  <button type="submit" class="btn" style="flex:1 1 190px">Registrar valorización</button>
                 </form>
               </div>
             </sc-if>
@@ -432,42 +808,107 @@ input::placeholder{color:inherit;opacity:.45}
     </div>
     </sc-if>
 
-    <sc-if value="{{ isPerfil }}" hint-placeholder-val="{{ false }}">
-    <section style="padding:clamp(28px,4vw,60px);background:#1C1B1A;color:#F3F0EA">
-      <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:20px clamp(16px,2.2vw,34px)">
-        <div><div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B5B0A6">{{ pe.label }}</div><div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,3.4vw,54px);line-height:1.15;font-variant-numeric:lining-nums;white-space:nowrap">{{ pe.ventas }}</div></div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3.4vw,54px);line-height:1.15;color:#B5B0A6">−</div>
-        <div><div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B5B0A6">Compra de terreno</div><div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,3.4vw,54px);line-height:1.15;font-variant-numeric:lining-nums;white-space:nowrap">{{ pe.terreno }}</div></div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3.4vw,54px);line-height:1.15;color:#B5B0A6">−</div>
-        <div><div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B5B0A6">Construcción</div><div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,3.4vw,54px);line-height:1.15;font-variant-numeric:lining-nums;white-space:nowrap">{{ pe.cons }}</div></div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3.4vw,54px);line-height:1.15;color:#B5B0A6">=</div>
+    <sc-if value="{{ isPedidos }}" hint-placeholder-val="{{ false }}">
+    <section class="card" style="margin-bottom:20px;padding:22px">
+      <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px 20px"><span class="lbl">Acumulado por material</span><span class="mut t12">Cada pedido nuevo se suma a su material y unidad</span></div>
+      <div class="mats">
+        <sc-for list="{{ mats }}" as="m" hint-placeholder-count="6">
+          <div class="mat"><div class="b" style="font-size:13px;line-height:1.3;min-height:34px">{{ m.item }}</div><div class="ser" style="font-size:30px;line-height:1.1;margin-top:6px">{{ m.cant }} <span style="font-size:16px">{{ m.und }}</span></div><div class="mut t12" style="margin-top:2px">{{ m.sub }}</div></div>
+        </sc-for>
       </div>
-      <div style="margin-top:clamp(28px,4vw,52px);padding-top:22px;border-top:3px solid var(--ac,#A9492A)">
+    </section>
+    <div class="bar" style="justify-content:flex-end">
+      <button type="button" class="btn-o" onClick="{{ togglePedForm }}">+ Nuevo pedido o servicio</button>
+    </div>
+    <sc-if value="{{ pedForm }}" hint-placeholder-val="{{ false }}">
+      <form class="card fbox" onSubmit="{{ addPed }}">
+        {{ pedFields }}
+        <button type="submit" class="btn">Guardar pedido</button>
+      </form>
+    </sc-if>
+    <div class="tw card">
+      <div style="min-width:var(--tw,1100px)">
+        <div class="hd g-ped"><span></span><span>Fecha</span><span>Proveedor · RUC</span><span>Pedido</span><span class="r">Cantidad</span><span class="r">Importe</span><span>Forma de pago</span><span>Garantía · Protocolos</span></div>
+        <sc-for list="{{ pedidos }}" as="p" hint-placeholder-count="6">
+          <div>
+            <button type="button" class="row g-ped {{ p.cls }}" onClick="{{ p.toggle }}" style="min-height:64px">
+              <span class="chev">{{ p.chev }}</span>
+              <span data-l="Fecha">{{ p.fecha }}</span>
+              <span class="full"><span class="b blk">{{ p.prov }}</span><span class="mut t12 blk">RUC {{ p.ruc }}</span></span>
+              <span data-l="Pedido"><span class="blk">{{ p.item }}</span><span class="mut t12 blk">{{ p.tipo }}</span></span>
+              <span data-l="Cantidad" class="r">{{ p.cant }}</span>
+              <span data-l="Importe" class="r b">{{ p.importe }}</span>
+              <span data-l="Forma de pago"><span class="blk">{{ p.forma }}</span><span class="ac t12 b blk">{{ p.estado }}</span></span>
+              <span data-l="Garantía · Protocolos">{{ p.docs }}</span>
+            </button>
+            <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
+              <div class="sub">
+                <div class="hd g-pag"><span>Pago</span><span>Fecha de pago</span><span class="r">Importe</span><span>Estado</span></div>
+                <sc-for list="{{ p.pagos }}" as="x" hint-placeholder-count="2">
+                  <div class="row g-pag">
+                    <span class="full b">{{ x.c }}</span>
+                    <span data-l="Fecha de pago"><input class="inp s" type="date" value="{{ x.fecha }}" onChange="{{ x.onFecha }}" aria-label="Fecha de pago"></span>
+                    <span data-l="Importe" class="r">{{ x.monto }}</span>
+                    <span data-l="Estado"><button type="button" class="chip {{ x.cls }}" onClick="{{ x.toggle }}">{{ x.estado }}</button></span>
+                  </div>
+                </sc-for>
+                <div class="yn">
+                  <span class="yn-i"><span class="lbl">¿Envió carta de garantía?</span><button type="button" class="chip {{ p.gCls }}" onClick="{{ p.tGar }}">{{ p.gar }}</button></span>
+                  <span class="yn-i"><span class="lbl">¿Envió protocolos?</span><button type="button" class="chip {{ p.pCls }}" onClick="{{ p.tPro }}">{{ p.pro }}</button></span>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isPerfil }}" hint-placeholder-val="{{ false }}">
+    <section style="padding:clamp(24px,4vw,60px);background:#1C1B1A;color:#F3F0EA">
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px clamp(16px,2.2vw,34px)">
+        <div><div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B5B0A6">{{ pe.label }}</div><div class="ser" style="font-size:clamp(30px,3.4vw,54px);line-height:1.15;white-space:nowrap">{{ pe.ventas }}</div></div>
+        <div class="ser" style="font-size:clamp(30px,3.4vw,54px);line-height:1.15;color:#B5B0A6">−</div>
+        <div><div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B5B0A6">Compra de terreno</div><div class="ser" style="font-size:clamp(30px,3.4vw,54px);line-height:1.15;white-space:nowrap">{{ pe.terreno }}</div></div>
+        <div class="ser" style="font-size:clamp(30px,3.4vw,54px);line-height:1.15;color:#B5B0A6">−</div>
+        <div><div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B5B0A6">Construcción</div><div class="ser" style="font-size:clamp(30px,3.4vw,54px);line-height:1.15;white-space:nowrap">{{ pe.cons }}</div></div>
+        <div class="ser" style="font-size:clamp(30px,3.4vw,54px);line-height:1.15;color:#B5B0A6">=</div>
+      </div>
+      <div style="margin-top:clamp(24px,4vw,52px);padding-top:22px;border-top:3px solid var(--ac,#A9492A)">
         <div style="font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase">+ Utilidad</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(56px,8.4vw,136px);line-height:1;font-variant-numeric:lining-nums;margin-top:6px">{{ pe.util }}</div>
+        <div class="ser" style="font-size:clamp(48px,8.4vw,136px);line-height:1;margin-top:6px;white-space:nowrap">{{ pe.util }}</div>
         <div style="margin-top:10px;font-size:14px;color:#D8D3C9">Margen sobre {{ pe.labelLower }}: {{ pe.margen }}</div>
       </div>
     </section>
-    <section style="margin-top:20px;padding:24px;background:#FBFAF7;border:1px solid #D9D4CA">
+    <section class="card" style="margin-top:20px;padding:24px">
       <div style="display:flex;height:14px;gap:2px">
         <div style="width:{{ pe.wT }};background:#2E2E2E"></div>
         <div style="width:{{ pe.wC }};background:#8C877E"></div>
         <div style="flex:1;background:var(--ac,#A9492A)"></div>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:10px 32px;margin-top:16px;font-size:13px">
-        <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#2E2E2E"></span>Compra de terreno · <strong>{{ pe.pT }}</strong></span>
-        <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#8C877E"></span>Construcción · <strong>{{ pe.pC }}</strong></span>
-        <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:var(--ac,#A9492A)"></span>Utilidad · <strong>{{ pe.margen }}</strong></span>
+        <span style="display:flex;align-items:center;gap:8px"><span class="sw" style="background:#2E2E2E"></span><span>Compra de terreno · <strong>{{ pe.pT }}</strong></span></span>
+        <span style="display:flex;align-items:center;gap:8px"><span class="sw" style="background:#8C877E"></span><span>Construcción · <strong>{{ pe.pC }}</strong></span></span>
+        <span style="display:flex;align-items:center;gap:8px"><span class="sw" style="background:var(--ac,#A9492A)"></span><span>Utilidad · <strong>{{ pe.margen }}</strong></span></span>
       </div>
+    </section>
+    <section class="card" style="margin-top:20px;padding:24px">
+      <div class="lbl">Construcción: obra + comercial + administrativo</div>
+      <div class="tip">
+        <sc-for list="{{ cons.tipos }}" as="t" hint-placeholder-count="3">
+          <div><div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600"><span class="sw" style="background:{{ t.col }}"></span>{{ t.t }} · {{ t.p }}</div><div class="ser" style="font-size:26px;line-height:1.2;white-space:nowrap">{{ t.v }}</div></div>
+        </sc-for>
+      </div>
+      <p class="note" style="margin-top:16px">{{ pe.nota }}</p>
     </section>
     </sc-if>
 
     <sc-if value="{{ isBalance }}" hint-placeholder-val="{{ false }}">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(440px,100%),1fr));gap:20px">
       <sc-for list="{{ bal }}" as="b" hint-placeholder-count="4">
-        <section style="padding:28px;background:{{ b.bg }};color:{{ b.fg }};border:1px solid #D9D4CA">
+        <section style="padding:clamp(20px,3vw,28px);background:{{ b.bg }};color:{{ b.fg }};border:1px solid #D9D4CA">
           <div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase">+ {{ b.title }}</div>
-          <div style="margin-top:8px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(40px,4vw,60px);line-height:1.05;font-variant-numeric:lining-nums;white-space:nowrap">{{ b.total }}</div>
+          <div class="ser" style="margin-top:8px;font-size:clamp(36px,4vw,60px);line-height:1.05;white-space:nowrap">{{ b.total }}</div>
           <div style="margin:2px 0 22px;font-size:12px;min-height:18px">{{ b.note }}</div>
           <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="2">
             <div style="padding:14px 0;border-top:1px solid {{ b.line }}">
@@ -487,16 +928,35 @@ input::placeholder{color:inherit;opacity:.45}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;seleccion&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Tarjetas verticales&quot;,&quot;Paneles a pantalla completa&quot;],&quot;default&quot;:&quot;Tarjetas verticales&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Selección de proyecto&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#A9492A&quot;,&quot;options&quot;:[&quot;#A9492A&quot;,&quot;#7A5C2E&quot;,&quot;#4F5D43&quot;,&quot;#2B4A5E&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Marca&quot;},&quot;moneda&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;S/&quot;,&quot;US$&quot;],&quot;default&quot;:&quot;S/&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Datos&quot;},&quot;pantalla&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;'login'|'select'|'hub'|'work'&quot;},&quot;proyecto&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;'eclat'|'essenziale'&quot;},&quot;modulo&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;string&quot;},&quot;embed&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;boolean&quot;}}">
 class Component extends DCLogic {
-  state = { screen: 'login', proj: 'eclat', mod: 'precios', lv: null, email: '', code: '', err: false, focus: false, sel: {}, openClient: {}, openProv: {}, mes: {}, pct: {}, provForm: false, gDia: '', gConcepto: '', gMonto: '', pNombre: '', pPartida: '', pPresu: '', vFactura: '', vMonto: '' };
+  state = {
+    screen: 'login', proj: 'eclat', mod: 'precios', email: '', code: '', err: false, menu: false, sheet: false,
+    sel: {}, tipo: {}, flt: {}, openClient: {}, ctab: 'crono', pay: null, payF: { f: '', m: '', b: '' },
+    ex: { t: 'Estacionamiento', id: '', p: '', f: '', ini: '', n: '6' },
+    rates: {}, tasa: '4', bq: '', bolForm: false, bol: { n: '', f: '', uid: '', m: '' },
+    mes: {}, g: { dia: '', concepto: '', tipo: 'Obra', monto: '' },
+    openProv: {}, provForm: false, pv: { nombre: '', partida: '', presu: '' }, val: { factura: '', monto: '', pago: '', pdf: null },
+    openPed: {}, openSel: {}, pedForm: false, ped: { fecha: '', ruc: '', prov: '', tipo: 'Compra', item: '', cant: '', und: 'und', importe: '', forma: 'Adelanto 20% + saldo a la entrega', entrega: '', gar: 'No', pro: 'No' }
+  };
+  HOY = '2026-11-25';
   MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
   NOM = ['María Elena', 'José Luis', 'Carmen', 'Luis Alberto', 'Rosa', 'Juan Carlos', 'Ana Lucía', 'Miguel Ángel', 'Patricia', 'Jorge', 'Claudia', 'Fernando', 'Silvia', 'Ricardo', 'Gabriela', 'Diego', 'Verónica', 'Renato', 'Mónica', 'Álvaro'];
   APE = ['Quispe Ramos', 'Flores Medina', 'Rojas Salazar', 'Castillo Vega', 'Torres Paredes', 'Mendoza Ríos', 'Chávez Luna', 'Gutiérrez Soto', 'Vargas León', 'Ramírez Cueva', 'Díaz Montoya', 'Herrera Campos', 'Salinas Ortiz', 'Navarro Peña', 'Cáceres Tello', 'Aguilar Bravo', 'Zegarra Polo', 'Benavides Rey'];
+  TIPOS = ['Obra', 'Comercial', 'Administrativo'];
+  TCOL = { Obra: 'var(--ac,#A9492A)', Comercial: '#D9B36A', Administrativo: '#8C877E' };
+  UND = ['und', 'm', 'm²', 'm³', 'bolsas', 'kg', 'gln', 'rollos', 'servicio'];
+  FORMAS = ['Contado', 'Adelanto 10% + saldo a la entrega', 'Adelanto 20% + saldo a la entrega', 'Adelanto 50% + saldo a la entrega', 'Crédito 30 días'];
+  MEDIO = ['Facebook', 'Instagram', 'Referido', 'Portal inmobiliario', 'Caseta de ventas', 'Feria inmobiliaria', 'Página web'];
 
   componentDidMount() {
-    try { const s = JSON.parse(localStorage.getItem('inverplus-portal-nav') || 'null'); if (s && s.email) this.setState({ email: s.email }); } catch (e) {}
+    let email = '';
+    try { const s = JSON.parse(localStorage.getItem('inverplus-portal-nav') || 'null'); if (s && s.email) email = s.email; } catch (e) {}
+    const m = /^#\/?(proyectos|empresa|eclat|essenziale)(?:\/([a-z]+))?/.exec(location.hash || '');
+    const deep = !m ? {} : m[1] === 'proyectos' ? { screen: 'select' } : m[1] === 'empresa' ? { screen: 'work', mod: 'balance' } : m[2] ? { screen: 'work', proj: m[1], mod: m[2] } : { screen: 'hub', proj: m[1] };
+    if (m && !email) email = 'usuario@inverplus.pe';
+    if (email || m) this.setState({ email, ...deep });
     this.applyAccent();
   }
-  componentDidUpdate(pp) {
+  componentDidUpdate() {
     this.applyAccent();
     const { screen, proj, mod, email } = this.state;
     try { localStorage.setItem('inverplus-portal-nav', JSON.stringify({ screen, proj, mod, email })); } catch (e) {}
@@ -505,135 +965,345 @@ class Component extends DCLogic {
   rng(seed) { let s = seed >>> 0; return () => (s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296; }
   money(n) { const v = Math.round(n); return (v < 0 ? '− ' : '') + (this.props.moneda ?? 'S/') + ' ' + Math.abs(v).toLocaleString('en-US'); }
   moneyM(n) { return (this.props.moneda ?? 'S/') + ' ' + (n / 1e6).toFixed(1) + ' M'; }
+  pad(n, w = 2) { return String(n).padStart(w, '0'); }
+  mIso(mi, d) { return (2026 + Math.floor(mi / 12)) + '-' + this.pad(mi % 12 + 1) + '-' + this.pad(d); }
+  addD(s, n) { const t = new Date(s + 'T12:00:00Z'); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); }
+  fd(s) { if (!s) return '—'; const p = s.split('-'); return p[2] + ' ' + this.MES[+p[1] - 1] + ' ' + p[0]; }
+  desc(u) { return Math.max(0, Math.min(u.price, parseFloat(u.dS) || 0)); }
+  pv(u) { return u.price - this.desc(u); }
+  ruc(name) { let h = 7; for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return '20' + String(100000000 + h % 899999999); }
+
+  /* Controles de formulario generados desde la lógica (selects con opciones dinámicas, rejillas de campos) */
+  fld(f) {
+    const h = React.createElement, base = { className: 'inp', value: f.value ?? '', onChange: f.on };
+    const ctl = f.opts ? h('select', base, f.opts.map(o => Array.isArray(o) ? h('option', { key: o[0], value: o[0] }, o[1]) : h('option', { key: o, value: o }, o)))
+      : f.area ? h('textarea', { ...base, placeholder: f.ph, rows: 3 })
+      : h('input', { ...base, type: f.type || 'text', placeholder: f.ph, inputMode: f.im, step: f.step, min: f.type === 'number' ? 0 : undefined, list: f.dl ? 'dl-' + f.label.replace(/[^a-zA-Z]+/g, '-') : undefined, autoComplete: 'off' });
+    return h('label', { key: f.label, className: 'fld' + (f.wide ? ' wide' : '') + (f.full ? ' full' : '') }, h('span', { className: 'lbl' }, f.label), ctl, f.dl ? h('datalist', { id: 'dl-' + f.label.replace(/[^a-zA-Z]+/g, '-') }, f.dl.map(o => h('option', { key: o, value: o }))) : null);
+  }
+  grid(fields) { return React.createElement('div', { className: 'fgrid' }, fields.map(f => this.fld(f))); }
+
+  /* Cronograma de pagos de un pedido según su forma de pago */
+  mkPed(o) {
+    const m = /Adelanto (\d+)%/.exec(o.forma), ent = o.entrega || this.addD(o.fecha, 20);
+    const P = (c, pct, fecha) => ({ c, monto: Math.round(o.importe * pct) / 100, fecha, paid: fecha <= this.HOY });
+    o.pagos = m ? [P('Adelanto ' + m[1] + '%', +m[1], o.fecha), P('Cancelación a la entrega', 100 - m[1], ent)] : o.forma === 'Crédito 30 días' ? [P('Pago a 30 días', 100, this.addD(o.fecha, 30))] : [P('Pago al contado', 100, o.fecha)];
+    return o;
+  }
 
   db() {
     if (this._db) return this._db;
     const MES = this.MES;
-    const CON = ['Concreto premezclado', 'Acero corrugado', 'Planilla de obra', 'Alquiler de grúa torre', 'Encofrado metálico', 'Instalaciones sanitarias', 'Instalaciones eléctricas', 'Supervisión de obra', 'Ladrillo y agregados', 'Seguridad y salud en obra'];
+    const CON = [['Concreto premezclado', 'Obra'], ['Acero corrugado', 'Obra'], ['Planilla de obra', 'Obra'], ['Alquiler de grúa torre', 'Obra'], ['Encofrado metálico', 'Obra'], ['Instalaciones sanitarias', 'Obra'], ['Instalaciones eléctricas', 'Obra'], ['Supervisión de obra', 'Obra'], ['Ladrillo y agregados', 'Obra'], ['Seguridad y salud en obra', 'Obra'], ['Publicidad y marketing', 'Comercial'], ['Caseta y sala de ventas', 'Comercial'], ['Planilla administrativa', 'Administrativo'], ['Licencias y trámites municipales', 'Administrativo']];
     const PV = [['Estructuras Andinas S.A.C.', 'Estructuras y casco', .34], ['Concretos del Pacífico S.A.', 'Concreto premezclado', .16], ['Electromontajes Lima E.I.R.L.', 'Instalaciones eléctricas', .1], ['Hidrosanitarias Rímac S.A.C.', 'Instalaciones sanitarias', .09], ['Vidrios y Aluminios Central S.A.C.', 'Carpintería de aluminio y vidrio', .12], ['Acabados Finos Perú S.A.C.', 'Acabados y pintura', .19]];
+    const PED = [['Compra', 'Cementos del Sur S.A.', 'Cemento Portland tipo I', 1200, 'bolsas', 26.5], ['Compra', 'Aceros Lima S.A.C.', 'Acero corrugado 1/2"', 18500, 'kg', 3.9], ['Compra', 'Concretos del Pacífico S.A.', "Concreto premezclado f'c 280", 240, 'm³', 365], ['Servicio', 'Grúas y Montajes Perú S.A.C.', 'Alquiler de grúa torre (mensual)', 1, 'servicio', 38500], ['Compra', 'Ladrillera Central S.A.C.', 'Ladrillo King Kong 18 huecos', 38000, 'und', .95], ['Compra', 'Cementos del Sur S.A.', 'Cemento Portland tipo I', 900, 'bolsas', 26.8], ['Compra', 'Tubos y Conexiones S.A.C.', 'Tubería PVC 4"', 620, 'm', 21.5], ['Servicio', 'Laboratorio de Suelos y Concreto E.I.R.L.', 'Ensayos de probetas de concreto', 1, 'servicio', 6800], ['Compra', 'Porcelanatos Andinos S.A.C.', 'Porcelanato 60×60 gris', 1450, 'm²', 48], ['Compra', 'Concretos del Pacífico S.A.', "Concreto premezclado f'c 280", 310, 'm³', 362]];
     const cfg = {
-      eclat: { key: 'eclat', name: 'ECLAT', num: '01', img2: 'assets/eclat-frente.jpg', floors: 20, areas: [58, 64, 71, 52, 61, 76], ext: [1, 1, 1, 0, 0, 0], ppm: 6300, seed: 11, pv: .37, ps: .09, terreno: 6200000, terrFecha: '15 ene 2026', m0: 1, nm: 10, gmin: 70000, gmax: 250000, budget: 14500000, ord: 1284300, gar: 3912750, sellers: ['Lucía Fernández', 'Andrea Morales', 'Paola Cárdenas'], ventasLabel: 'Ventas', cellH: 40 },
-      essenziale: { key: 'essenziale', name: 'ESSENZIALE', num: '02', img2: 'assets/essenziale-frente.jpg', floors: 10, areas: [118, 96, 132], ext: [1, 1, 0], ppm: 7400, seed: 29, pv: .43, ps: .1, terreno: 4100000, terrFecha: '12 mar 2026', m0: 3, nm: 8, gmin: 45000, gmax: 140000, budget: 6800000, ord: 846120, gar: 2105400, sellers: ['Valeria Núñez', 'Daniela Espinoza', 'Katherine Lozano'], ventasLabel: 'Ingresos', cellH: 54 }
+      eclat: { key: 'eclat', name: 'ECLAT', num: '01', floors: 20, areas: [58, 64, 71, 52, 61, 76], ext: [1, 1, 1, 0, 0, 0], ppm: 6300, seed: 11, pv: .37, ps: .09, terreno: 6200000, terrFecha: '15 ene 2026', m0: 1, nm: 10, gmin: 70000, gmax: 250000, budget: 14500000, ord: 1284300, gar: 3912750, sellers: ['Lucía Fernández', 'Andrea Morales', 'Paola Cárdenas'], ventasLabel: 'Ventas', cellH: 40, sot: 3, nPark: 54, nDep: 30, pPark: 42000, pDep: 14000, esc: 1 },
+      essenziale: { key: 'essenziale', name: 'ESSENZIALE', num: '02', floors: 10, areas: [118, 96, 132], ext: [1, 1, 0], ppm: 7400, seed: 29, pv: .43, ps: .1, terreno: 4100000, terrFecha: '12 mar 2026', m0: 3, nm: 8, gmin: 45000, gmax: 140000, budget: 6800000, ord: 846120, gar: 2105400, sellers: ['Valeria Núñez', 'Daniela Espinoza', 'Katherine Lozano'], ventasLabel: 'Ingresos', cellH: 54, sot: 2, nPark: 30, nDep: 12, pPark: 52000, pDep: 18000, esc: .5 }
     };
     const out = {};
     for (const k in cfg) {
       const c = cfg[k], r = this.rng(c.seed), units = [], months = [];
       for (let f = 1; f <= c.floors; f++) for (let j = 0; j < c.areas.length; j++) {
-        const x = r(), h = Math.floor(r() * 1e6), m2 = c.areas[j], ext = !!c.ext[j];
-        units.push({ id: String(f * 100 + j + 1), f, m2, vista: ext ? 'Externa' : 'Interna', price: Math.round(m2 * c.ppm * (1 + f * .006) * (ext ? 1.06 : 1) / 500) * 500, st: x < c.pv ? 'v' : x < c.pv + c.ps ? 's' : 'd', h });
+        const x = r(), h = Math.floor(r() * 1e6), m2 = c.areas[j], ext = !!c.ext[j], price = Math.round(m2 * c.ppm * (1 + f * .006) * (ext ? 1.06 : 1) / 500) * 500, st = x < c.pv ? 'v' : x < c.pv + c.ps ? 's' : 'd';
+        units.push({ t: 'dpto', id: String(f * 100 + j + 1), f, m2, vista: ext ? 'Externa' : 'Interna', price, st, h, dS: st === 'v' && h % 4 === 1 ? String(Math.round(price * (.01 + (h % 3) * .01) / 500) * 500) : '' });
       }
       for (let i = 0; i < c.nm; i++) {
         const g = [], n = i === c.nm - 1 ? 3 : 5;
-        for (let j = 0; j < n; j++) g.push({ dia: 3 + j * 5 + Math.floor(r() * 3), concepto: CON[Math.floor(r() * CON.length)], monto: Math.round((c.gmin + r() * (c.gmax - c.gmin)) / 100) * 100 });
+        for (let j = 0; j < n; j++) { const dia = 3 + j * 5 + Math.floor(r() * 3), con = CON[Math.floor(r() * CON.length)], raw = r(); g.push({ dia, concepto: con[0], tipo: con[1], monto: Math.round((c.gmin + raw * (c.gmax - c.gmin)) * (con[1] === 'Obra' ? 1 : .3) / 100) * 100 }); }
         months.push({ label: MES[(c.m0 + i) % 12] + ' 2026', g });
       }
       const provs = PV.map((p, i) => {
         const presu = Math.round(c.budget * p[2] / 1000) * 1000, nv = i < 4 ? 2 + Math.floor(r() * 3) : Math.floor(r() * 2), vals = [];
-        for (let j = 0; j < nv; j++) vals.push({ n: j + 1, fecha: (5 + Math.floor(r() * 20)) + ' ' + MES[(c.m0 + 1 + j * 2) % 12] + ' 2026', factura: 'F001-' + String(1000 + Math.floor(r() * 8000)).padStart(6, '0'), monto: Math.round(presu * (.12 + r() * .1) / 100) * 100 });
+        for (let j = 0; j < nv; j++) {
+          const fecha = this.mIso(c.m0 + 1 + j * 2, 5 + Math.floor(r() * 20)), factura = 'F001-' + String(1000 + Math.floor(r() * 8000)).padStart(6, '0'), monto = Math.round(presu * (.12 + r() * .1) / 100) * 100, pago = this.addD(fecha, 15), paid = pago <= this.HOY && !(j === nv - 1 && i % 2 === 1);
+          vals.push({ n: j + 1, fecha, factura, monto, pago: paid ? pago : '', pdf: paid ? factura + '.pdf' : '', url: '' });
+        }
         return { nombre: p[0], partida: p[1], presu, vals };
       });
-      out[k] = { cfg: c, units, months, provs };
+      const r2 = this.rng(c.seed + 500), parks = [], deps = [], perS = Math.ceil(c.nPark / c.sot), perD = Math.ceil(c.nDep / c.sot);
+      for (let i = 0; i < c.nPark; i++) { const f = 1 + Math.floor(i / perS); parks.push({ t: 'est', id: 'E-' + this.pad(i + 1), f, m2: 12.5, price: c.pPark + (f === 1 ? 4000 : 0) + Math.floor(r2() * 3) * 500, st: 'd', dS: '' }); }
+      for (let i = 0; i < c.nDep; i++) { const m2 = 3 + Math.floor(r2() * 4) * .5; deps.push({ t: 'dep', id: 'D-' + this.pad(i + 1), f: 1 + Math.floor(i / perD), m2, price: Math.round(c.pDep * m2 / 4 / 500) * 500, st: 'd', dS: '' }); }
+      const pedidos = PED.map((p, i) => { const cant = p[0] === 'Servicio' ? 1 : Math.round(p[3] * c.esc), fecha = this.mIso(c.m0 + Math.floor(i * c.nm / PED.length), 4 + (i * 7) % 22); return this.mkPed({ fecha, ruc: this.ruc(p[1]), prov: p[1], tipo: p[0], item: p[2], cant, und: p[4], importe: Math.round(cant * p[5] * (p[0] === 'Servicio' ? c.esc + .5 : 1)), forma: this.FORMAS[(i + 3) % this.FORMAS.length], gar: i % 3 !== 1, pro: i % 4 !== 2 }); });
+      const D = out[k] = { cfg: c, units, parks, deps, months, provs, pedidos, boletas: [], seq: 1500 };
+      units.filter(u => u.st === 'v').forEach(u => this.client(D, u));
+      [...parks, ...deps].filter(p => p.st === 'd').forEach((p, i) => { if (i % 9 === 4) p.st = 's'; });
+      D.boletas.sort((a, b) => a.fecha < b.fecha ? -1 : a.fecha > b.fecha ? 1 : 0).forEach((b, i) => { b.n = 'B001-' + this.pad(1501 + i, 6); b.cons = b.used ? 'DET-' + this.pad(48200 + i, 6) : ''; });
+      D.seq = 1500 + D.boletas.length;
     }
     return (this._db = out);
   }
 
-  client(c, u) {
+  /* Ficha, cronograma, boletas e inmuebles adicionales de la venta de un departamento */
+  client(D, u) {
     if (u._c) return u._c;
-    const h = u.h, MES = this.MES, bol = (n) => 'B001-' + String(n).padStart(6, '0');
-    const ini = Math.round(u.price * (.2 + (h % 5) * .05) / 100) * 100;
-    const n = 6 + (h % 7), cuota = Math.round((u.price - ini) / n / 10) * 10, m0 = 1 + ((h >> 4) % 6), paidN = Math.max(0, Math.min(n, 10 - m0));
-    const letras = [{ c: 'Cuota inicial', vence: '15 ' + MES[m0] + ' 2026', monto: ini, boleta: bol(1200 + h % 6000), paid: true }];
-    for (let i = 1; i <= n; i++) { const mi = m0 + i; letras.push({ c: 'Letra ' + i + ' de ' + n, vence: '15 ' + MES[mi % 12] + ' ' + (2026 + Math.floor(mi / 12)), monto: cuota, boleta: i <= paidN ? bol(1200 + (h + i * 37) % 6000) : '—', paid: i <= paidN }); }
-    return (u._c = { name: this.NOM[h % this.NOM.length] + ' ' + this.APE[(h >> 3) % this.APE.length], seller: c.sellers[(h >> 5) % c.sellers.length], letras, pagado: ini + paidN * cuota, saldo: (n - paidN) * cuota, pend: n - paidN });
+    const c = D.cfg, h = u.h, N = this.NOM, A = this.APE, name = N[h % N.length] + ' ' + A[(h >> 3) % A.length];
+    const forma = h % 4 === 0 ? 'Contado' : 'Crédito', m0 = 1 + ((h >> 4) % 6), f0 = this.mIso(m0, 15), fSep = this.mIso(m0, 2 + h % 9), fMin = this.mIso(m0, 16 + h % 10), ext = [];
+    const take = (pool, t) => { const x = pool.find(p => p.st === 'd'); if (x) { x.st = 'v'; x.owner = u.id; ext.push({ t, id: x.id, ref: x, fecha: fSep, junto: true }); } };
+    if (h % 3 !== 2) take(D.parks, 'Estacionamiento');
+    if (h % 5 === 0) take(D.deps, 'Depósito');
+    const total = this.pv(u) + ext.reduce((t, e) => t + this.pv(e.ref), 0), ini = Math.round(total * (.2 + (h % 5) * .05) / 100) * 100;
+    const n = forma === 'Contado' ? 2 + (h % 3) : 6 + (h % 7), cuota = Math.round((total - ini) / n / 10) * 10, paidN = Math.max(0, Math.min(n, 10 - m0));
+    const bol = (fecha, concepto, monto, used) => { const b = { n: 'B001-' + this.pad(++D.seq, 6), fecha, uid: u.id, concepto, monto, cons: '', used }; D.boletas.push(b); return b; };
+    const letras = [{ c: 'Cuota inicial', vence: f0, monto: ini, paid: true, fPago: f0, pagado: ini, bol: bol(f0, 'Cuota inicial', ini, true) }];
+    for (let i = 1; i <= n; i++) { const v = this.mIso(m0 + i, 15), paid = i <= paidN, fp = paid ? this.addD(v, -((h + i) % 4)) : '', cn = 'Letra ' + i + ' de ' + n, mo = i === n ? total - ini - cuota * (n - 1) : cuota; letras.push({ c: cn, vence: v, monto: mo, paid, fPago: fp, pagado: paid ? mo : 0, bol: paid ? bol(fp, cn, mo, true) : null }); }
+    const nx = letras.find(l => !l.paid);
+    if (nx && (h % 3 === 0 || !D.demo)) { D.demo = 1; bol(this.addD(this.HOY, -(h % 6)), nx.c, nx.monto, false); }
+    const last = letras[letras.length - 1], d0 = forma === 'Contado' ? (last.paid ? last.fPago : '') : h % 3 === 0 ? this.addD(fMin, 60 + h % 20) : '';
+    const fDes = d0 && d0 <= this.HOY ? d0 : '', e0 = fDes && h % 2 === 0 ? this.addD(fDes, 25) : '', fEsc = e0 && e0 <= this.HOY ? e0 : '', afp = h % 4 === 1 ? Math.round(ini * .5 / 100) * 100 : 0, c2 = h % 5 < 2;
+    const slug = name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z]+/g, '.');
+    const DIR = ['Av. Primavera', 'Calle Los Cedros', 'Jr. Las Magnolias', 'Av. Del Parque', 'Calle Los Álamos', 'Av. La Encalada'], DIST = ['Santiago de Surco', 'Miraflores', 'San Borja', 'La Molina', 'Jesús María', 'Magdalena del Mar'];
+    const PROF = ['Ingeniería civil', 'Medicina', 'Contabilidad', 'Derecho', 'Comercio', 'Arquitectura', 'Administración', 'Docencia universitaria', 'Odontología', 'Ingeniería de sistemas'], NOT = ['Notaría Alvarado Rey', 'Notaría Montes Zegarra', 'Notaría Salcedo Luna'];
+    const F = {
+      name, dni: String(10000000 + (h * 7919) % 89999999), cony: c2 ? N[(h >> 2) % N.length] + ' ' + A[(h >> 6) % A.length] : '', dni2: c2 ? String(10000000 + (h * 104729) % 89999999) : '',
+      cel: '9' + String(10000000 + (h * 31) % 89999999), mail: slug + '@ejemplo.pe', dir: DIR[h % DIR.length] + ' ' + (100 + h % 900) + ', ' + DIST[(h >> 3) % DIST.length], prof: PROF[h % PROF.length], medio: this.MEDIO[(h >> 2) % this.MEDIO.length],
+      forma, moneda: h % 6 === 1 ? 'Dólares' : 'Soles', tc: '3.75', promo: this.desc(u) ? 'Descuento especial de campaña' : '', regalo: h % 4 === 2 ? 'Kit de cocina: campana y encimera' : '',
+      obsObra: h % 3 === 0 ? 'Cambiar tina por ducha en el baño principal. Punto eléctrico adicional en sala.' : '', obsPago: afp ? 'Parte de la cuota inicial se paga con retiro de AFP.' : '', pen: h % 9 === 4 ? 'Sí' : 'No', penImp: h % 9 === 4 ? '350' : '',
+      fSep, fMin, fEsc, kardex: fEsc ? 'K-' + (20000 + h % 9999) : '', notaria: NOT[h % NOT.length], fDes, afp: afp ? String(afp) : '', fAfp: afp ? this.addD(f0, -3) : ''
+    };
+    const p1 = this.addD(fMin, 7), p2 = fDes ? this.addD(fDes, 7) : '';
+    u.c1 = p1 <= this.HOY && h % 5 !== 3 ? p1 : ''; u.c2 = p2 && p2 <= this.HOY ? p2 : '';
+    return (u._c = { F, ext, letras, seller: c.sellers[(h >> 5) % c.sellers.length] });
+  }
+  /* Reparte el saldo entre las letras pendientes cuando cambia el precio de venta (descuento) */
+  rebal(u) {
+    const cl = u && u._c; if (!cl) return;
+    const base = this.pv(u) + cl.ext.filter(e => e.junto).reduce((t, e) => t + this.pv(e.ref), 0), L = cl.letras.filter(l => !l.x), P = L.filter(l => !l.paid);
+    if (!P.length) return;
+    const q = Math.max(0, Math.round((base - L.filter(l => l.paid).reduce((t, l) => t + l.monto, 0)) / P.length / 10) * 10);
+    P.forEach(l => { l.monto = q; });
+    P[P.length - 1].monto = Math.max(0, base - L.filter(l => l.paid).reduce((t, l) => t + l.monto, 0) - q * (P.length - 1));
+  }
+  /* Libera la venta de un departamento que deja de estar vendido */
+  release(D, u) {
+    const cl = u._c; if (!cl) return;
+    cl.ext.forEach(e => { e.ref.st = 'd'; e.ref.owner = null; });
+    D.boletas = D.boletas.filter(b => b.uid !== u.id);
+    delete u._c; delete u.cp; u.c1 = ''; u.c2 = '';
   }
 
   renderVals() {
-    const pr = this.props, s = { ...this.state, screen: pr.pantalla ?? this.state.screen, proj: pr.proyecto ?? this.state.proj, mod: pr.modulo ?? this.state.mod, email: this.state.email || (pr.embed ? 'usuario@inverplus.pe' : '') }, db = this.db(), D = db[s.proj] || db.eclat, c = D.cfg, $ = (n) => this.money(n);
-    const go = (patch) => () => { this.setState(patch); window.scrollTo(0, 0); };
-    const set = (k) => (e) => this.setState({ [k]: e.target.value });
+    const pr = this.props, s = { ...this.state, screen: pr.pantalla ?? this.state.screen, proj: pr.proyecto ?? this.state.proj, mod: pr.modulo ?? this.state.mod, email: this.state.email || (pr.embed ? 'usuario@inverplus.pe' : '') };
+    const db = this.db(), D = db[s.proj] || db.eclat, c = D.cfg, HOY = this.HOY, $ = (n) => this.money(n), fd = (x) => this.fd(x), up = () => this.forceUpdate(), h = React.createElement;
+    const go = (patch) => () => { this.setState({ menu: false, sheet: false, pay: null, ...patch }); window.scrollTo(0, 0); };
+    const setF = (form, k) => (e) => this.setState({ [form]: { ...this.state[form], [k]: e.target.value } });
     const sum = (a, f) => a.reduce((t, x) => t + f(x), 0);
     const pc = (x) => Math.max(0, Math.min(100, Math.round(x * 100))) + '%';
-    const lv = String(s.lv ?? this.props.loginVariant ?? '1');
-
-    const cells = [0, 1, 2, 3, 4, 5].map(i => { const on = s.focus && i === Math.min(s.code.length, 5); return { ch: i < s.code.length ? '●' : '', bdD: on ? '#F3F0EA' : 'rgba(243,240,234,.3)', bdL: on ? '#23221F' : '#C9C3B8', caret: on && i >= s.code.length }; });
+    const num = (n) => Number(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
+    const K = (label, value, sub, o) => ({ label, value, sub: sub || '', isBtn: !!o, isDiv: !o, go: o && o.go, cls: o && o.on ? 'on' : '' });
     const onSubmit = (e) => { e.preventDefault(); if (!/\S+@\S+\.\S+/.test(s.email) || s.code.length !== 6) return this.setState({ err: true }); this.setState({ screen: 'select', err: false, code: '' }); window.scrollTo(0, 0); };
-    const lvTabs = ['1', '2', '3', '4'].map(n => ({ n, bg: n === lv ? '#F3F0EA' : 'transparent', fg: n === lv ? '#23221F' : '#F3F0EA', go: () => this.setState({ lv: n, err: false }) }));
 
-    const stat = (k) => { const U = db[k].units, v = U.filter(u => u.st === 'v').length, sp = U.filter(u => u.st === 's').length; return { total: U.length, v, s: sp, d: U.length - v - sp, wv: pc(v / U.length), ws: pc(sp / U.length) }; };
-    const line = (k) => { const t = stat(k); return t.total + ' departamentos · ' + t.v + ' vendidos · ' + t.s + ' separados'; };
-    const st = stat(s.proj in db ? s.proj : 'eclat');
+    const cnt = (L) => { const v = L.filter(u => u.st === 'v').length, sp = L.filter(u => u.st === 's').length; return { total: L.length, v, s: sp, d: L.length - v - sp, wv: pc(v / L.length), ws: pc(sp / L.length) }; };
+    const line = (k) => { const t = cnt(db[k].units); return t.total + ' dptos · ' + t.v + ' vendidos · ' + t.s + ' separados'; };
+    const st = cnt(D.units);
 
+    /* ---- Lista de precios: departamentos, estacionamientos y depósitos ---- */
     const COL = { d: ['#FBFAF7', '#23221F', '#CFC9BD'], s: ['#D9B36A', '#23221F', '#D9B36A'], v: ['var(--ac,#A9492A)', '#FFFFFF', 'var(--ac,#A9492A)'] };
-    const ACT = { d: ['#23221F', '#FFFFFF', '#23221F'], s: COL.s, v: COL.v }, LBL = { d: 'Disponible', s: 'Separado', v: 'Vendido' };
-    const selId = s.sel[c.key] ?? D.units[Math.floor(D.units.length * .55)].id;
+    const ACT = { d: ['#23221F', '#FFFFFF', '#23221F'], s: COL.s, v: COL.v }, LBL = { d: 'Disponible', s: 'Separado', v: 'Vendido' }, LBLS = { d: 'Disponibles', s: 'Separados', v: 'Vendidos' };
+    const KIND = { dpto: 'Departamento', est: 'Estacionamiento', dep: 'Depósito' }, PLUR = { dpto: 'departamentos', est: 'estacionamientos', dep: 'depósitos' }, POOL = { dpto: D.units, est: D.parks, dep: D.deps };
+    const tipo = POOL[s.tipo[c.key]] ? s.tipo[c.key] : 'dpto', LIST = POOL[tipo], lst = cnt(LIST), flt = s.flt[c.key] || '', selKey = c.key + ':' + tipo;
+    const tipos = ['dpto', 'est', 'dep'].map(t => ({ label: KIND[t] + 's', n: POOL[t].length, cls: t === tipo ? 'on' : '', go: () => this.setState({ tipo: { ...s.tipo, [c.key]: t } }) }));
+    const setFlt = (k) => () => this.setState({ flt: { ...s.flt, [c.key]: flt === k ? '' : k } });
+    const selId = s.sel[selKey] ?? (tipo === 'dpto' ? D.units[Math.floor(D.units.length * .55)].id : LIST[0].id);
+    const SU = LIST.find(u => u.id === selId) || LIST[0];
+    const pick = (u) => () => this.setState({ sel: { ...s.sel, [selKey]: u.id } });
+    const niv = (u) => (tipo === 'dpto' ? 'Piso ' : 'Sótano ') + u.f;
+    const cell = (u) => ({ id: u.id, pk: Math.round(this.pv(u) / 1000) + 'k', bg: COL[u.st][0], fg: COL[u.st][1], bd: COL[u.st][2], ring: u.id === SU.id ? '2px solid #23221F' : 'none', op: flt && u.st !== flt ? .16 : 1, title: KIND[tipo] + ' ' + u.id + ' · ' + u.m2 + ' m² · ' + $(this.pv(u)) + ' · ' + LBL[u.st], sel: pick(u) });
     const floors = [];
-    for (let f = c.floors; f >= 1; f--) floors.push({ n: f, units: D.units.filter(u => u.f === f).map(u => ({ id: u.id, pk: Math.round(u.price / 1000) + 'k', bg: COL[u.st][0], fg: COL[u.st][1], bd: COL[u.st][2], ring: u.id === selId ? '2px solid #23221F' : 'none', title: 'Dpto ' + u.id + ' · ' + u.m2 + ' m² · ' + $(u.price) + ' · ' + LBL[u.st], sel: () => this.setState({ sel: { ...s.sel, [c.key]: u.id } }) })) });
-    const SU = D.units.find(u => u.id === selId) || D.units[0], suC = this.client(c, SU);
-    const su = { id: SU.id, piso: SU.f, m2: SU.m2 + ' m²', vista: SU.vista, price: $(SU.price), sold: SU.st === 'v', cliente: suC.name, vendedora: suC.seller };
-    const stOpts = ['d', 's', 'v'].map(k => ({ label: LBL[k], bg: SU.st === k ? ACT[k][0] : 'transparent', fg: SU.st === k ? ACT[k][1] : '#23221F', bd: SU.st === k ? ACT[k][2] : '#CFC9BD', set: () => { SU.st = k; this.forceUpdate(); } }));
+    if (tipo === 'dpto') for (let f = c.floors; f >= 1; f--) floors.push({ n: 'Piso ' + f, units: D.units.filter(u => u.f === f).map(cell) });
+    else for (let f = 1; f <= c.sot; f++) { const L = LIST.filter(u => u.f === f); for (let i = 0; i < L.length; i += 6) floors.push({ n: i ? '' : 'Sótano ' + f, units: L.slice(i, i + 6).map(cell) }); }
+    const legend = ['v', 's', 'd'].map(k => ({ label: LBL[k], n: lst[k], bg: COL[k][0], bd: COL[k][2], cls: flt === k ? 'on' : '', go: setFlt(k) }));
+    const fltRows = flt ? LIST.filter(u => u.st === flt).map(u => ({ id: u.id, niv: niv(u), m2: u.m2 + ' m²', vista: u.vista || '—', pv: $(this.pv(u)), sel: pick(u) })) : [];
+    const owner = tipo === 'dpto' ? SU : D.units.find(u => u.id === SU.owner), oc = owner && owner.st === 'v' ? this.client(D, owner) : null, dsc = this.desc(SU);
+    const su = {
+      kind: KIND[tipo], id: SU.id, rows: tipo === 'dpto' ? [{ k: 'Piso', v: SU.f }, { k: 'Área', v: SU.m2 + ' m²' }, { k: 'Vista', v: SU.vista }] : [{ k: 'Nivel', v: 'Sótano ' + SU.f }, { k: 'Área', v: SU.m2 + ' m²' }],
+      price: $(SU.price), desc: SU.dS, descPct: dsc ? '(' + (dsc / SU.price * 100).toFixed(1) + '%)' : '', pv: $(this.pv(SU)), onDesc: (e) => { SU.dS = e.target.value; this.rebal(owner); up(); },
+      hasInfo: !!oc && SU.st === 'v', info: oc ? (tipo === 'dpto' ? [{ k: 'Cliente', v: oc.F.name }, { k: 'Vendedora', v: oc.seller }] : [{ k: 'Vendido con', v: 'Dpto ' + owner.id }, { k: 'Cliente', v: oc.F.name }]) : [],
+      goCli: owner ? go({ screen: 'work', mod: 'clientes', ctab: tipo === 'dpto' ? 'crono' : 'venta', openClient: { ...s.openClient, [c.key]: owner.id } }) : null,
+      note: tipo !== 'dpto' && SU.st === 'v' && !oc ? 'Vendido sin cliente asignado. Asígnelo desde la ficha del cliente, en «Venta e inmuebles».' : ''
+    };
+    const stOpts = ['d', 's', 'v'].map(k => ({ label: LBL[k], bg: SU.st === k ? ACT[k][0] : 'transparent', fg: SU.st === k ? ACT[k][1] : '#23221F', bd: SU.st === k ? ACT[k][2] : '#CFC9BD', set: () => {
+      if (SU.st === k) return;
+      if (tipo === 'dpto') { if (SU.st === 'v') this.release(D, SU); }
+      else if (oc) { oc.ext = oc.ext.filter(e => e.ref !== SU); oc.letras = oc.letras.filter(l => l.x !== SU.id || l.paid); SU.owner = null; this.rebal(owner); }
+      SU.st = k; up();
+    } }));
 
-    const sold = D.units.filter(u => u.st === 'v'), cls = sold.map(u => ({ u, ...this.client(c, u) }));
-    const ventas = sum(sold, u => u.price), pagadoT = sum(cls, x => x.pagado);
-    const openId = s.openClient[c.key] ?? (sold[0] && sold[0].id);
-    const clients = cls.map(x => { const open = x.u.id === openId; return { name: x.name, unit: 'Dpto ' + x.u.id, vista: x.u.vista, seller: x.seller, price: $(x.u.price), m2: x.u.m2, pagado: $(x.pagado), porPagar: x.pend + ' letras · ' + $(x.saldo), open, chev: open ? '−' : '+', bg: open ? '#F3F0EA' : 'transparent', toggle: () => this.setState({ openClient: { ...s.openClient, [c.key]: open ? '' : x.u.id } }), letras: open ? x.letras.map(l => ({ c: l.c, vence: l.vence, monto: $(l.monto), boleta: l.boleta, estado: l.paid ? 'Pagada' : 'Por pagar', fg: l.paid ? '#6A665F' : '#23221F' })) : [] }; });
+    /* ---- Clientes ---- */
+    const tasa = parseFloat(s.tasa) || 0, det = (m) => Math.round(m * tasa / 100);
+    const sold = D.units.filter(u => u.st === 'v');
+    const cls = sold.map(u => { const cl = this.client(D, u), L = cl.letras, P = L.filter(l => !l.paid); return { u, cl, F: cl.F, total: this.pv(u) + sum(cl.ext, e => this.pv(e.ref)), pagado: sum(L, l => l.pagado || 0), saldo: sum(P, l => l.monto), pend: P.length }; });
+    const ventas = sum(cls, x => x.total), pagadoT = sum(cls, x => x.pagado);
+    const first = cls.find(x => x.pend && D.boletas.some(b => !b.used && b.uid === x.u.id)) || cls.find(x => x.pend) || cls[0], openId = s.openClient[c.key] ?? (first && first.u.id);
+    const CT = [['crono', 'Cronograma de pagos'], ['datos', 'Datos del cliente'], ['venta', 'Venta e inmuebles'], ['tramite', 'Trámite y fechas'], ['obs', 'Observaciones']];
+    const ctabs = CT.map(t => ({ label: t[1], cls: s.ctab === t[0] ? 'on' : '', go: () => this.setState({ ctab: t[0], pay: null }) }));
+    const clients = cls.map(x => {
+      const open = x.u.id === openId, F = x.F, cl = x.cl, u = x.u;
+      const o = { name: F.name, doc: 'DNI ' + F.dni + (F.cony ? ' · con ' + F.cony : ''), unit: 'Dpto ' + u.id, extra: cl.ext.map(e => e.id).join(' · '), vista: u.vista, m2: u.m2, seller: cl.seller, forma: F.forma + (F.moneda === 'Dólares' ? ' · US$' : ''), price: $(x.total), pagado: $(x.pagado), porPagar: x.pend ? x.pend + ' letras · ' + $(x.saldo) : 'Cancelado', open, chev: open ? '−' : '+', cls: open ? 'on' : '', toggle: () => this.setState({ openClient: { ...s.openClient, [c.key]: open ? '' : u.id }, pay: null }), letras: [] };
+      if (!open) return o;
+      o.letras = cl.letras.map((l, i) => {
+        const key = u.id + ':' + i, isForm = s.pay === key, row = { c: l.c, vence: fd(l.vence), monto: $(l.monto), fPago: l.paid ? fd(l.fPago) : '—', pagado: l.paid ? $(l.pagado) : '—', boleta: l.bol ? l.bol.n : '—', det: l.bol ? $(det(l.bol.monto)) : '—', paid: l.paid, due: !l.paid, form: isForm, payLbl: isForm ? 'Cancelar' : 'Registrar pago', pay: () => this.setState({ pay: isForm ? null : key, payF: { f: HOY, m: String(l.monto), b: '' } }) };
+        if (!isForm) return row;
+        const nb = s.payF.b.trim().toUpperCase(), found = nb ? D.boletas.find(b => b.n === nb) : null, m = parseFloat(s.payF.m) || 0;
+        const libres = D.boletas.filter(b => !b.used && b.uid === u.id);
+        row.bolOpts = libres.map(b => h('option', { key: b.n, value: b.n }, b.concepto + ' · ' + $(b.monto)));
+        row.chips = libres.map(b => ({ lbl: b.n + ' · ' + $(b.monto), pick: () => this.setState({ payF: { ...this.state.payF, b: b.n, m: String(b.monto) } }) }));
+        row.hasChips = libres.length > 0;
+        row.hint = found ? (found.used ? 'Esa boleta ya está asignada a otro pago.' : 'Boleta encontrada · importe ' + $(found.monto) + ' · detracción ' + $(det(found.monto)) + '. La detracción se jala de la boleta.') : nb ? 'Boleta nueva: se registrará con una detracción de ' + $(det(m)) + ' (' + tasa + '%).' : 'Escriba el N° de boleta. Si ya está registrada en Boletas de Venta, el importe y la detracción se jalan solos.';
+        row.save = (e) => {
+          e.preventDefault(); const pf = this.state.payF, mm = parseFloat(pf.m), n2 = pf.b.trim().toUpperCase(); if (!(mm > 0) || !pf.f) return;
+          let rec = n2 ? D.boletas.find(b => b.n === n2) : null; if (rec && rec.used) return;
+          if (rec) { rec.used = true; rec.concepto = l.c; } else if (n2) { rec = { n: n2, fecha: pf.f, uid: u.id, concepto: l.c, monto: mm, cons: '', used: true }; D.boletas.push(rec); }
+          l.paid = true; l.fPago = pf.f; l.pagado = mm; l.bol = rec; this.setState({ pay: null });
+        };
+        return row;
+      });
+      o.totMonto = $(sum(cl.letras, l => l.monto)); o.totDet = $(sum(cl.letras, l => l.bol ? det(l.bol.monto) : 0));
+      const B = (label, k, opt) => ({ label, value: F[k] ?? '', on: (e) => { F[k] = e.target.value; up(); }, ...opt });
+      const FORMS = {
+        datos: [B('Titular', 'name', { wide: 1 }), B('DNI del titular', 'dni', { im: 'numeric' }), B('Cónyuge o segundo titular', 'cony', { wide: 1, ph: 'Si compran ambos esposos' }), B('DNI del cónyuge', 'dni2', { im: 'numeric' }), B('Celular', 'cel', { type: 'tel' }), B('Correo', 'mail', { type: 'email' }), B('Dirección', 'dir', { wide: 1 }), B('Profesión', 'prof'), B('Medio de contacto', 'medio', { opts: this.MEDIO })],
+        venta: [B('Forma de venta', 'forma', { opts: ['Contado', 'Crédito'] }), B('Moneda de la venta', 'moneda', { opts: ['Soles', 'Dólares'] }), ...(F.moneda === 'Dólares' ? [B('Tipo de cambio de la venta', 'tc', { type: 'number', step: '0.001', im: 'decimal' })] : []), B('Promoción / Dscto', 'promo', { wide: 1 }), B('Regalo', 'regalo', { wide: 1 })],
+        tramite: [B('Fecha de separación', 'fSep', { type: 'date' }), B('Fecha de firma de minuta', 'fMin', { type: 'date' }), B('Fecha de firma de escritura', 'fEsc', { type: 'date' }), B('Kardex', 'kardex'), B('Notaría', 'notaria', { wide: 1 }), B('Fecha de desembolso', 'fDes', { type: 'date' }), B('AFP (importe)', 'afp', { type: 'number', im: 'decimal' }), B('Fecha de AFP', 'fAfp', { type: 'date' })],
+        obs: [B('Observación comercial para obra', 'obsObra', { area: 1, full: 1, ph: 'Modificaciones del departamento vendido' }), B('Observación de pago', 'obsPago', { area: 1, full: 1 }), B('Penalidad', 'pen', { opts: ['No', 'Sí'] }), ...(F.pen === 'Sí' ? [B('Importe de penalidad', 'penImp', { type: 'number', im: 'decimal' })] : [])]
+      };
+      o.form = this.grid(FORMS[s.ctab] || []);
+      const tc = parseFloat(F.tc) || 0;
+      o.usd = F.moneda === 'Dólares' && tc ? 'Venta en dólares: US$ ' + num(Math.round(x.total / tc)) + ' al tipo de cambio ' + F.tc + ' (equivale a ' + $(x.total) + ').' : '';
+      o.inm = [{ name: 'Departamento ' + u.id, note: u.m2 + ' m² · vista ' + u.vista.toLowerCase(), lista: $(u.price), desc: this.desc(u) ? '− ' + $(this.desc(u)) : '—', pv: $(this.pv(u)) }, ...cl.ext.map(e => ({ name: e.t + ' ' + e.id, note: e.junto ? 'Comprado junto con el departamento' : 'Comprado el ' + fd(e.fecha) + ' · con sus propias letras', lista: $(e.ref.price), desc: this.desc(e.ref) ? '− ' + $(this.desc(e.ref)) : '—', pv: $(this.pv(e.ref)) }))];
+      const X = s.ex, pool = (X.t === 'Depósito' ? D.deps : D.parks).filter(p => p.st !== 'v'), xr = pool.find(p => p.id === X.id);
+      const E = (label, k, opt) => ({ label, value: X[k], on: setF('ex', k), ...opt });
+      o.exForm = this.grid([{ label: 'Tipo', value: X.t, opts: ['Estacionamiento', 'Depósito'], on: (e) => this.setState({ ex: { ...X, t: e.target.value, id: '', p: '' } }) }, E('Unidad disponible', 'id', { opts: [['', 'Seleccione…'], ...pool.map(p => [p.id, p.id + ' · ' + $(p.price)])] }), E('Precio de venta', 'p', { type: 'number', im: 'decimal', ph: xr ? 'Lista: ' + $(xr.price) : 'Precio de lista' }), E('Fecha de compra', 'f', { type: 'date' }), E('Cuota inicial', 'ini', { type: 'number', im: 'decimal', ph: '0' }), E('N° de letras', 'n', { type: 'number', im: 'numeric' })]);
+      o.addExtra = (e) => {
+        e.preventDefault(); const Y = this.state.ex, ref = (Y.t === 'Depósito' ? D.deps : D.parks).find(p => p.id === Y.id && p.st !== 'v'); if (!ref) return;
+        const price = parseFloat(Y.p) > 0 ? parseFloat(Y.p) : ref.price, f = Y.f || HOY, n = Math.max(0, Math.min(36, parseInt(Y.n) || 0)), ini = n ? Math.max(0, Math.min(price, parseFloat(Y.ini) || 0)) : price;
+        if (price > ref.price) ref.price = price; ref.dS = price < ref.price ? String(ref.price - price) : ''; ref.st = 'v'; ref.owner = u.id;
+        cl.ext.push({ t: Y.t, id: ref.id, ref, fecha: f, junto: false });
+        const tag = (Y.t === 'Depósito' ? 'Depósito ' : 'Estac. ') + ref.id + ' · ', L = (cc, vence, monto) => cl.letras.push({ c: tag + cc, vence, monto, paid: false, fPago: '', pagado: 0, bol: null, x: ref.id });
+        if (ini > 0) L(n ? 'Cuota inicial' : 'Pago único', f, ini);
+        if (n) { const q = Math.round((price - ini) / n / 10) * 10; for (let i = 1; i <= n; i++) L('Letra ' + i + ' de ' + n, this.addD(f, 30 * i), q); }
+        this.setState({ ex: { t: Y.t, id: '', p: '', f: '', ini: '', n: '6' }, ctab: 'crono' });
+      };
+      return o;
+    });
 
-    const pcts = s.pct[c.key] || {};
-    let comT = 0;
-    const sellers = c.sellers.map(name => { const mine = cls.filter(x => x.seller === name), raw = pcts[name] ?? '2', p = parseFloat(raw) || 0, v = sum(mine, x => x.u.price); comT += v * p / 100; return { name, count: mine.length, ventas: $(v), pct: raw, com: $(v * p / 100), onPct: (e) => this.setState({ pct: { ...s.pct, [c.key]: { ...pcts, [name]: e.target.value } } }), rows: mine.map(x => ({ unit: 'Dpto ' + x.u.id, price: $(x.u.price), com: $(x.u.price * p / 100) })) }; });
+    /* ---- Boletas de venta y detracción ---- */
+    const nameOf = (uid) => { const u = D.units.find(z => z.id === uid); return u && u._c ? u._c.F.name : '—'; };
+    const q = s.bq.trim().toLowerCase(), allB = D.boletas.map(b => ({ b, cli: nameOf(b.uid) })).sort((a, z) => a.b.used !== z.b.used ? (a.b.used ? 1 : -1) : a.b.n < z.b.n ? 1 : -1);
+    const filB = q ? allB.filter(z => (z.b.n + ' ' + z.cli + ' dpto ' + z.b.uid).toLowerCase().includes(q)) : allB;
+    const boletas = filB.slice(0, 40).map(({ b, cli }) => ({ n: b.n, fecha: fd(b.fecha), cli, unit: 'Dpto ' + b.uid, concepto: b.concepto, est: b.used ? '' : 'Sin asignar a un pago', monto: $(b.monto), det: $(det(b.monto)), cons: b.cons || 'Pendiente' }));
+    const bolNote = filB.length > 40 ? 'Se muestran las 40 boletas más recientes de ' + filB.length + '. Use el buscador para ubicar una boleta.' : filB.length + (filB.length === 1 ? ' boleta.' : ' boletas.');
+    const BF = (label, k, opt) => ({ label, value: s.bol[k], on: setF('bol', k), ...opt });
+    const bolFields = this.grid([BF('N° de boleta', 'n', { ph: 'B001-000000' }), BF('Fecha de emisión', 'f', { type: 'date' }), BF('Cliente · inmueble', 'uid', { wide: 1, opts: [['', 'Seleccione…'], ...cls.map(x => [x.u.id, 'Dpto ' + x.u.id + ' · ' + x.F.name])] }), BF('Importe', 'm', { type: 'number', im: 'decimal' })]);
+    const addBol = (e) => { e.preventDefault(); const b = this.state.bol, m = parseFloat(b.m), n = b.n.trim().toUpperCase(); if (!n || !b.uid || !(m > 0) || D.boletas.some(z => z.n === n)) return; D.boletas.push({ n, fecha: b.f || HOY, uid: b.uid, concepto: 'Por asignar a una letra', monto: m, cons: '', used: false }); this.setState({ bol: { n: '', f: '', uid: '', m: '' }, bolForm: false }); };
 
-    const mSel = Math.min(s.mes[c.key] ?? D.months.length - 1, D.months.length - 1), mt = D.months.map(m => sum(m.g, g => g.monto)), mx = Math.max(...mt);
-    let acc = c.terreno;
-    const months = D.months.map((m, i) => { acc += mt[i]; return { label: m.label, total: $(mt[i]), acum: $(acc), w: pc(mt[i] / mx), bg: i === mSel ? '#EAE5DB' : 'transparent', fw: i === mSel ? 700 : 500, sel: () => this.setState({ mes: { ...s.mes, [c.key]: i } }) }; });
-    const consT = acc - c.terreno, M = D.months[mSel];
-    const cons = { terreno: $(c.terreno), terrFecha: c.terrFecha, months, mesSel: M.label, mesTotal: $(mt[mSel]), gastos: M.g.slice().sort((a, b) => b.dia - a.dia).map(g => ({ fecha: String(g.dia).padStart(2, '0') + ' ' + M.label.slice(0, 3), concepto: g.concepto, monto: $(g.monto) })) };
-    const addGasto = (e) => { e.preventDefault(); const monto = parseFloat(s.gMonto); if (!s.gConcepto.trim() || !(monto > 0)) return; M.g.push({ dia: Math.min(31, Math.max(1, parseInt(s.gDia) || 1)), concepto: s.gConcepto.trim(), monto }); this.setState({ gDia: '', gConcepto: '', gMonto: '' }); };
+    /* ---- Vendedoras y comisiones: % por vista y forma de venta, pago 60% / 40% ---- */
+    const RK = ['Externa|Contado', 'Externa|Crédito', 'Interna|Contado', 'Interna|Crédito'], RT = { 'Externa|Contado': '2.5', 'Externa|Crédito': '2', 'Interna|Contado': '3', 'Interna|Crédito': '2.5', ...(s.rates[c.key] || {}) };
+    const rates = RK.map(k => ({ label: 'Vista ' + k.toLowerCase().replace('|', ' · '), v: RT[k], on: (e) => this.setState({ rates: { ...s.rates, [c.key]: { ...(s.rates[c.key] || {}), [k]: e.target.value } } }) }));
+    let comT = 0, comP = 0;
+    const openS = s.openSel[c.key] ?? c.sellers[0];
+    const sellers = c.sellers.map(name => {
+      const mine = cls.filter(x => x.cl.seller === name), open = openS === name; let tot = 0, pag = 0;
+      const rows = mine.map(x => {
+        const u = x.u, F = x.F, raw = u.cp ?? RT[u.vista + '|' + F.forma], com = this.pv(u) * (parseFloat(raw) || 0) / 100, a = com * .6, b = com * .4; tot += com; pag += (u.c1 ? a : 0) + (u.c2 ? b : 0);
+        return { unit: 'Dpto ' + u.id, cond: u.vista + ' · ' + F.forma, price: $(this.pv(u)), pct: raw, onPct: (e) => { u.cp = e.target.value; up(); }, com: $(com), m1: $(a), m2: $(b), f1: u.c1 || '', f2: u.c2 || '', onF1: (e) => { u.c1 = e.target.value; up(); }, onF2: (e) => { u.c2 = e.target.value; up(); },
+          h1: u.c1 ? 'Pagado' : F.fMin && F.fMin <= HOY ? 'Por pagar · minuta ' + fd(F.fMin) : 'Minuta pendiente', h2: u.c2 ? 'Pagado' : F.fDes ? 'Por pagar · desembolso ' + fd(F.fDes) : 'Desembolso pendiente' };
+      });
+      comT += tot; comP += pag;
+      return { name, count: mine.length, ventas: $(sum(mine, x => this.pv(x.u))), com: $(tot), pag: $(pag), pend: $(tot - pag), rows: open ? rows : [], open, chev: open ? '−' : '+', togLbl: open ? 'Ocultar el detalle de ventas' : 'Ver las ' + mine.length + ' ventas y sus comisiones', toggle: () => this.setState({ openSel: { ...s.openSel, [c.key]: open ? '' : name } }) };
+    });
 
+    /* ---- Construcción: el terreno va aparte; los gastos parten del mes 1 ---- */
+    const mSel = Math.min(s.mes[c.key] ?? D.months.length - 1, D.months.length - 1), byT = (g, t) => sum(g.filter(x => x.tipo === t), x => x.monto);
+    const mt = D.months.map(m => sum(m.g, g => g.monto)), mx = Math.max(...mt, 1);
+    let acc = 0;
+    const months = D.months.map((m, i) => { acc += mt[i]; return { n: 'Mes ' + (i + 1), label: m.label, total: $(mt[i]), acum: $(acc), wO: pc(byT(m.g, 'Obra') / mx), wC: pc(byT(m.g, 'Comercial') / mx), wA: pc(byT(m.g, 'Administrativo') / mx), cls: i === mSel ? 'on' : '', sel: () => { this.setState({ mes: { ...s.mes, [c.key]: i } }); if (window.innerWidth <= 860) setTimeout(() => { const el = document.getElementById('gastos-dia'); el && el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 80); } }; });
+    const consT = acc, M = D.months[mSel], allG = D.months.flatMap(m => m.g);
+    const cons = { terreno: $(c.terreno), terrFecha: c.terrFecha, months, total: $(consT), mesSel: 'Mes ' + (mSel + 1) + ' · ' + M.label, mesTotal: $(mt[mSel]),
+      tipos: this.TIPOS.map(t => { const v = byT(allG, t); return { t, v: $(v), p: (consT ? v / consT * 100 : 0).toFixed(1) + '%', fx: Math.max(v, 1), col: this.TCOL[t] }; }),
+      gastos: M.g.slice().sort((a, b) => b.dia - a.dia).map(g => ({ fecha: this.pad(g.dia) + ' ' + M.label, concepto: g.concepto, tipo: g.tipo, monto: $(g.monto), onTipo: (e) => { g.tipo = e.target.value; up(); } })) };
+    const addGasto = (e) => { e.preventDefault(); const G = this.state.g, monto = parseFloat(G.monto); if (!G.concepto.trim() || !(monto > 0)) return; M.g.push({ dia: Math.min(31, Math.max(1, parseInt(G.dia) || 1)), concepto: G.concepto.trim(), tipo: G.tipo, monto }); this.setState({ g: { dia: '', concepto: '', tipo: G.tipo, monto: '' } }); };
+
+    /* ---- Proveedores: valorizaciones con PDF de la factura y fecha de pago ---- */
     const openP = s.openProv[c.key] ?? 0;
-    const provs = D.provs.map((p, i) => { const pag = sum(p.vals, v => v.monto), last = p.vals[p.vals.length - 1], open = openP === i; return { nombre: p.nombre, partida: p.partida, presu: $(p.presu), ultVal: last ? 'N° ' + last.n + ' · ' + $(last.monto) : 'Sin valorizaciones', factura: last ? last.factura : '—', pagado: $(pag), saldo: $(p.presu - pag), w: pc(pag / p.presu), open, chev: open ? '−' : '+', bg: open ? '#F3F0EA' : 'transparent', toggle: () => this.setState({ openProv: { ...s.openProv, [c.key]: open ? -1 : i }, vFactura: '', vMonto: '' }), vals: open ? p.vals.map(v => ({ n: 'Valorización N° ' + v.n, fecha: v.fecha, factura: v.factura, monto: $(v.monto) })) : [], addVal: (e) => { e.preventDefault(); const monto = parseFloat(s.vMonto); if (!(monto > 0)) return; p.vals.push({ n: p.vals.length + 1, fecha: '24 nov 2026', factura: s.vFactura.trim() || '—', monto }); this.setState({ vFactura: '', vMonto: '' }); } }; });
-    const presuT = sum(D.provs, p => p.presu), pagT = sum(D.provs, p => sum(p.vals, v => v.monto));
-    const addProv = (e) => { e.preventDefault(); const presu = parseFloat(s.pPresu); if (!s.pNombre.trim() || !(presu > 0)) return; D.provs.push({ nombre: s.pNombre.trim(), partida: s.pPartida.trim() || 'Partida por definir', presu, vals: [] }); this.setState({ pNombre: '', pPartida: '', pPresu: '', provForm: false, openProv: { ...s.openProv, [c.key]: D.provs.length - 1 } }); };
+    const provs = D.provs.map((p, i) => {
+      const valT = sum(p.vals, v => v.monto), pag = sum(p.vals.filter(v => v.pago), v => v.monto), last = p.vals[p.vals.length - 1], open = openP === i;
+      return { nombre: p.nombre, partida: p.partida, presu: $(p.presu), ultVal: last ? 'N° ' + last.n + ' · ' + $(last.monto) : 'Sin valorizaciones', factura: last ? last.factura : '—', pagado: $(pag), porPagar: valT - pag > 0 ? $(valT - pag) + ' por pagar' : '', saldo: $(p.presu - valT), w: pc(pag / p.presu), open, chev: open ? '−' : '+', cls: open ? 'on' : '',
+        toggle: () => this.setState({ openProv: { ...s.openProv, [c.key]: open ? -1 : i }, val: { factura: '', monto: '', pago: '', pdf: null } }),
+        vals: open ? p.vals.map(v => ({ n: 'Valorización N° ' + v.n, fecha: fd(v.fecha), factura: v.factura, monto: $(v.monto), pago: v.pago, onPago: (e) => { v.pago = e.target.value; up(); }, pdf: v.pdf, url: v.url, hasUrl: !!v.url, hasName: !!v.pdf && !v.url, noPdf: !v.pdf, onPdf: (e) => { const f = e.target.files && e.target.files[0]; if (!f) return; v.pdf = f.name; v.url = URL.createObjectURL(f); up(); } })) : [],
+        addVal: (e) => { e.preventDefault(); const V = this.state.val, monto = parseFloat(V.monto); if (!(monto > 0)) return; p.vals.push({ n: p.vals.length + 1, fecha: HOY, factura: V.factura.trim() || '—', monto, pago: V.pago, pdf: V.pdf ? V.pdf.name : '', url: V.pdf ? V.pdf.url : '' }); this.setState({ val: { factura: '', monto: '', pago: '', pdf: null } }); } };
+    });
+    const presuT = sum(D.provs, p => p.presu), valTT = sum(D.provs, p => sum(p.vals, v => v.monto)), pagT = sum(D.provs, p => sum(p.vals.filter(v => v.pago), v => v.monto));
+    const addProv = (e) => { e.preventDefault(); const P = this.state.pv, presu = parseFloat(P.presu); if (!P.nombre.trim() || !(presu > 0)) return; D.provs.push({ nombre: P.nombre.trim(), partida: P.partida.trim() || 'Partida por definir', presu, vals: [] }); this.setState({ pv: { nombre: '', partida: '', presu: '' }, provForm: false, openProv: { ...s.openProv, [c.key]: D.provs.length - 1 } }); };
+    const onVPdf = (e) => { const f = e.target.files && e.target.files[0]; if (f) this.setState({ val: { ...this.state.val, pdf: { name: f.name, url: URL.createObjectURL(f) } } }); };
 
+    /* ---- Pedidos: compras de materiales y servicios ---- */
+    const compras = D.pedidos.filter(p => p.tipo === 'Compra'), serv = D.pedidos.filter(p => p.tipo === 'Servicio');
+    const mats = Object.values(compras.reduce((a, p) => { const k = p.item + '|' + p.und, o = a[k] || (a[k] = { item: p.item, und: p.und, cant: 0, imp: 0, n: 0 }); o.cant += p.cant; o.imp += p.importe; o.n++; return a; }, {})).map(m => ({ item: m.item, cant: num(m.cant), und: m.und, sub: m.n + (m.n === 1 ? ' pedido · ' : ' pedidos · ') + $(m.imp) }));
+    if (serv.length) mats.push({ item: 'Servicios contratados', cant: serv.length, und: serv.length === 1 ? 'servicio' : 'servicios', sub: $(sum(serv, p => p.importe)) });
+    const ordP = D.pedidos.map((p, i) => ({ p, i })).sort((a, b) => a.p.fecha < b.p.fecha ? 1 : -1), openPd = s.openPed[c.key] ?? (ordP[0] ? ordP[0].i : -1);
+    const paidOf = (p) => sum(p.pagos.filter(g => g.paid), g => g.monto);
+    const pedidos = ordP.map(({ p, i }) => {
+      const pag = paidOf(p), open = openPd === i;
+      return { fecha: fd(p.fecha), prov: p.prov, ruc: p.ruc || '—', item: p.item, tipo: p.tipo, cant: p.tipo === 'Servicio' ? '—' : num(p.cant) + ' ' + p.und, importe: $(p.importe), forma: p.forma, estado: pag >= p.importe - .5 ? 'Pagado' : 'Pagado ' + $(pag) + ' · saldo ' + $(p.importe - pag), docs: 'Garantía: ' + (p.gar ? 'Sí' : 'No') + ' · Protocolos: ' + (p.pro ? 'Sí' : 'No'), open, chev: open ? '−' : '+', cls: open ? 'on' : '', toggle: () => this.setState({ openPed: { ...s.openPed, [c.key]: open ? -1 : i } }),
+        pagos: open ? p.pagos.map(g => ({ c: g.c, fecha: g.fecha, onFecha: (e) => { g.fecha = e.target.value; up(); }, monto: $(g.monto), estado: g.paid ? 'Pagado' : 'Pendiente', cls: g.paid ? 'ok' : '', toggle: () => { g.paid = !g.paid; up(); } })) : [],
+        gar: p.gar ? 'Sí' : 'No', gCls: p.gar ? 'ok' : '', tGar: () => { p.gar = !p.gar; up(); }, pro: p.pro ? 'Sí' : 'No', pCls: p.pro ? 'ok' : '', tPro: () => { p.pro = !p.pro; up(); } };
+    });
+    const PF = (label, k, opt) => ({ label, value: s.ped[k], on: setF('ped', k), ...opt });
+    const pedFields = this.grid([PF('Fecha', 'fecha', { type: 'date' }), PF('RUC', 'ruc', { im: 'numeric', ph: '11 dígitos' }), PF('Proveedor', 'prov', { wide: 1 }), PF('Tipo', 'tipo', { opts: ['Compra', 'Servicio'] }), PF('Pedido o servicio', 'item', { wide: 1, ph: 'Ej. Cemento Portland tipo I', dl: [...new Set(D.pedidos.map(p => p.item))] }), PF('Cantidad', 'cant', { type: 'number', im: 'decimal', step: 'any' }), PF('Unidad', 'und', { opts: this.UND }), PF('Importe de la compra o servicio', 'importe', { type: 'number', im: 'decimal', step: 'any' }), PF('Forma de pago', 'forma', { wide: 1, opts: this.FORMAS }), PF('Fecha de entrega', 'entrega', { type: 'date' }), PF('¿Envió carta de garantía?', 'gar', { opts: ['No', 'Sí'] }), PF('¿Envió protocolos?', 'pro', { opts: ['No', 'Sí'] })]);
+    const addPed = (e) => { e.preventDefault(); const P = this.state.ped, importe = parseFloat(P.importe); if (!P.prov.trim() || !P.item.trim() || !(importe > 0)) return; D.pedidos.push(this.mkPed({ fecha: P.fecha || HOY, ruc: P.ruc.trim(), prov: P.prov.trim(), tipo: P.tipo, item: P.item.trim(), cant: P.tipo === 'Servicio' ? 1 : parseFloat(P.cant) || 0, und: P.tipo === 'Servicio' ? 'servicio' : P.und, importe, forma: P.forma, entrega: P.entrega, gar: P.gar === 'Sí', pro: P.pro === 'Sí' })); this.setState({ ped: { ...P, ruc: '', prov: '', item: '', cant: '', importe: '', entrega: '' }, pedForm: false, openPed: { ...s.openPed, [c.key]: D.pedidos.length - 1 } }); };
+    const pedT = sum(D.pedidos, p => p.importe), pedP = sum(D.pedidos, paidOf);
+
+    /* ---- Perfil económico y balance ---- */
     const util = ventas - c.terreno - consT;
-    const pe = { label: c.ventasLabel, labelLower: c.ventasLabel.toLowerCase(), ventas: $(ventas), terreno: $(c.terreno), cons: $(consT), util: $(util), margen: (ventas ? util / ventas * 100 : 0).toFixed(1) + '%', wT: pc(c.terreno / ventas), wC: pc(consT / ventas), pT: (c.terreno / ventas * 100).toFixed(1) + '%', pC: (consT / ventas * 100).toFixed(1) + '%' };
-
-    const agg = (k) => { const d = db[k], cf = d.cfg; return { name: cf.name, ing: sum(d.units.filter(u => u.st === 'v'), u => this.client(cf, u).pagado), gas: cf.terreno + sum(d.months, m => sum(m.g, g => g.monto)), ord: cf.ord, gar: cf.gar }; };
+    const pe = { label: c.ventasLabel, labelLower: c.ventasLabel.toLowerCase(), ventas: $(ventas), terreno: $(c.terreno), cons: $(consT), util: $(util), margen: (ventas ? util / ventas * 100 : 0).toFixed(1) + '%', wT: pc(c.terreno / ventas), wC: pc(consT / ventas), pT: (c.terreno / ventas * 100).toFixed(1) + '%', pC: (consT / ventas * 100).toFixed(1) + '%', nota: c.ventasLabel + ': precio de venta de departamentos, estacionamientos y depósitos vendidos, ya con sus descuentos. El terreno se muestra aparte de la construcción.' };
+    const agg = (k) => { const d = db[k], cf = d.cfg; return { name: cf.name, ing: sum(d.units.filter(u => u.st === 'v'), u => sum(this.client(d, u).letras, l => l.pagado || 0)), gas: cf.terreno + sum(d.months, m => sum(m.g, g => g.monto)), ord: cf.ord, gar: cf.gar }; };
     const A = [agg('eclat'), agg('essenziale')];
     const blk = (title, f, note, dark) => { const v = A.map(f), top = Math.max(...v); return { title, note, total: $(v[0] + v[1]), bg: dark ? '#1C1B1A' : '#FBFAF7', fg: dark ? '#F3F0EA' : '#23221F', line: dark ? 'rgba(243,240,234,.2)' : '#E6E1D8', bar: dark ? '#F3F0EA' : 'var(--ac,#A9492A)', rows: A.map((a, i) => ({ name: a.name, value: $(v[i]), w: pc(v[i] / top) })) }; };
     const bal = [blk('Ingresos por Proyecto', a => a.ing, 'Monto pagado por clientes', true), blk('Gastos por Proyecto', a => a.gas, 'Compra de terreno y construcción', true), blk('Saldo Ctas Ordinarias', a => a.ord, '', false), blk('Saldo Ctas Garantias', a => a.gar, '', false)];
 
+    /* ---- Navegación ---- */
     const isBal = s.mod === 'balance';
-    const link = (label, mod, sub) => ({ isLink: true, isGroup: false, label, pl: sub ? '24px' : '12px', bg: s.mod === mod ? 'rgba(243,240,234,.12)' : 'transparent', bar: s.mod === mod ? 'var(--ac,#A9492A)' : 'transparent', fw: s.mod === mod ? 700 : 500, go: go({ screen: 'work', mod }) });
-    const nav = isBal ? [link('Balance Empresa', 'balance')] : [{ isGroup: true, isLink: false, label: 'Ventas' }, link('Lista de Precios', 'precios', 1), link('Clientes', 'clientes', 1), link('Vendedoras', 'vendedoras', 1), { isGroup: true, isLink: false, label: 'Obra y resultado' }, link('Construcción', 'construccion', 1), link('Proveedores', 'proveedores', 1), link('Perfil Económico', 'perfil', 1)];
-    const T = { precios: ['Ventas', 'Lista de Precios'], clientes: ['Ventas', 'Clientes'], vendedoras: ['Ventas', 'Vendedoras'], construccion: ['', 'Construcción'], proveedores: ['', 'Proveedores'], perfil: ['', 'Perfil Económico'], balance: ['', 'Balance Empresa'] }[s.mod] || ['', ''];
-    const K = (label, value, sub) => ({ label, value, sub: sub || '' });
+    const MODS = [['precios', 'Ventas', 'Lista de Precios', 'Departamentos, estacionamientos y depósitos: vendidos y separados', st.v + ' / ' + st.total + ' vendidos'], ['clientes', 'Ventas', 'Clientes', 'Ficha del cliente, inmuebles comprados, cronograma de letras y pagos', cls.length + ' clientes'], ['boletas', 'Ventas', 'Boletas de Venta', 'Boletas emitidas y su detracción', D.boletas.length + ' boletas'], ['vendedoras', 'Ventas', 'Vendedoras', '% de comisión por venta y pago 60% minuta · 40% desembolso', $(comT - comP) + ' por pagar'], ['construccion', '', 'Construcción', 'Terreno aparte, gastos mes a mes y por tipo: obra, comercial, administrativo', this.moneyM(consT) + ' en obra'], ['proveedores', '', 'Proveedores', 'Contratistas, valorizaciones, factura en PDF, fecha de pago y saldo', D.provs.length + ' contratistas'], ['pedidos', '', 'Pedidos', 'Compras de materiales y servicios, pagos y cartas de garantía', D.pedidos.length + ' pedidos'], ['perfil', '', 'Perfil Económico', c.ventasLabel + ' − Compra de terreno − Construcción = Utilidad', 'Utilidad ' + this.moneyM(util)]];
+    const hubRows = MODS.map((m, i) => ({ num: this.pad(i + 1), grp: m[1], title: m[2], desc: m[3], val: m[4], go: go({ screen: 'work', mod: m[0] }) }));
+    const link = (label, mod, top) => ({ isLink: true, isGroup: false, label, cls: (s.mod === mod ? 'on' : '') + (top ? ' top' : ''), go: go({ screen: 'work', mod }) }), grp = (label) => ({ isGroup: true, isLink: false, label });
+    const nav = isBal ? [link('Balance Empresa', 'balance', 1)] : [grp('Ventas'), ...MODS.slice(0, 4).map(m => link(m[2], m[0])), grp('Obra y resultado'), ...MODS.slice(4).map(m => link(m[2], m[0]))];
+    const tab = (label, mod) => ({ label, cls: s.mod === mod && !s.menu ? 'on' : '', go: go({ screen: 'work', mod }) }), menuTab = { label: 'Menú', cls: s.menu ? 'on' : '', go: () => this.setState({ menu: !s.menu }) };
+    const tabs = isBal ? [{ label: 'Proyectos', cls: '', go: go({ screen: 'select' }) }, tab('Balance', 'balance'), menuTab] : [tab('Precios', 'precios'), tab('Clientes', 'clientes'), tab('Obra', 'construccion'), tab('Perfil', 'perfil'), menuTab];
+    const TT = { vendedoras: 'Vendedoras · Comisiones', balance: 'Balance Empresa' }, mi = MODS.find(m => m[0] === s.mod);
+    const modTitle = TT[s.mod] || (mi ? mi[2] : ''), crumb = isBal ? 'Empresa' : c.name + (mi && mi[1] ? ' · ' + mi[1] : '');
     const kpis = ({
-      precios: [K('Total departamentos', st.total, c.floors + ' pisos'), K('Disponibles', st.d, pc(st.d / st.total) + ' del total'), K('Separados', st.s, st.ws + ' del total'), K('Vendidos', st.v, st.wv + ' del total')],
+      precios: [K('Total ' + PLUR[tipo], lst.total, tipo === 'dpto' ? c.floors + ' pisos' : c.sot + ' sótanos', { go: () => this.setState({ flt: { ...s.flt, [c.key]: '' } }), on: false }), K('Disponibles', lst.d, pc(lst.d / lst.total) + ' del total', { go: setFlt('d'), on: flt === 'd' }), K('Separados', lst.s, lst.ws + ' del total', { go: setFlt('s'), on: flt === 's' }), K('Vendidos', lst.v, lst.wv + ' del total', { go: setFlt('v'), on: flt === 'v' })],
       clientes: [K('Clientes', cls.length), K('Precio de venta', $(ventas)), K('Monto pagado', $(pagadoT)), K('Letras por pagar', $(sum(cls, x => x.saldo)), sum(cls, x => x.pend) + ' letras')],
-      vendedoras: [K('Vendedoras', c.sellers.length), K('Departamentos vendidos', sold.length), K('Ventas', $(ventas)), K('Comisión a pagar', $(comT))],
-      construccion: [K('Compra del terreno', $(c.terreno), c.terrFecha), K('Gastos del mes', $(mt[mSel]), M.label), K('Construcción', $(consT), D.months.length + ' meses de obra'), K('Acumulado', $(acc), 'Terreno + construcción')],
-      proveedores: [K('Contratistas', D.provs.length), K('Presupuesto aprobado', $(presuT)), K('Acumulado pagado', $(pagT), pc(pagT / presuT) + ' del presupuesto'), K('Saldo', $(presuT - pagT))]
+      boletas: [K('Boletas emitidas', D.boletas.length), K('Importe en boletas', $(sum(D.boletas, b => b.monto))), K('Detracción', $(sum(D.boletas, b => det(b.monto))), 'Tasa ' + tasa + '%'), K('Sin asignar a un pago', D.boletas.filter(b => !b.used).length, 'Listas para jalar desde Clientes')],
+      vendedoras: [K('Vendedoras', c.sellers.length, sold.length + ' departamentos vendidos'), K('Comisión total', $(comT)), K('Comisión pagada', $(comP)), K('Comisión por pagar', $(comT - comP))],
+      construccion: [K('Compra del terreno', $(c.terreno), 'Gasto aparte · ' + c.terrFecha), K('Gastos del mes', $(mt[mSel]), 'Mes ' + (mSel + 1) + ' · ' + M.label), K('Construcción acumulada', $(consT), D.months.length + ' meses de obra'), K('Promedio mensual', $(consT / D.months.length), 'Obra + comercial + administrativo')],
+      proveedores: [K('Contratistas', D.provs.length), K('Presupuesto aprobado', $(presuT)), K('Acumulado pagado', $(pagT), valTT - pagT > 0 ? $(valTT - pagT) + ' valorizado por pagar' : pc(pagT / presuT) + ' del presupuesto'), K('Saldo', $(presuT - valTT), 'Presupuesto por valorizar')],
+      pedidos: [K('Pedidos', D.pedidos.length, compras.length + ' compras · ' + serv.length + ' servicios'), K('Importe total', $(pedT)), K('Pagado', $(pedP)), K('Por pagar', $(pedT - pedP), 'Saldos a la entrega o a crédito')]
     })[s.mod] || [];
 
     return {
       showRail: !pr.embed, isLogin: s.screen === 'login', isSelect: s.screen === 'select', isHub: s.screen === 'hub', isWork: s.screen === 'work',
-      onSubmit,
-      email: s.email, code: s.code, err: s.err,
+      onSubmit, email: s.email, code: s.code, err: s.err, hoy: fd(HOY), cur: this.props.moneda ?? 'S/',
       onEmail: (e) => this.setState({ email: e.target.value, err: false }),
       onCode: (e) => this.setState({ code: e.target.value.replace(/\D/g, '').slice(0, 6), err: false }),
       logout: go({ screen: 'login', code: '', err: false }), goSelect: go({ screen: 'select' }), goBalance: go({ screen: 'work', mod: 'balance' }),
       openEclat: go({ screen: 'hub', proj: 'eclat' }), openEss: go({ screen: 'hub', proj: 'essenziale' }),
-      selTarjetas: (this.props.seleccion ?? 'Tarjetas verticales') === 'Tarjetas verticales', selPaneles: this.props.seleccion === 'Paneles a pantalla completa', eS: stat('eclat'), zS: stat('essenziale'), eclatStats: line('eclat'), essStats: line('essenziale'),
-      P: c, st,
-      hub: { precios: st.v + ' / ' + st.total + ' vendidos', clientes: cls.length + ' clientes', vendedoras: c.sellers.length + ' vendedoras', construccion: this.moneyM(acc) + ' acumulado', proveedores: D.provs.length + ' contratistas', perfil: 'Utilidad ' + this.moneyM(util) },
-      goPrecios: go({ screen: 'work', mod: 'precios' }), goClientes: go({ screen: 'work', mod: 'clientes' }), goVendedoras: go({ screen: 'work', mod: 'vendedoras' }), goConstruccion: go({ screen: 'work', mod: 'construccion' }), goProveedores: go({ screen: 'work', mod: 'proveedores' }), goPerfil: go({ screen: 'work', mod: 'perfil' }),
+      selTarjetas: (this.props.seleccion ?? 'Tarjetas verticales') === 'Tarjetas verticales', selPaneles: this.props.seleccion === 'Paneles a pantalla completa', eS: cnt(db.eclat.units), zS: cnt(db.essenziale.units), eclatStats: line('eclat'), essStats: line('essenziale'),
+      P: c, st, lst, hubRows,
       ctxGo: isBal ? go({ screen: 'select' }) : go({ screen: 'hub' }), isEclat: c.key === 'eclat', isEss: c.key === 'essenziale', ctxEclat: !isBal && c.key === 'eclat', ctxEss: !isBal && c.key === 'essenziale', ctxKind: isBal ? 'Empresa' : 'Proyecto ' + c.num, ctxName: isBal ? 'Inverplus+' : c.name,
-      nav, crumb: isBal ? 'Empresa' : c.name + (T[0] ? ' · ' + T[0] : ''), modTitle: T[1], kpis, hasKpis: kpis.length > 0,
-      isPrecios: s.mod === 'precios', isClientes: s.mod === 'clientes', isVendedoras: s.mod === 'vendedoras', isConstruccion: s.mod === 'construccion', isProveedores: s.mod === 'proveedores', isPerfil: s.mod === 'perfil', isBalance: isBal,
-      floors, perFloor: c.areas.length, cellH: c.cellH, su, stOpts, clients, sellers, cons, addGasto,
-      gDia: s.gDia, gConcepto: s.gConcepto, gMonto: s.gMonto, onGDia: set('gDia'), onGConcepto: set('gConcepto'), onGMonto: set('gMonto'),
-      provs, provForm: s.provForm, toggleProvForm: () => this.setState({ provForm: !s.provForm }), addProv,
-      pNombre: s.pNombre, pPartida: s.pPartida, pPresu: s.pPresu, onPNombre: set('pNombre'), onPPartida: set('pPartida'), onPPresu: set('pPresu'),
-      vFactura: s.vFactura, vMonto: s.vMonto, onVFactura: set('vFactura'), onVMonto: set('vMonto'),
+      nav, tabs, menuCls: s.menu ? 'open' : '', openMenu: () => this.setState({ menu: true }), closeMenu: () => this.setState({ menu: false }),
+      mainCls: s.mod === 'precios' && !pr.embed ? 'has-peek' : '', crumb, modTitle, kpis, hasKpis: kpis.length > 0,
+      isPrecios: s.mod === 'precios', isClientes: s.mod === 'clientes', isBoletas: s.mod === 'boletas', isVendedoras: s.mod === 'vendedoras', isConstruccion: s.mod === 'construccion', isProveedores: s.mod === 'proveedores', isPedidos: s.mod === 'pedidos', isPerfil: s.mod === 'perfil', isBalance: isBal,
+      tipos, legend, hasFlt: !!flt, clearFlt: () => this.setState({ flt: { ...s.flt, [c.key]: '' } }), fltTitle: flt ? LBLS[flt] + ' · ' + fltRows.length + ' ' + PLUR[tipo] : '', fltCol: KIND[tipo], fltRows,
+      floors, perFloor: tipo === 'dpto' ? c.areas.length : 6, cellH: tipo === 'dpto' ? c.cellH : 44, su, stOpts,
+      sheetCls: s.sheet ? 'open' : '', openSheet: () => this.setState({ sheet: true }), closeSheet: () => this.setState({ sheet: false }), peek: { id: KIND[tipo] + ' ' + SU.id, sub: SU.m2 + ' m² · ' + LBL[SU.st] },
+      clients, ctabs, isCrono: s.ctab === 'crono', isVenta: s.ctab === 'venta', isFicha: s.ctab === 'datos' || s.ctab === 'tramite' || s.ctab === 'obs',
+      payF: s.payF, onPayF: setF('payF', 'f'), onPayM: setF('payF', 'm'), onPayB: (e) => { const v = e.target.value, b = D.boletas.find(z => z.n === v.trim().toUpperCase() && !z.used); this.setState({ payF: { ...this.state.payF, b: v, ...(b ? { m: String(b.monto) } : {}) } }); },
+      tasa: s.tasa, onTasa: (e) => this.setState({ tasa: e.target.value }), bq: s.bq, onBq: (e) => this.setState({ bq: e.target.value }), boletas, bolNote, bolForm: s.bolForm, toggleBolForm: () => this.setState({ bolForm: !s.bolForm }), bolFields, addBol,
+      rates, sellers, cons, addGasto, g: s.g, onGDia: setF('g', 'dia'), onGConcepto: setF('g', 'concepto'), onGTipo: setF('g', 'tipo'), onGMonto: setF('g', 'monto'),
+      provs, provForm: s.provForm, toggleProvForm: () => this.setState({ provForm: !s.provForm }), addProv, pv: s.pv, onPNombre: setF('pv', 'nombre'), onPPartida: setF('pv', 'partida'), onPPresu: setF('pv', 'presu'),
+      val: s.val, onVFactura: setF('val', 'factura'), onVMonto: setF('val', 'monto'), onVPago: setF('val', 'pago'), onVPdf, vPdfLbl: s.val.pdf ? s.val.pdf.name : 'Adjuntar PDF',
+      mats, pedidos, pedForm: s.pedForm, togglePedForm: () => this.setState({ pedForm: !s.pedForm }), pedFields, addPed,
       pe, bal
     };
   }

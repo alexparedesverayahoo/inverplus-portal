@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Portal Inverplus+ · Vista en celular</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#1C1B1A;color:#F3F0EA;font-family:'Montserrat',sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1360px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 24px;padding:24px 0}
+header img{display:block;height:32px;width:auto}
+.btn{display:inline-flex;align-items:center;height:44px;padding:0 20px;background:#A9492A;color:#FFFFFF;font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;transition:filter .2s}
+.btn:hover{filter:brightness(1.15)}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:#D9B36A}
+h1{margin:10px 0 0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(40px,5.4vw,76px);line-height:1;text-wrap:balance}
+.lead{max-width:62ch;margin:18px 0 0;font-size:15px;color:#D8D3C9}
+.intro{padding:clamp(18px,4vw,48px) 0 clamp(28px,4vw,52px)}
+.points{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 28px;margin:0;padding:0;list-style:none;border-top:1px solid rgba(243,240,234,.3)}
+.points li{padding:18px 0;border-bottom:1px solid rgba(243,240,234,.16)}
+.points b{display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:24px;line-height:1.15}
+.points span{display:block;margin-top:6px;font-size:13px;color:#B5B0A6}
+.phones{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:44px 28px;justify-items:center;padding:clamp(32px,5vw,64px) 0}
+figure{margin:0;width:300px}
+figcaption{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+figcaption i{font-style:normal;font-size:11px;font-weight:600;letter-spacing:.2em;color:#D9B36A}
+figcaption b{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:26px;line-height:1.1}
+.phone{position:relative;width:300px;height:616px;overflow:hidden;border:8px solid #2E2E2E;border-radius:30px;background:#2E2E2E}
+.phone iframe{display:block;width:375px;height:790px;border:0;transform:scale(.7574);transform-origin:0 0;background:#1C1B1A}
+figure p{margin:12px 0 0;font-size:13px;color:#B5B0A6}
+footer{padding:28px 0 44px;border-top:1px solid rgba(243,240,234,.16);font-size:12px;color:#B5B0A6}
+.only-m{display:none}
+@media (max-width:700px){
+  .only-m{display:block;margin-top:22px;padding:16px;background:#D9B36A;color:#23221F;font-weight:500}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="design_handoff_portal_inverplus/assets/logo-blanco.png" alt="Inverplus+ Inmobiliaria">
+    <a class="btn" href="design_handoff_portal_inverplus/Portal%20Inverplus.dc.html?v=2">Abrir el portal →</a>
+  </header>
+
+  <section class="intro">
+    <div class="eyebrow">+ Propuesta para celular</div>
+    <h1>El portal, en la palma de la mano</h1>
+    <p class="lead">Estas son las pantallas del Portal Inverplus+ tal como se ven en un teléfono. Cada teléfono de abajo es el portal funcionando: puede tocar, desplazarse y entrar a los módulos. Para probarlo en su propio celular, abra el mismo enlace del portal.</p>
+    <p class="only-m">Está viendo esta página desde un celular. Toque «Abrir el portal» para usarlo directamente a pantalla completa.</p>
+  </section>
+
+  <ul class="points">
+    <li><b>Menú siempre a un toque</b><span>Barra superior con el proyecto y, abajo, accesos directos a Precios, Clientes, Obra y Perfil. El botón Menú abre todos los módulos.</span></li>
+    <li><b>Tablas convertidas en fichas</b><span>En pantalla angosta cada cliente, proveedor o pedido se muestra como una ficha con sus datos rotulados; ya no hay que desplazarse hacia los lados.</span></li>
+    <li><b>Plano de precios completo</b><span>El edificio entra en el ancho del teléfono. Al tocar un departamento aparece su precio y se abre su ficha con descuento, precio de venta y estado.</span></li>
+    <li><b>Campos cómodos para el dedo</b><span>Botones y campos de 44 px de alto como mínimo, teclado numérico en montos y selector de fecha propio del teléfono.</span></li>
+  </ul>
+
+  <section class="phones">
+    <figure><figcaption><i>01</i><b>Ingreso</b></figcaption><div class="phone"><iframe loading="lazy" title="Ingreso en celular" src="design_handoff_portal_inverplus/Portal%20Inverplus.dc.html?v=2"></iframe></div><p>Correo y clave de 6 dígitos, con el botón visible sin desplazarse.</p></figure>
+    <figure><figcaption><i>02</i><b>Proyectos</b></figcaption><div class="phone"><iframe loading="lazy" title="Selección de proyecto en celular" src="design_handoff_portal_inverplus/Portal%20Inverplus.dc.html?v=2#/proyectos"></iframe></div><p>Los dos proyectos lado a lado y el acceso a Balance Empresa.</p></figure>
+    <figure><figcaption><i>03</i><b>Módulos</b></figcaption><div class="phone"><iframe loading="lazy" title="Módulos del proyecto en celular" src="design_handoff_portal_inverplus/Portal%20Inverplus.dc.html?v=2#/eclat"></iframe></div><p>Índice del proyecto con el dato clave de cada módulo.</p></figure>
+    <figure><figcaption><i>04</i><b>Lista de Precios</b></figcaption><div class="phone"><iframe loading="lazy" title="Lista de precios en celular" src="design_handoff_portal_inverplus/Portal%20Inverplus.dc.html?v=2#/eclat/precios"></iframe></div><p>Disponibles, separados y vendidos se tocan para filtrar. Incluye estacionamientos y depósitos.</p></figure>
+    <figure><figcaption><i>05</i><b>Clientes</b></figcaption><div class="phone"><iframe loading="lazy" title="Clientes en celular" src="design_handoff_portal_inverplus/Portal%20Inverplus.dc.html?v=2#/eclat/clientes"></iframe></div><p>Ficha del cliente, cronograma de letras y registro de pagos con boleta y detracción.</p></figure>
+    <figure><figcaption><i>06</i><b>Comisiones</b></figcaption><div class="phone"><iframe loading="lazy" title="Comisiones en celular" src="design_handoff_portal_inverplus/Portal%20Inverplus.dc.html?v=2#/eclat/vendedoras"></iframe></div><p>% por venta y pago en dos partes: 60% minuta y 40% desembolso.</p></figure>
+    <figure><figcaption><i>07</i><b>Construcción</b></figcaption><div class="phone"><iframe loading="lazy" title="Construcción en celular" src="design_handoff_portal_inverplus/Portal%20Inverplus.dc.html?v=2#/eclat/construccion"></iframe></div><p>Terreno aparte, gastos desde el mes 1 y tipo de gasto: obra, comercial o administrativo.</p></figure>
+    <figure><figcaption><i>08</i><b>Pedidos</b></figcaption><div class="phone"><iframe loading="lazy" title="Pedidos en celular" src="design_handoff_portal_inverplus/Portal%20Inverplus.dc.html?v=2#/eclat/pedidos"></iframe></div><p>Compras y servicios, acumulado por material, pagos y cartas de garantía.</p></figure>
+  </section>
+
+  <footer>Inverplus+ · Portal de proyectos · Prototipo de diseño con datos de ejemplo.</footer>
+</div>
+</body>
+</html>

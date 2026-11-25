@@ -1,9 +1,9 @@
 # Handoff: Portal Inverplus+ (portal de proyectos inmobiliarios)
 
 ## Overview
-Portal interno de Inverplus+ Inmobiliaria. El usuario ingresa con correo y clave de 6 dígitos, elige uno de dos proyectos (ECLAT, ESSENZIALE) y entra a los módulos de ese proyecto: Ventas (Lista de Precios, Clientes, Vendedoras), Construcción, Proveedores y Perfil Económico. A nivel empresa hay un módulo de Balance. Cada proyecto maneja sus datos de forma independiente.
+Portal interno de Inverplus+ Inmobiliaria. El usuario ingresa con correo y clave de 6 dígitos, elige uno de dos proyectos (ECLAT, ESSENZIALE) y entra a los módulos de ese proyecto: Ventas (Lista de Precios, Clientes, Boletas de Venta, Vendedoras), Construcción, Proveedores, Pedidos y Perfil Económico. A nivel empresa hay un módulo de Balance. Cada proyecto maneja sus datos de forma independiente.
 
-Estado: **borrador / modelo de diseño**. Todos los números, nombres de clientes, vendedoras y contratistas, y la cantidad de departamentos son datos de ejemplo generados en el prototipo.
+Estado: **borrador / modelo de diseño, versión 2 (25 nov 2026)**. Incorpora las observaciones preliminares del cliente (ver «Cambios de la versión 2») y la adaptación a celular. Todos los números, nombres de clientes, vendedoras y contratistas, y la cantidad de departamentos son datos de ejemplo generados en el prototipo.
 
 ## About the Design Files
 Los archivos de este paquete son **referencias de diseño hechas en HTML**: prototipos que muestran el aspecto y el comportamiento esperados, no código de producción para copiar tal cual. La tarea es **recrear estos diseños en el entorno del código destino** (React, Vue, etc.) con sus patrones y librerías; si aún no existe un entorno, elegir el framework más adecuado e implementarlos ahí. El prototipo no tiene backend, autenticación real ni persistencia.
@@ -35,42 +35,72 @@ Los archivos de este paquete son **referencias de diseño hechas en HTML**: prot
 
 ### 3. Índice de módulos (por proyecto)
 - Dos columnas con wrap. Izquierda (`flex:1 1 360px`): foto frontal del proyecto a sangre, logo y botón "← Proyectos" arriba, y abajo "+ Proyecto NN", nombre (Cormorant `clamp(52px,6.6vw,108px)`) y 4 cifras: Departamentos, Vendidos, Separados, Disponibles.
-- Derecha (`flex:1.25 1 440px`, fondo `#F3F0EA`): lista de 6 filas, cada una con número, (grupo "Ventas" en las tres primeras), nombre en Cormorant `clamp(24px,2.4vw,34px)`, descripción 13px, dato en vivo y flecha. Hover: fondo `#2E2E2E`, texto `#F3F0EA`, `padding-left:26px`.
-  1. Lista de Precios · 2. Clientes · 3. Vendedoras · 4. Construcción · 5. Proveedores · 6. Perfil Económico.
+- Derecha (`flex:1.25 1 440px`, fondo `#F3F0EA`): lista de 8 filas, cada una con número, (grupo "Ventas" en las cuatro primeras), nombre en Cormorant `clamp(24px,2.3vw,32px)`, descripción 13px, dato en vivo y flecha. Hover: fondo `#2E2E2E`, texto `#F3F0EA`, `padding-left:26px`.
+  1. Lista de Precios · 2. Clientes · 3. Boletas de Venta · 4. Vendedoras · 5. Construcción · 6. Proveedores · 7. Pedidos · 8. Perfil Económico.
 
 ### 4. Módulos (pantalla de trabajo)
-- Barra lateral fija de 224px (`#1C1B1A`): logo, bloque del proyecto con miniatura (vuelve al índice), navegación (grupo "Ventas": Lista de Precios, Clientes, Vendedoras; grupo "Obra y resultado": Construcción, Proveedores, Perfil Económico), y abajo "← Proyectos", "Balance Empresa", correo y "Salir". Ítem activo: fondo `rgba(243,240,234,.12)`, borde izquierdo 2px acento, peso 700.
+- Barra lateral fija de 224px (`#1C1B1A`): logo, bloque del proyecto con miniatura (vuelve al índice), navegación (grupo "Ventas": Lista de Precios, Clientes, Boletas de Venta, Vendedoras; grupo "Obra y resultado": Construcción, Proveedores, Pedidos, Perfil Económico), y abajo "← Proyectos", "Balance Empresa", correo y "Salir". Ítem activo: fondo `rgba(243,240,234,.12)`, borde izquierdo 2px acento, peso 700.
 - Área principal (fondo `#F3F0EA`, padding `clamp(20px,3vw,44px)`): migas "+ PROYECTO · Ventas" en acento, título Cormorant `clamp(36px,3.8vw,58px)`, y franja de 4 indicadores (rejilla `auto-fit, minmax(200px,1fr)`, celdas `#FBFAF7`, valor Cormorant 32px).
 
-**Lista de Precios** — debe mostrar el total de departamentos y marcar vendidos y separados.
-- Barra de proporción y leyenda (Vendido = acento, Separado = `#D9B36A`, Disponible = `#FBFAF7` con borde `#CFC9BD`).
-- Plano por pisos (de arriba hacia abajo): una fila por piso con una celda por departamento (número + precio abreviado "412k"), coloreada por estado. Clic selecciona (contorno 2px `#23221F`).
-- Panel lateral del departamento: número, piso, área, vista, precio de lista y selector de estado (Disponible / Separado / Vendido). Si está vendido muestra cliente y vendedora.
+**Lista de Precios** — tres pestañas con su propio inventario y precios: **Departamentos**, **Estacionamientos** y **Depósitos**.
+- Los indicadores (Total / Disponibles / Separados / Vendidos) y la leyenda son **botones**: al tocarlos filtran el plano (lo demás se atenúa) y debajo aparece la lista de las unidades de ese estado con su precio. "Ver todos" quita el filtro.
+- Barra de proporción y plano: departamentos por piso (de arriba hacia abajo); estacionamientos y depósitos por sótano, en filas de 6. Cada celda muestra número y precio de venta abreviado ("412k"), coloreada por estado (Vendido = acento, Separado = `#D9B36A`, Disponible = `#FBFAF7` con borde `#CFC9BD`). Clic selecciona (contorno 2px `#23221F`).
+- Panel de la unidad: número, piso o nivel, área, vista, **Precio de lista**, **Descuento** (campo editable, muestra su %) y **Precio de venta** (lista − descuento), selector de estado, y si está vendida: cliente y vendedora con enlace a su ficha. Un estacionamiento o depósito vendido indica con qué departamento se vendió.
 
-**Clientes** — tabla: Cliente, Inmueble, Vista (Interna/Externa), Vendedora, Precio de venta, m², Monto pagado, Letras por pagar. Cada fila se expande para ver el cronograma: Concepto (cuota inicial / letra N de M), Vencimiento, Monto, N° Boleta, Estado (Pagada / Por pagar).
+**Clientes** — tabla: Cliente (con DNI y cónyuge), Inmueble (departamento + estacionamiento/depósito), Vista, m², Vendedora, Venta (Contado/Crédito, y US$ si aplica), Precio de venta, Monto pagado, Letras por pagar. Cada fila se expande en una ficha con cinco pestañas:
+- **Cronograma de pagos**: Concepto, Vencimiento, Monto, Fecha de pago, Importe pagado, N° Boleta, Detracción, Estado. Las letras pendientes tienen "Registrar pago" (fecha, importe, N° de boleta). Al escribir o elegir un N° de boleta ya registrado en Boletas de Venta, el importe y la **detracción se jalan de la boleta**.
+- **Datos del cliente**: titular y DNI, cónyuge o segundo titular y su DNI (ambos en un solo inmueble), celular, correo, dirección, profesión, medio de contacto.
+- **Venta e inmuebles**: forma de venta (contado/crédito), moneda (soles/dólares; en dólares pide el T.C. de la venta), promoción/descuento, regalo; lista de inmuebles de la venta, cada uno con precio de lista, descuento y precio de venta; formulario para **agregar un estacionamiento o depósito** (también meses después) con su precio, fecha de compra, cuota inicial y N° de letras, que se suman al cronograma.
+- **Trámite y fechas**: fecha de separación, firma de minuta, firma de escritura, kardex, notaría, fecha de desembolso, AFP (importe) y fecha de AFP.
+- **Observaciones**: observación comercial para obra (modificaciones del departamento), observación de pago, penalidad e importe de penalidad.
 
-**Vendedoras** — una tarjeta por vendedora: nombre, departamentos vendidos y ventas; campo **% Comisión** editable; **Comisión a pagar** calculada (ventas × %); lista de sus departamentos vendidos con precio y comisión. Los departamentos se toman de los marcados como Vendidos.
+**Boletas de Venta** — registro de boletas: N° Boleta, Fecha, Cliente, Inmueble, Concepto, Importe, **Detracción** (importe × tasa; la tasa es un campo editable, 4% por defecto como valor de ejemplo, a confirmar con contabilidad) y Constancia. Buscador, y formulario "+ Registrar boleta". Una boleta registrada sin asignar aparece como "Sin asignar a un pago" y se ofrece al registrar el pago de una letra de ese cliente.
 
-**Construcción** — parte de la compra del terreno. Tabla mes a mes: Mes, barra, Gastos del mes, Acumulado (terreno + construcción). Al elegir un mes se ven sus gastos diarios y un formulario (Día, Concepto, Monto) para registrar un gasto.
+**Vendedoras · Comisiones** — bloque "% de comisión pactado" con cuatro tasas editables: vista externa/interna × contado/crédito (valores de ejemplo). Una sección por vendedora (plegable): comisión total, pagado y por pagar; por cada venta: Dpto, Vista · Venta, Precio de venta, **% Comisión** (toma la tasa pactada y se puede cambiar por venta), Comisión, y el pago en dos partes — **60% a la firma de minuta** y **40% al desembolso** — cada una con su fecha de pago.
 
-**Proveedores** — tabla por contratista: Contratista · Partida, Presupuesto aprobado, Última valorización, Factura, Acumulado pagado (con barra de avance), Saldo. Cada fila se expande con sus valorizaciones (N°, fecha, factura, monto) y un formulario para registrar una valorización. Botón "+ Nuevo contratista" (Contratista, Partida, Presupuesto aprobado).
+**Construcción** — el **terreno va aparte** (franja oscura propia) y no se suma a la construcción. Bloque "por tipo de gasto" (Obra / Comercial / Administrativo, con barra apilada). Tabla mes a mes desde el **Mes 1**: Mes, barra apilada por tipo, Gastos del mes, Acumulado (solo construcción). Al elegir un mes se ven sus gastos diarios y un formulario (Día, Concepto, **Tipo**, Monto); el tipo también se cambia en cada gasto. Los tres tipos suman al total de construcción del Perfil Económico.
 
-**Perfil Económico** — bloque oscuro con la ecuación en tipografía grande: Ventas − Compra de terreno − Construcción = **Utilidad** (Cormorant `clamp(56px,8.4vw,136px)`, con borde superior 3px acento) y margen %. Debajo, barra de proporción terreno / construcción / utilidad. En ESSENZIALE el primer término se rotula "Ingresos" (así viene en el requerimiento).
+**Proveedores** — tabla por contratista: Contratista · Partida, Presupuesto aprobado, Última valorización, Factura, Acumulado pagado (con barra y aviso de lo valorizado por pagar), Saldo. Cada fila se expande con sus valorizaciones (N°, fecha, factura, **PDF de la factura** adjuntable, **fecha de pago**, monto) y un formulario para registrar una valorización con su fecha de pago y su PDF. Botón "+ Nuevo contratista" (Contratista, Partida, Presupuesto aprobado).
+
+**Pedidos** — compras de materiales y servicios contratados.
+- "Acumulado por material": una celda por material y unidad con la suma de cantidades de todos sus pedidos (bolsas, kg, m, m², m³, und…), más los servicios contratados.
+- Tabla: Fecha, Proveedor · RUC, Pedido (compra o servicio), Cantidad, Importe, Forma de pago (con lo pagado y el saldo), Garantía · Protocolos. Cada fila se expande con sus pagos (adelanto 10/20/50% y cancelación a la entrega, contado o crédito a 30 días), cada uno con fecha editable y estado Pagado/Pendiente, y los interruptores "¿Envió carta de garantía?" y "¿Envió protocolos?".
+- "+ Nuevo pedido o servicio": fecha, RUC, proveedor, tipo, pedido, cantidad, unidad, importe, forma de pago, fecha de entrega, carta de garantía, protocolos.
+
+**Perfil Económico** — bloque oscuro con la ecuación en tipografía grande: Ventas − Compra de terreno − Construcción = **Utilidad** (Cormorant `clamp(48px,8.4vw,136px)`, con borde superior 3px acento) y margen %. Debajo, barra de proporción terreno / construcción / utilidad y el desglose de construcción por tipo. Las ventas consideran el precio de venta (con descuentos) de departamentos, estacionamientos y depósitos. En ESSENZIALE el primer término se rotula "Ingresos" (así viene en el requerimiento).
 
 **Balance Empresa** — rejilla de 4 bloques: Ingresos por Proyecto, Gastos por Proyecto, Saldo Ctas Ordinarias, Saldo Ctas Garantias. Cada bloque: total grande y una fila por proyecto con barra. Los dos primeros en fondo oscuro, los dos últimos en claro.
 
+### 5. Celular (ancho ≤ 860px)
+- La barra lateral se oculta. Arriba queda una **barra fija** (56px) con el botón de menú, el proyecto y el logo; abajo, una **barra de accesos** (58px): Precios, Clientes, Obra, Perfil y Menú. El menú abre la barra lateral como panel deslizante (86vw, máx. 320px) sobre un velo oscuro.
+- Indicadores en rejilla de 2 columnas. Las tablas dejan de desplazarse hacia los lados: cada fila pasa a ser una **ficha** con sus datos rotulados (atributo `data-l`), en 2 columnas (3 en el cronograma de letras).
+- Lista de Precios: el plano ocupa todo el ancho; al tocar una unidad aparece una franja fija con su precio, y "Ver ficha" abre el panel de la unidad a pantalla completa.
+- Formularios en una columna (≤ 520px), campos de 44px con texto de 16px (evita el zoom de iOS), teclado numérico en montos y selector de fecha nativo.
+- Ingreso: fotos arriba (40% del alto) y formulario a todo el ancho. Selección: los dos proyectos lado a lado. Índice de módulos: foto arriba y lista debajo con el dato en vivo bajo cada módulo.
+
+## Cambios de la versión 2
+Responden al documento «Observaciones preliminar sistema» del cliente:
+1. Lista de Precios: estados cliqueables como filtro; Descuento y Precio de venta bajo el Precio de lista; listas de estacionamientos y depósitos con su propio precio.
+2. Clientes: ficha completa (contado/crédito, moneda y T.C., medio de contacto, estacionamiento y depósito con su precio y sus letras, DNI de ambos esposos, celular, dirección, correo, profesión, promoción, regalo, observaciones, penalidad, fechas de separación/minuta/escritura, kardex, notaría, desembolso, AFP) y cronograma con fecha de pago, importe pagado y detracción jalada de la boleta. Apartado propio de Boletas de Venta.
+3. Comisiones: % variable por venta según vista y forma de venta; pago 60% minuta / 40% desembolso con fecha en cada parte.
+4. Construcción: terreno aparte; gastos desde el mes 1 con acumulado; tipo de gasto obra/comercial/administrativo.
+5. Módulo de Pedidos, debajo de Proveedores.
+6. Proveedores: PDF de la factura y fecha de pago por valorización.
+7. Celular: rediseño completo de la vista angosta (antes la barra lateral tapaba el contenido).
+
 ## Interactions & Behavior
 - Navegación por estado: `login → select → hub → work` (módulo) y `work/balance`. "Salir" vuelve al ingreso. Al cargar siempre abre en el ingreso; solo recuerda el correo.
-- Cambiar el estado de un departamento actualiza indicadores, Clientes, Vendedoras, Perfil Económico y Balance.
-- Registrar gasto / valorización / contratista actualiza totales al instante (en memoria; no persiste).
+- Enlaces directos del prototipo (para demostraciones): `#/proyectos`, `#/eclat`, `#/essenziale/clientes`, `#/empresa`, etc. abren esa pantalla sin pasar por el ingreso. No portar a producción.
+- Cambiar el estado o el descuento de una unidad actualiza indicadores, Clientes (reparte el saldo entre las letras pendientes), Vendedoras, Perfil Económico y Balance.
+- Registrar gasto / valorización / contratista / pedido / boleta / pago de letra actualiza totales al instante (en memoria; no persiste). El PDF adjunto se abre desde el navegador y tampoco se guarda.
 - Transiciones: aparición de pantalla con fundido .5–.6s; hovers .2–.35s.
-- Responsivo: las pantallas usan flex con wrap y `clamp()`; las tablas anchas tienen scroll horizontal.
+- Responsivo: flex con wrap y `clamp()`; las tablas anchas tienen scroll horizontal hasta 860px y por debajo pasan a fichas (ver «5. Celular»).
 
 ## State Management
 - Sesión: `screen`, `proj` (eclat | essenziale), `mod`, `email`.
-- Por proyecto: departamentos (id, piso, m², vista, precio, estado), clientes y letras, % de comisión por vendedora, compra de terreno, gastos por mes, contratistas y valorizaciones, saldos de cuentas.
+- Por proyecto: departamentos, estacionamientos y depósitos (id, piso/nivel, m², vista, precio de lista, descuento, estado, dueño); clientes (ficha, inmuebles de la venta, letras con fecha de pago, importe y boleta); boletas (número, fecha, importe, constancia, asignada o no); tasas de comisión pactadas, % por venta y fechas de pago 60/40; compra de terreno; gastos por mes con tipo; contratistas y valorizaciones (factura, PDF, fecha de pago); pedidos (proveedor, RUC, cantidad, unidad, importe, forma de pago, pagos, garantía, protocolos); saldos de cuentas.
 - En producción estos datos deben venir de una API/base de datos; el prototipo los genera con una semilla fija dentro de `db()` y `client()`.
-- Reglas de cálculo: Comisión = precio de venta × %; Acumulado = terreno + suma de gastos mensuales; Saldo proveedor = presupuesto − suma de valorizaciones; Utilidad = ventas − terreno − construcción.
+- Reglas de cálculo: Precio de venta = precio de lista − descuento; Comisión = precio de venta del departamento × % (60% a la minuta, 40% al desembolso); Detracción = importe de la boleta × tasa; Acumulado de construcción = suma de gastos mensuales desde el mes 1 (sin terreno); Acumulado pagado a proveedor = valorizaciones con fecha de pago; Saldo proveedor = presupuesto − suma de valorizaciones; Utilidad = ventas − terreno − construcción (obra + comercial + administrativo).
 
 ## Design Tokens
 - Carbón profundo `#1C1B1A` · Carbón `#2E2E2E` (color del logo) · Tinta `#23221F`
@@ -89,6 +119,7 @@ En `assets/` (provistos por el cliente, reducidos a 1800px de alto):
 
 ## Files
 - `Portal Inverplus.dc.html` — prototipo interactivo completo (plantilla + lógica).
-- `Portal Inverplus-print.dc.html` — documento de 17 hojas A4 horizontal con todas las pantallas (requiere `doc-page.js`).
+- `Portal Inverplus-print.dc.html` — documento de 21 hojas A4 horizontal con todas las pantallas (requiere `doc-page.js`).
+- `../movil.html` — página de presentación de la vista en celular: ocho teléfonos con el prototipo funcionando a 375px de ancho.
 - `support.js`, `doc-page.js` — runtime del prototipo; no portar.
 - `Requerimiento Sr. Alex.docx` — requerimiento original con la lista de módulos.

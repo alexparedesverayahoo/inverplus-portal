@@ -8,3 +8,6 @@ Captura de pantalla 2026-11-24 180856.png
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Configuración local de vista previa
+.claude/
