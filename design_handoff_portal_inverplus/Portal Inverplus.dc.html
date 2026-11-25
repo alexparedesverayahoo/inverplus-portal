@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>Portal Inverplus+</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#1C1B1A;-webkit-font-smoothing:antialiased}
+a{color:#A9492A}a:hover{color:#23221F}
+button,input{font-family:inherit}
+input::placeholder{color:inherit;opacity:.45}
+@keyframes pfade{from{opacity:0}to{opacity:1}}
+@keyframes pcaret{50%{opacity:0}}
+</style>
+</helmet>
+<div style="min-height:calc(var(--vh,1vh)*100);font-family:'Montserrat',sans-serif;font-size:14px;line-height:1.5;color:#23221F;background:#1C1B1A">
+
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+
+<div data-screen-label="Ingreso 1" style="min-height:calc(var(--vh,1vh)*100);display:flex;flex-wrap:wrap;animation:pfade .6s both">
+  <div style="flex:1 1 520px;min-height:calc(var(--vh,1vh)*56);display:flex;gap:2px">
+    <div style="flex:1 1 0;min-width:0;position:relative;overflow:hidden;background:#2E2E2E">
+      <img src="assets/eclat-angulo.jpg" alt="Edificio ECLAT" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:35% 36%;transform:scale(1.17);transform-origin:10% 42%">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,27,26,0) 72%,rgba(28,27,26,.8) 100%)"></div>
+      <div style="position:absolute;left:clamp(16px,2.4vw,36px);right:16px;bottom:clamp(20px,2.6vw,36px);color:#F3F0EA">
+        <div style="font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase">+ Proyecto 01</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,3.1vw,56px);line-height:1;letter-spacing:.04em;margin-top:8px">ECLAT</div>
+      </div>
+    </div>
+    <div style="flex:1 1 0;min-width:0;position:relative;overflow:hidden;background:#2E2E2E">
+      <img src="assets/essenziale-angulo.jpg" alt="Edificio ESSENZIALE" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 36%">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,27,26,0) 72%,rgba(28,27,26,.8) 100%)"></div>
+      <div style="position:absolute;left:clamp(16px,2.4vw,36px);right:16px;bottom:clamp(20px,2.6vw,36px);color:#F3F0EA">
+        <div style="font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase">+ Proyecto 02</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,3.1vw,56px);line-height:1;letter-spacing:.04em;margin-top:8px">ESSENZIALE</div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:0 1 296px;display:flex;flex-direction:column;justify-content:center;padding:28px;color:#F3F0EA">
+    <form onSubmit="{{ onSubmit }}" style="width:100%;display:flex;flex-direction:column;gap:18px">
+      <img src="assets/logo-blanco.png" alt="Inverplus+ Inmobiliaria" style="height:42px;width:auto;align-self:flex-start;margin-bottom:14px">
+      <div>
+        <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:24px;line-height:1.1">Portal de proyectos</h1>
+        <p style="margin:6px 0 0;font-size:13px;color:#B5B0A6">Ingrese con su correo y su clave de 6 dígitos.</p>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:6px;margin-top:6px">
+        <span style="font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#B5B0A6">Correo</span>
+        <input type="email" value="{{ email }}" onChange="{{ onEmail }}" placeholder="nombre@empresa.pe" style="width:100%;height:46px;padding:0 12px;border:0;border-bottom:1px solid rgba(243,240,234,.45);background:rgba(243,240,234,.05);font-size:15px;color:#F3F0EA;outline:none" style-focus="border-bottom-color:#F3F0EA">
+      </label>
+      <label style="display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#B5B0A6">Clave</span>
+        <input type="password" value="{{ code }}" onChange="{{ onCode }}" inputMode="numeric" placeholder="6 dígitos" style="width:100%;height:46px;padding:0 12px;border:0;border-bottom:1px solid rgba(243,240,234,.45);background:rgba(243,240,234,.05);font-size:15px;color:#F3F0EA;outline:none;letter-spacing:.3em" style-focus="border-bottom-color:#F3F0EA">
+      </label>
+      <sc-if value="{{ err }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:#F0B49A">Ingrese un correo válido y su clave de 6 dígitos.</div></sc-if>
+      <button type="submit" style="height:48px;margin-top:8px;border:0;background:var(--ac,#A9492A);color:#FFFFFF;font-size:12px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:filter .2s" style-hover="filter:brightness(1.15)">Ingresar</button>
+    </form>
+  </div>
+</div>
+
+</sc-if>
+
+<sc-if value="{{ isSelect }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Selección de proyecto" style="min-height:calc(var(--vh,1vh)*100);display:flex;flex-direction:column;background:#1C1B1A;color:#F3F0EA;animation:pfade .6s both">
+  <header style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;padding:20px clamp(20px,3vw,40px)">
+    <img src="assets/logo-blanco.png" alt="Inverplus+ Inmobiliaria" style="height:32px;width:auto">
+    <div style="display:flex;align-items:center;gap:18px;font-size:12px">
+      <span style="color:#B5B0A6">{{ email }}</span>
+      <button type="button" onClick="{{ logout }}" style="height:36px;padding:0 16px;border:1px solid rgba(243,240,234,.35);background:transparent;color:#F3F0EA;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;cursor:pointer" style-hover="background:#F3F0EA;color:#23221F">Salir</button>
+    </div>
+  </header>
+  <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;padding:10px clamp(20px,3vw,40px) 24px">
+    <h1 style="margin:0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,3.8vw,56px);line-height:1.05">Seleccione un proyecto</h1>
+    <span style="font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#B5B0A6">2 proyectos</span>
+  </div>
+<sc-if value="{{ selPaneles }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;flex-wrap:wrap;gap:2px">
+    <button type="button" onClick="{{ openEclat }}" style="flex:1 1 320px;min-height:max(440px,calc(var(--vh,1vh)*60));position:relative;overflow:hidden;padding:0;border:0;background:#2E2E2E;color:#F3F0EA;text-align:left;cursor:pointer;transition:flex-grow .7s cubic-bezier(.2,.7,.2,1)" style-hover="flex-grow:1.6">
+      <img src="assets/eclat-angulo.jpg" alt="Edificio ECLAT" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:35% 36%;transform:scale(1.17);transform-origin:10% 42%">
+      <span style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,27,26,.45) 0%,rgba(28,27,26,0) 30%,rgba(28,27,26,.92) 100%)"></span>
+      <span style="position:absolute;top:22px;left:26px;right:26px;display:flex;justify-content:space-between;gap:12px;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase"><span>+ Proyecto 01</span><span>Ingresar →</span></span>
+      <span style="position:absolute;left:26px;right:26px;bottom:26px">
+        <span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(48px,6.4vw,104px);line-height:.95;letter-spacing:.03em">ECLAT</span>
+        <span style="display:block;margin-top:12px;font-size:13px;font-weight:500">{{ eclatStats }}</span>
+      </span>
+    </button>
+    <button type="button" onClick="{{ openEss }}" style="flex:1 1 320px;min-height:max(440px,calc(var(--vh,1vh)*60));position:relative;overflow:hidden;padding:0;border:0;background:#2E2E2E;color:#F3F0EA;text-align:left;cursor:pointer;transition:flex-grow .7s cubic-bezier(.2,.7,.2,1)" style-hover="flex-grow:1.6">
+      <img src="assets/essenziale-angulo.jpg" alt="Edificio ESSENZIALE" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 36%">
+      <span style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,27,26,.45) 0%,rgba(28,27,26,0) 30%,rgba(28,27,26,.92) 100%)"></span>
+      <span style="position:absolute;top:22px;left:26px;right:26px;display:flex;justify-content:space-between;gap:12px;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase"><span>+ Proyecto 02</span><span>Ingresar →</span></span>
+      <span style="position:absolute;left:26px;right:26px;bottom:26px">
+        <span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(48px,6.4vw,104px);line-height:.95;letter-spacing:.03em">ESSENZIALE</span>
+        <span style="display:block;margin-top:12px;font-size:13px;font-weight:500">{{ essStats }}</span>
+      </span>
+    </button>
+  </div>
+</sc-if>
+<sc-if value="{{ selTarjetas }}" hint-placeholder-val="{{ false }}">
+<div style="flex:1;display:flex;align-items:flex-start;gap:clamp(56px,18vw,300px);padding:6px clamp(20px,3vw,40px) 48px;overflow-x:auto;scroll-snap-type:x mandatory">
+  <button type="button" onClick="{{ openEclat }}" style="flex:0 0 auto;width:clamp(240px,min(32vw,calc(var(--vh,1vh)*46)),460px);margin-left:auto;padding:0;border:0;background:transparent;color:#F3F0EA;text-align:left;cursor:pointer;scroll-snap-align:center;transition:transform .35s cubic-bezier(.2,.7,.2,1)" style-hover="transform:translateY(-6px)">
+    <span style="display:block;position:relative;aspect-ratio:4/5;overflow:hidden;background:#2E2E2E"><img src="assets/eclat-angulo.jpg" alt="Edificio ECLAT" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 0%;transform:scale(1.15);transform-origin:8% 0%"></span>
+    <span style="display:block;margin-top:14px;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase">+ Proyecto 01</span>
+    <span style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:6px"><span style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(28px,calc(var(--vh,1vh)*4.4),46px);line-height:1;letter-spacing:.04em">ECLAT</span><span style="font-size:20px">→</span></span>
+    <span style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(243,240,234,.3)"><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ eS.total }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Dptos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ eS.v }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Vendidos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ eS.s }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Separados</span></span></span>
+  </button>
+  <button type="button" onClick="{{ openEss }}" style="flex:0 0 auto;width:clamp(240px,min(32vw,calc(var(--vh,1vh)*46)),460px);margin-right:auto;padding:0;border:0;background:transparent;color:#F3F0EA;text-align:left;cursor:pointer;scroll-snap-align:center;transition:transform .35s cubic-bezier(.2,.7,.2,1)" style-hover="transform:translateY(-6px)">
+    <span style="display:block;position:relative;aspect-ratio:4/5;overflow:hidden;background:#2E2E2E"><img src="assets/essenziale-angulo.jpg" alt="Edificio ESSENZIALE" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 5%"></span>
+    <span style="display:block;margin-top:14px;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase">+ Proyecto 02</span>
+    <span style="display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:6px"><span style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(28px,calc(var(--vh,1vh)*4.4),46px);line-height:1;letter-spacing:.04em">ESSENZIALE</span><span style="font-size:20px">→</span></span>
+    <span style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(243,240,234,.3)"><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ zS.total }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Dptos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ zS.v }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Vendidos</span></span><span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(26px,calc(var(--vh,1vh)*3.6),36px);line-height:1;font-variant-numeric:lining-nums">{{ zS.s }}</span><span style="display:block;margin-top:5px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#D8D3C9">Separados</span></span></span>
+  </button>
+</div>
+</sc-if>
+  <button type="button" onClick="{{ goBalance }}" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 28px;margin-top:2px;padding:22px clamp(20px,3vw,40px);border:0;background:#D9B36A;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s" style-hover="background:var(--ac,#A9492A);color:#FFFFFF">
+    <span style="display:flex;align-items:baseline;gap:16px"><span style="font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase">+ Empresa</span><span style="font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1.1">Balance Empresa</span></span>
+    <span style="font-size:13px">Ingresos y gastos por proyecto · Saldos de cuentas ordinarias y de garantía</span>
+    <span style="font-size:20px">→</span>
+  </button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isHub }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Módulos del proyecto" style="min-height:calc(var(--vh,1vh)*100);display:flex;flex-wrap:wrap;background:#F3F0EA;animation:pfade .6s both">
+  <div style="flex:1 1 360px;min-height:calc(var(--vh,1vh)*52);position:relative;overflow:hidden;background:#2E2E2E;color:#F3F0EA">
+    <sc-if value="{{ isEclat }}" hint-placeholder-val="{{ false }}"><img src="assets/eclat-frente.jpg" alt="Edificio ECLAT" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 34%"></sc-if><sc-if value="{{ isEss }}" hint-placeholder-val="{{ false }}"><img src="assets/essenziale-frente.jpg" alt="Edificio ESSENZIALE" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 34%"></sc-if>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,27,26,.6) 0%,rgba(28,27,26,0) 28%,rgba(28,27,26,.94) 100%)"></div>
+    <div style="position:absolute;top:22px;left:clamp(20px,3vw,40px);right:clamp(20px,3vw,40px);display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <img src="assets/logo-blanco.png" alt="Inverplus+ Inmobiliaria" style="height:28px;width:auto">
+      <button type="button" onClick="{{ goSelect }}" style="height:36px;padding:0 16px;border:1px solid rgba(243,240,234,.5);background:rgba(28,27,26,.4);color:#F3F0EA;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;cursor:pointer" style-hover="background:#F3F0EA;color:#23221F">← Proyectos</button>
+    </div>
+    <div style="position:absolute;left:clamp(20px,3vw,40px);right:clamp(20px,3vw,40px);bottom:clamp(22px,3vw,40px)">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase">+ Proyecto {{ P.num }}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(52px,6.6vw,108px);line-height:.95;letter-spacing:.03em;margin-top:8px">{{ P.name }}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px 36px;margin-top:22px;padding-top:18px;border-top:1px solid rgba(243,240,234,.35)">
+        <div><div style="font-family:'Cormorant Garamond',serif;font-size:36px;line-height:1">{{ st.total }}</div><div style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-top:4px">Departamentos</div></div>
+        <div><div style="font-family:'Cormorant Garamond',serif;font-size:36px;line-height:1">{{ st.v }}</div><div style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-top:4px">Vendidos</div></div>
+        <div><div style="font-family:'Cormorant Garamond',serif;font-size:36px;line-height:1">{{ st.s }}</div><div style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-top:4px">Separados</div></div>
+        <div><div style="font-family:'Cormorant Garamond',serif;font-size:36px;line-height:1">{{ st.d }}</div><div style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;margin-top:4px">Disponibles</div></div>
+      </div>
+    </div>
+  </div>
+  <div style="flex:1.25 1 440px;min-width:0;display:flex;flex-direction:column;padding:clamp(24px,4vw,60px)">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 20px;margin-bottom:clamp(20px,3vw,40px)">
+      <span style="font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--ac,#A9492A)">+ Módulos</span>
+      <span style="display:flex;align-items:center;gap:16px;font-size:12px;color:#6A665F"><span>{{ email }}</span><button type="button" onClick="{{ logout }}" style="padding:0;border:0;background:transparent;color:#23221F;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;text-decoration:underline;text-underline-offset:4px;cursor:pointer" style-hover="color:var(--ac,#A9492A)">Salir</button></span>
+    </div>
+    <div style="display:flex;flex-direction:column;border-bottom:1px solid #D9D4CA">
+      <button type="button" onClick="{{ goPrecios }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">01</span>
+        <span style="min-width:0"><span style="display:block;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;opacity:.75">Ventas</span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Lista de Precios</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">Total de departamentos, vendidos y separados</span></span>
+        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.precios }}</span>
+        <span style="font-size:18px;text-align:right">→</span>
+      </button>
+      <button type="button" onClick="{{ goClientes }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">02</span>
+        <span style="min-width:0"><span style="display:block;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;opacity:.75">Ventas</span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Clientes</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">Inmueble comprado, vendedora, monto pagado y letras por pagar</span></span>
+        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.clientes }}</span>
+        <span style="font-size:18px;text-align:right">→</span>
+      </button>
+      <button type="button" onClick="{{ goVendedoras }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">03</span>
+        <span style="min-width:0"><span style="display:block;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;opacity:.75">Ventas</span><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Vendedoras</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">Departamentos vendidos, % de comisión y comisión a pagar</span></span>
+        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.vendedoras }}</span>
+        <span style="font-size:18px;text-align:right">→</span>
+      </button>
+      <button type="button" onClick="{{ goConstruccion }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">04</span>
+        <span style="min-width:0"><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Construcción</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">Compra del terreno, gastos del mes, acumulado y gastos diarios</span></span>
+        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.construccion }}</span>
+        <span style="font-size:18px;text-align:right">→</span>
+      </button>
+      <button type="button" onClick="{{ goProveedores }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">05</span>
+        <span style="min-width:0"><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Proveedores</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">Contratistas, valorización y factura, presupuesto, pagado y saldo</span></span>
+        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.proveedores }}</span>
+        <span style="font-size:18px;text-align:right">→</span>
+      </button>
+      <button type="button" onClick="{{ goPerfil }}" style="display:grid;grid-template-columns:36px minmax(0,1fr) auto 24px;align-items:center;gap:8px 18px;width:100%;padding:18px 14px;border:0;border-top:1px solid #D9D4CA;background:transparent;color:#23221F;text-align:left;cursor:pointer;transition:background .25s,color .25s,padding .25s" style-hover="background:#2E2E2E;color:#F3F0EA;padding-left:26px">
+        <span style="font-size:12px;font-weight:600;letter-spacing:.12em">06</span>
+        <span style="min-width:0"><span style="display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(24px,2.4vw,34px);line-height:1.1">Perfil Económico</span><span style="display:block;font-size:13px;opacity:.8;margin-top:2px">{{ P.ventasLabel }} − Compra de terreno y construcción = Utilidad</span></span>
+        <span style="font-size:13px;font-weight:600;text-align:right">{{ hub.perfil }}</span>
+        <span style="font-size:18px;text-align:right">→</span>
+      </button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isWork }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Módulo" style="min-height:calc(var(--vh,1vh)*100);display:flex;background:#F3F0EA;animation:pfade .5s both">
+  <sc-if value="{{ showRail }}" hint-placeholder-val="{{ true }}">
+  <aside style="flex:0 0 224px;position:sticky;top:0;align-self:flex-start;height:calc(var(--vh,1vh)*100);display:flex;flex-direction:column;background:#1C1B1A;color:#F3F0EA;overflow-y:auto">
+    <div style="padding:22px 20px 20px"><img src="assets/logo-blanco.png" alt="Inverplus+ Inmobiliaria" style="display:block;height:26px;width:auto"></div>
+    <button type="button" onClick="{{ ctxGo }}" style="flex:0 0 132px;position:relative;display:block;margin:0 12px;padding:0;border:0;overflow:hidden;background:#2E2E2E;color:#F3F0EA;text-align:left;cursor:pointer">
+      <sc-if value="{{ ctxEclat }}" hint-placeholder-val="{{ false }}"><img src="assets/eclat-frente.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%"></sc-if><sc-if value="{{ ctxEss }}" hint-placeholder-val="{{ false }}"><img src="assets/essenziale-frente.jpg" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 30%"></sc-if>
+      <span style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,27,26,.1),rgba(28,27,26,.9))"></span>
+      <span style="position:absolute;left:14px;right:14px;bottom:12px">
+        <span style="display:block;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase">{{ ctxKind }}</span>
+        <span style="display:block;font-family:'Cormorant Garamond',serif;font-size:26px;line-height:1.05;letter-spacing:.03em">{{ ctxName }}</span>
+      </span>
+    </button>
+    <nav style="flex:1;display:flex;flex-direction:column;gap:2px;padding:16px 12px">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6">
+        <sc-if value="{{ n.isGroup }}" hint-placeholder-val="{{ false }}"><div style="padding:12px 12px 4px;font-size:10px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#B5B0A6">{{ n.label }}</div></sc-if>
+        <sc-if value="{{ n.isLink }}" hint-placeholder-val="{{ true }}"><button type="button" onClick="{{ n.go }}" style="display:block;width:100%;min-height:40px;padding:8px 12px 8px {{ n.pl }};border:0;border-left:2px solid {{ n.bar }};background:{{ n.bg }};color:#F3F0EA;font-size:13px;font-weight:{{ n.fw }};text-align:left;cursor:pointer" style-hover="background:rgba(243,240,234,.1)">{{ n.label }}</button></sc-if>
+      </sc-for>
+    </nav>
+    <div style="display:flex;flex-direction:column;gap:2px;padding:12px;border-top:1px solid rgba(243,240,234,.14)">
+      <button type="button" onClick="{{ goSelect }}" style="display:block;width:100%;min-height:38px;padding:8px 12px;border:0;background:transparent;color:#F3F0EA;font-size:13px;font-weight:500;text-align:left;cursor:pointer" style-hover="background:rgba(243,240,234,.1)">← Proyectos</button>
+      <button type="button" onClick="{{ goBalance }}" style="display:block;width:100%;min-height:38px;padding:8px 12px;border:0;background:transparent;color:#F3F0EA;font-size:13px;font-weight:500;text-align:left;cursor:pointer" style-hover="background:rgba(243,240,234,.1)">Balance Empresa</button>
+      <div style="padding:10px 12px 2px;font-size:11px;color:#B5B0A6;overflow:hidden;text-overflow:ellipsis">{{ email }}</div>
+      <button type="button" onClick="{{ logout }}" style="display:block;width:100%;min-height:38px;padding:8px 12px;border:0;background:transparent;color:#F3F0EA;font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;text-align:left;cursor:pointer" style-hover="background:rgba(243,240,234,.1)">Salir</button>
+    </div>
+  </aside>
+  </sc-if>
+
+  <main style="flex:1;min-width:0;padding:clamp(20px,3vw,44px)">
+    <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid #D9D4CA">
+      <div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--ac,#A9492A)">+ {{ crumb }}</div>
+        <h1 style="margin:6px 0 0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(36px,3.8vw,58px);line-height:1">{{ modTitle }}</h1>
+      </div>
+      <div style="font-size:12px;color:#6A665F">Datos de ejemplo · 24 nov 2026</div>
+    </header>
+
+    <sc-if value="{{ hasKpis }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;margin-bottom:26px;background:#FBFAF7;border:1px solid #D9D4CA">
+      <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4">
+        <div style="padding:18px 20px;background:#FBFAF7;box-shadow:0 0 0 1px #D9D4CA">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6A665F">{{ k.label }}</div>
+          <div style="margin-top:6px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:32px;line-height:1.1;font-variant-numeric:lining-nums;white-space:nowrap">{{ k.value }}</div>
+          <div style="margin-top:2px;font-size:12px;color:#6A665F">{{ k.sub }}</div>
+        </div>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isPrecios }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-wrap:wrap;gap:28px;align-items:flex-start">
+      <div style="flex:2 1 420px;min-width:0">
+        <div style="display:flex;height:8px;gap:2px;margin-bottom:10px">
+          <div style="width:{{ st.wv }};background:var(--ac,#A9492A)"></div>
+          <div style="width:{{ st.ws }};background:#D9B36A"></div>
+          <div style="flex:1;background:#FBFAF7;border:1px solid #CFC9BD"></div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px 22px;margin-bottom:22px;font-size:12px;font-weight:500">
+          <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:var(--ac,#A9492A)"></span>Vendido</span>
+          <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#D9B36A"></span>Separado</span>
+          <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#FBFAF7;border:1px solid #CFC9BD"></span>Disponible</span>
+        </div>
+        <sc-for list="{{ floors }}" as="f" hint-placeholder-count="10">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px">
+            <span style="flex:0 0 50px;font-size:11px;font-weight:500;color:#6A665F;white-space:nowrap">Piso {{ f.n }}</span>
+            <div style="flex:1;min-width:0;display:grid;grid-template-columns:repeat({{ perFloor }},minmax(0,1fr));gap:4px">
+              <sc-for list="{{ f.units }}" as="u" hint-placeholder-count="6">
+                <button type="button" onClick="{{ u.sel }}" title="{{ u.title }}" style="height:{{ cellH }}px;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;border:1px solid {{ u.bd }};background:{{ u.bg }};color:{{ u.fg }};outline:{{ u.ring }};outline-offset:2px;cursor:pointer;line-height:1.15">
+                  <span style="font-size:12px;font-weight:700">{{ u.id }}</span>
+                  <span style="font-size:10px;font-weight:500">{{ u.pk }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <aside style="flex:1 1 280px;position:sticky;top:24px;padding:26px;background:#FBFAF7;border:1px solid #D9D4CA">
+        <div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#6A665F">Departamento</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:64px;line-height:1;font-variant-numeric:lining-nums;margin:4px 0 18px">{{ su.id }}</div>
+        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #E6E1D8"><span style="color:#6A665F">Piso</span><span style="font-weight:600">{{ su.piso }}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #E6E1D8"><span style="color:#6A665F">Área</span><span style="font-weight:600">{{ su.m2 }}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #E6E1D8"><span style="color:#6A665F">Vista</span><span style="font-weight:600">{{ su.vista }}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #E6E1D8;border-bottom:1px solid #E6E1D8"><span style="color:#6A665F">Precio de lista</span><span style="font-weight:700">{{ su.price }}</span></div>
+        <div style="margin:20px 0 8px;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#6A665F">Estado</div>
+        <div style="display:flex;gap:6px">
+          <sc-for list="{{ stOpts }}" as="o" hint-placeholder-count="3">
+            <button type="button" onClick="{{ o.set }}" style="flex:1;min-width:0;height:44px;padding:0 4px;border:1px solid {{ o.bd }};background:{{ o.bg }};color:{{ o.fg }};font-size:12px;font-weight:600;cursor:pointer">{{ o.label }}</button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ su.sold }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid #E6E1D8">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:4px 0"><span style="color:#6A665F">Cliente</span><span style="font-weight:600;text-align:right">{{ su.cliente }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:4px 0"><span style="color:#6A665F">Vendedora</span><span style="font-weight:600;text-align:right">{{ su.vendedora }}</span></div>
+          </div>
+        </sc-if>
+      </aside>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isClientes }}" hint-placeholder-val="{{ false }}">
+    <div style="overflow-x:auto;background:#FBFAF7;border:1px solid #D9D4CA">
+      <div style="min-width:var(--tw,980px)">
+        <div style="display:grid;grid-template-columns:28px 1.7fr .8fr .7fr 1.2fr 1fr .5fr 1fr 1.4fr;gap:12px;padding:14px 18px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F">
+          <span></span><span>Cliente</span><span>Inmueble</span><span>Vista</span><span>Vendedora</span><span style="text-align:right">Precio de venta</span><span style="text-align:right">m²</span><span style="text-align:right">Monto pagado</span><span style="text-align:right">Letras por pagar</span>
+        </div>
+        <sc-for list="{{ clients }}" as="c" hint-placeholder-count="6">
+          <div style="border-top:1px solid #E6E1D8">
+            <button type="button" onClick="{{ c.toggle }}" style="display:grid;grid-template-columns:28px 1.7fr .8fr .7fr 1.2fr 1fr .5fr 1fr 1.4fr;gap:12px;align-items:center;width:100%;min-height:52px;padding:8px 18px;border:0;background:{{ c.bg }};color:#23221F;font-size:13px;text-align:left;cursor:pointer;font-variant-numeric:tabular-nums" style-hover="background:#F3F0EA">
+              <span style="font-size:18px;color:var(--ac,#A9492A)">{{ c.chev }}</span>
+              <span style="font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.name }}</span>
+              <span>{{ c.unit }}</span><span>{{ c.vista }}</span><span>{{ c.seller }}</span>
+              <span style="text-align:right">{{ c.price }}</span><span style="text-align:right">{{ c.m2 }}</span>
+              <span style="text-align:right;font-weight:600">{{ c.pagado }}</span><span style="text-align:right">{{ c.porPagar }}</span>
+            </button>
+            <sc-if value="{{ c.open }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:6px 18px 22px 58px;background:#F3F0EA">
+                <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr .8fr;gap:12px;padding:12px 0 8px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F"><span>Concepto</span><span>Vencimiento</span><span style="text-align:right">Monto</span><span>N° Boleta</span><span>Estado</span></div>
+                <sc-for list="{{ c.letras }}" as="l" hint-placeholder-count="4">
+                  <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr .8fr;gap:12px;padding:8px 0;border-top:1px solid #D9D4CA;font-size:13px;font-variant-numeric:tabular-nums">
+                    <span>{{ l.c }}</span><span>{{ l.vence }}</span><span style="text-align:right">{{ l.monto }}</span><span>{{ l.boleta }}</span>
+                    <span style="font-weight:600;color:{{ l.fg }}">{{ l.estado }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isVendedoras }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;align-items:start">
+      <sc-for list="{{ sellers }}" as="s" hint-placeholder-count="3">
+        <section style="background:#FBFAF7;border:1px solid #D9D4CA">
+          <div style="padding:24px 22px 20px">
+            <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:30px;line-height:1.1">{{ s.name }}</div>
+            <div style="margin-top:4px;font-size:13px;color:#6A665F">{{ s.count }} departamentos vendidos · {{ s.ventas }}</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-top:22px">
+              <label style="display:flex;flex-direction:column;gap:6px">
+                <span style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6A665F">% Comisión</span>
+                <span style="display:flex;align-items:center;gap:6px"><input type="number" step="0.1" min="0" value="{{ s.pct }}" onChange="{{ s.onPct }}" style="width:84px;height:44px;padding:0 10px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:16px;font-weight:600;color:#23221F;outline:none" style-focus="border-color:#23221F"><span style="font-weight:600">%</span></span>
+              </label>
+              <div style="text-align:right">
+                <div style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#6A665F">Comisión a pagar</div>
+                <div style="font-family:'Cormorant Garamond',serif;font-weight:600;font-size:34px;line-height:1.1;font-variant-numeric:lining-nums;color:var(--ac,#A9492A);white-space:nowrap">{{ s.com }}</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:.8fr 1fr 1fr;gap:10px;padding:10px 22px;border-top:1px solid #E6E1D8;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F"><span>Dpto vendido</span><span style="text-align:right">Precio de venta</span><span style="text-align:right">Comisión</span></div>
+          <div style="max-height:336px;overflow-y:auto">
+            <sc-for list="{{ s.rows }}" as="r" hint-placeholder-count="4">
+              <div style="display:grid;grid-template-columns:.8fr 1fr 1fr;gap:10px;padding:10px 22px;border-top:1px solid #E6E1D8;font-size:13px;font-variant-numeric:tabular-nums"><span style="font-weight:600">{{ r.unit }}</span><span style="text-align:right">{{ r.price }}</span><span style="text-align:right;font-weight:600">{{ r.com }}</span></div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-for>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isConstruccion }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start">
+      <section style="flex:1.3 1 440px;min-width:0;background:#FBFAF7;border:1px solid #D9D4CA">
+        <div style="display:grid;grid-template-columns:96px minmax(40px,1fr) 124px 132px;gap:12px;padding:14px 18px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F"><span>Mes</span><span></span><span style="text-align:right">Gastos del mes</span><span style="text-align:right">Acumulado</span></div>
+        <div style="display:grid;grid-template-columns:96px minmax(40px,1fr) 124px 132px;gap:12px;align-items:center;padding:14px 18px;border-top:1px solid #E6E1D8;font-size:13px;font-variant-numeric:tabular-nums;background:#2E2E2E;color:#F3F0EA"><span style="font-weight:600">Terreno</span><span>Compra del terreno · {{ cons.terrFecha }}</span><span style="text-align:right">{{ cons.terreno }}</span><span style="text-align:right;font-weight:600">{{ cons.terreno }}</span></div>
+        <sc-for list="{{ cons.months }}" as="m" hint-placeholder-count="8">
+          <button type="button" onClick="{{ m.sel }}" style="display:grid;grid-template-columns:96px minmax(40px,1fr) 124px 132px;gap:12px;align-items:center;width:100%;min-height:46px;padding:8px 18px;border:0;border-top:1px solid #E6E1D8;background:{{ m.bg }};color:#23221F;font-size:13px;font-weight:{{ m.fw }};text-align:left;cursor:pointer;font-variant-numeric:tabular-nums" style-hover="background:#EAE5DB">
+            <span>{{ m.label }}</span>
+            <span style="display:block;height:6px;background:#E6E1D8"><span style="display:block;height:6px;width:{{ m.w }};background:var(--ac,#A9492A)"></span></span>
+            <span style="text-align:right">{{ m.total }}</span><span style="text-align:right">{{ m.acum }}</span>
+          </button>
+        </sc-for>
+      </section>
+      <section style="flex:1 1 340px;min-width:0;background:#FBFAF7;border:1px solid #D9D4CA">
+        <div style="padding:20px 20px 16px">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#6A665F">Gastos diarios</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:30px;line-height:1.1;margin-top:2px">{{ cons.mesSel }}</div>
+        </div>
+        <form onSubmit="{{ addGasto }}" style="display:flex;flex-wrap:wrap;gap:8px;padding:0 20px 18px">
+          <input type="number" min="1" max="31" value="{{ gDia }}" onChange="{{ onGDia }}" placeholder="Día" aria-label="Día" style="flex:0 0 64px;min-width:0;height:44px;padding:0 10px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
+          <input value="{{ gConcepto }}" onChange="{{ onGConcepto }}" placeholder="Concepto del gasto" aria-label="Concepto" style="flex:1 1 150px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
+          <input type="number" min="0" value="{{ gMonto }}" onChange="{{ onGMonto }}" placeholder="Monto" aria-label="Monto" style="flex:1 1 100px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
+          <button type="submit" style="flex:1 1 100%;height:44px;border:0;background:#23221F;color:#FFFFFF;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:background .2s" style-hover="background:var(--ac,#A9492A)">Registrar gasto</button>
+        </form>
+        <sc-for list="{{ cons.gastos }}" as="g" hint-placeholder-count="5">
+          <div style="display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:12px;padding:11px 20px;border-top:1px solid #E6E1D8;font-size:13px;font-variant-numeric:tabular-nums"><span style="color:#6A665F">{{ g.fecha }}</span><span>{{ g.concepto }}</span><span style="font-weight:600">{{ g.monto }}</span></div>
+        </sc-for>
+        <div style="display:flex;justify-content:space-between;gap:12px;padding:14px 20px;border-top:1px solid #D9D4CA;font-weight:700"><span>Gastos del mes</span><span>{{ cons.mesTotal }}</span></div>
+      </section>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isProveedores }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:14px">
+      <button type="button" onClick="{{ toggleProvForm }}" style="height:44px;padding:0 20px;border:1px solid #23221F;background:transparent;color:#23221F;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer" style-hover="background:#23221F;color:#FFFFFF">+ Nuevo contratista</button>
+    </div>
+    <sc-if value="{{ provForm }}" hint-placeholder-val="{{ false }}">
+      <form onSubmit="{{ addProv }}" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;padding:18px;background:#FBFAF7;border:1px solid #D9D4CA">
+        <input value="{{ pNombre }}" onChange="{{ onPNombre }}" placeholder="Contratista" aria-label="Contratista" style="flex:1.4 1 200px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
+        <input value="{{ pPartida }}" onChange="{{ onPPartida }}" placeholder="Partida" aria-label="Partida" style="flex:1.2 1 180px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
+        <input type="number" min="0" value="{{ pPresu }}" onChange="{{ onPPresu }}" placeholder="Presupuesto aprobado" aria-label="Presupuesto aprobado" style="flex:1 1 170px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
+        <button type="submit" style="flex:0 0 auto;height:44px;padding:0 22px;border:0;background:#23221F;color:#FFFFFF;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--ac,#A9492A)">Guardar</button>
+      </form>
+    </sc-if>
+    <div style="overflow-x:auto;background:#FBFAF7;border:1px solid #D9D4CA">
+      <div style="min-width:var(--tw,940px)">
+        <div style="display:grid;grid-template-columns:28px 1.9fr 1fr 1.2fr .9fr 1fr 1fr;gap:12px;padding:14px 18px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F">
+          <span></span><span>Contratista · Partida</span><span style="text-align:right">Presupuesto aprobado</span><span>Última valorización</span><span>Factura</span><span style="text-align:right">Acumulado pagado</span><span style="text-align:right">Saldo</span>
+        </div>
+        <sc-for list="{{ provs }}" as="p" hint-placeholder-count="6">
+          <div style="border-top:1px solid #E6E1D8">
+            <button type="button" onClick="{{ p.toggle }}" style="display:grid;grid-template-columns:28px 1.9fr 1fr 1.2fr .9fr 1fr 1fr;gap:12px;align-items:center;width:100%;min-height:64px;padding:10px 18px;border:0;background:{{ p.bg }};color:#23221F;font-size:13px;text-align:left;cursor:pointer;font-variant-numeric:tabular-nums" style-hover="background:#F3F0EA">
+              <span style="font-size:18px;color:var(--ac,#A9492A)">{{ p.chev }}</span>
+              <span style="min-width:0"><span style="display:block;font-weight:600">{{ p.nombre }}</span><span style="display:block;font-size:12px;color:#6A665F">{{ p.partida }}</span></span>
+              <span style="text-align:right">{{ p.presu }}</span><span>{{ p.ultVal }}</span><span>{{ p.factura }}</span>
+              <span style="text-align:right"><span style="display:block;font-weight:600">{{ p.pagado }}</span><span style="display:block;height:4px;margin-top:6px;background:#E6E1D8"><span style="display:block;height:4px;width:{{ p.w }};background:var(--ac,#A9492A)"></span></span></span>
+              <span style="text-align:right;font-weight:700">{{ p.saldo }}</span>
+            </button>
+            <sc-if value="{{ p.open }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:6px 18px 20px 58px;background:#F3F0EA">
+                <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:12px;padding:12px 0 8px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6A665F"><span>Valorización</span><span>Fecha</span><span>Factura</span><span style="text-align:right">Monto</span></div>
+                <sc-for list="{{ p.vals }}" as="v" hint-placeholder-count="2">
+                  <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:12px;padding:8px 0;border-top:1px solid #D9D4CA;font-size:13px;font-variant-numeric:tabular-nums"><span>{{ v.n }}</span><span>{{ v.fecha }}</span><span>{{ v.factura }}</span><span style="text-align:right;font-weight:600">{{ v.monto }}</span></div>
+                </sc-for>
+                <form onSubmit="{{ p.addVal }}" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid #D9D4CA">
+                  <input value="{{ vFactura }}" onChange="{{ onVFactura }}" placeholder="N° de factura" aria-label="N° de factura" style="flex:1 1 160px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
+                  <input type="number" min="0" value="{{ vMonto }}" onChange="{{ onVMonto }}" placeholder="Monto de la valorización" aria-label="Monto de la valorización" style="flex:1 1 180px;min-width:0;height:44px;padding:0 12px;border:1px solid #CFC9BD;background:#FFFFFF;font-size:14px;color:#23221F;outline:none" style-focus="border-color:#23221F">
+                  <button type="submit" style="flex:0 0 auto;height:44px;padding:0 20px;border:0;background:#23221F;color:#FFFFFF;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer" style-hover="background:var(--ac,#A9492A)">Registrar valorización</button>
+                </form>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    </sc-if>
+
+    <sc-if value="{{ isPerfil }}" hint-placeholder-val="{{ false }}">
+    <section style="padding:clamp(28px,4vw,60px);background:#1C1B1A;color:#F3F0EA">
+      <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:20px clamp(16px,2.2vw,34px)">
+        <div><div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B5B0A6">{{ pe.label }}</div><div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,3.4vw,54px);line-height:1.15;font-variant-numeric:lining-nums;white-space:nowrap">{{ pe.ventas }}</div></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3.4vw,54px);line-height:1.15;color:#B5B0A6">−</div>
+        <div><div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B5B0A6">Compra de terreno</div><div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,3.4vw,54px);line-height:1.15;font-variant-numeric:lining-nums;white-space:nowrap">{{ pe.terreno }}</div></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3.4vw,54px);line-height:1.15;color:#B5B0A6">−</div>
+        <div><div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B5B0A6">Construcción</div><div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(32px,3.4vw,54px);line-height:1.15;font-variant-numeric:lining-nums;white-space:nowrap">{{ pe.cons }}</div></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:clamp(32px,3.4vw,54px);line-height:1.15;color:#B5B0A6">=</div>
+      </div>
+      <div style="margin-top:clamp(28px,4vw,52px);padding-top:22px;border-top:3px solid var(--ac,#A9492A)">
+        <div style="font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase">+ Utilidad</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(56px,8.4vw,136px);line-height:1;font-variant-numeric:lining-nums;margin-top:6px">{{ pe.util }}</div>
+        <div style="margin-top:10px;font-size:14px;color:#D8D3C9">Margen sobre {{ pe.labelLower }}: {{ pe.margen }}</div>
+      </div>
+    </section>
+    <section style="margin-top:20px;padding:24px;background:#FBFAF7;border:1px solid #D9D4CA">
+      <div style="display:flex;height:14px;gap:2px">
+        <div style="width:{{ pe.wT }};background:#2E2E2E"></div>
+        <div style="width:{{ pe.wC }};background:#8C877E"></div>
+        <div style="flex:1;background:var(--ac,#A9492A)"></div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px 32px;margin-top:16px;font-size:13px">
+        <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#2E2E2E"></span>Compra de terreno · <strong>{{ pe.pT }}</strong></span>
+        <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:#8C877E"></span>Construcción · <strong>{{ pe.pC }}</strong></span>
+        <span style="display:flex;align-items:center;gap:8px"><span style="width:12px;height:12px;background:var(--ac,#A9492A)"></span>Utilidad · <strong>{{ pe.margen }}</strong></span>
+      </div>
+    </section>
+    </sc-if>
+
+    <sc-if value="{{ isBalance }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px">
+      <sc-for list="{{ bal }}" as="b" hint-placeholder-count="4">
+        <section style="padding:28px;background:{{ b.bg }};color:{{ b.fg }};border:1px solid #D9D4CA">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase">+ {{ b.title }}</div>
+          <div style="margin-top:8px;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(40px,4vw,60px);line-height:1.05;font-variant-numeric:lining-nums;white-space:nowrap">{{ b.total }}</div>
+          <div style="margin:2px 0 22px;font-size:12px;min-height:18px">{{ b.note }}</div>
+          <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="2">
+            <div style="padding:14px 0;border-top:1px solid {{ b.line }}">
+              <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><span style="font-family:'Cormorant Garamond',serif;font-size:22px;letter-spacing:.04em">{{ r.name }}</span><span style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums">{{ r.value }}</span></div>
+              <div style="height:4px;margin-top:10px;background:{{ b.line }}"><div style="height:4px;width:{{ r.w }};background:{{ b.bar }}"></div></div>
+            </div>
+          </sc-for>
+        </section>
+      </sc-for>
+    </div>
+    </sc-if>
+  </main>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;seleccion&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Tarjetas verticales&quot;,&quot;Paneles a pantalla completa&quot;],&quot;default&quot;:&quot;Tarjetas verticales&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Selección de proyecto&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#A9492A&quot;,&quot;options&quot;:[&quot;#A9492A&quot;,&quot;#7A5C2E&quot;,&quot;#4F5D43&quot;,&quot;#2B4A5E&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Marca&quot;},&quot;moneda&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;S/&quot;,&quot;US$&quot;],&quot;default&quot;:&quot;S/&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Datos&quot;},&quot;pantalla&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;'login'|'select'|'hub'|'work'&quot;},&quot;proyecto&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;'eclat'|'essenziale'&quot;},&quot;modulo&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;string&quot;},&quot;embed&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;boolean&quot;}}">
+class Component extends DCLogic {
+  state = { screen: 'login', proj: 'eclat', mod: 'precios', lv: null, email: '', code: '', err: false, focus: false, sel: {}, openClient: {}, openProv: {}, mes: {}, pct: {}, provForm: false, gDia: '', gConcepto: '', gMonto: '', pNombre: '', pPartida: '', pPresu: '', vFactura: '', vMonto: '' };
+  MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  NOM = ['María Elena', 'José Luis', 'Carmen', 'Luis Alberto', 'Rosa', 'Juan Carlos', 'Ana Lucía', 'Miguel Ángel', 'Patricia', 'Jorge', 'Claudia', 'Fernando', 'Silvia', 'Ricardo', 'Gabriela', 'Diego', 'Verónica', 'Renato', 'Mónica', 'Álvaro'];
+  APE = ['Quispe Ramos', 'Flores Medina', 'Rojas Salazar', 'Castillo Vega', 'Torres Paredes', 'Mendoza Ríos', 'Chávez Luna', 'Gutiérrez Soto', 'Vargas León', 'Ramírez Cueva', 'Díaz Montoya', 'Herrera Campos', 'Salinas Ortiz', 'Navarro Peña', 'Cáceres Tello', 'Aguilar Bravo', 'Zegarra Polo', 'Benavides Rey'];
+
+  componentDidMount() {
+    try { const s = JSON.parse(localStorage.getItem('inverplus-portal-nav') || 'null'); if (s && s.email) this.setState({ email: s.email }); } catch (e) {}
+    this.applyAccent();
+  }
+  componentDidUpdate(pp) {
+    this.applyAccent();
+    const { screen, proj, mod, email } = this.state;
+    try { localStorage.setItem('inverplus-portal-nav', JSON.stringify({ screen, proj, mod, email })); } catch (e) {}
+  }
+  applyAccent() { document.documentElement.style.setProperty('--ac', this.props.accent ?? '#A9492A'); }
+  rng(seed) { let s = seed >>> 0; return () => (s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296; }
+  money(n) { const v = Math.round(n); return (v < 0 ? '− ' : '') + (this.props.moneda ?? 'S/') + ' ' + Math.abs(v).toLocaleString('en-US'); }
+  moneyM(n) { return (this.props.moneda ?? 'S/') + ' ' + (n / 1e6).toFixed(1) + ' M'; }
+
+  db() {
+    if (this._db) return this._db;
+    const MES = this.MES;
+    const CON = ['Concreto premezclado', 'Acero corrugado', 'Planilla de obra', 'Alquiler de grúa torre', 'Encofrado metálico', 'Instalaciones sanitarias', 'Instalaciones eléctricas', 'Supervisión de obra', 'Ladrillo y agregados', 'Seguridad y salud en obra'];
+    const PV = [['Estructuras Andinas S.A.C.', 'Estructuras y casco', .34], ['Concretos del Pacífico S.A.', 'Concreto premezclado', .16], ['Electromontajes Lima E.I.R.L.', 'Instalaciones eléctricas', .1], ['Hidrosanitarias Rímac S.A.C.', 'Instalaciones sanitarias', .09], ['Vidrios y Aluminios Central S.A.C.', 'Carpintería de aluminio y vidrio', .12], ['Acabados Finos Perú S.A.C.', 'Acabados y pintura', .19]];
+    const cfg = {
+      eclat: { key: 'eclat', name: 'ECLAT', num: '01', img2: 'assets/eclat-frente.jpg', floors: 20, areas: [58, 64, 71, 52, 61, 76], ext: [1, 1, 1, 0, 0, 0], ppm: 6300, seed: 11, pv: .37, ps: .09, terreno: 6200000, terrFecha: '15 ene 2026', m0: 1, nm: 10, gmin: 70000, gmax: 250000, budget: 14500000, ord: 1284300, gar: 3912750, sellers: ['Lucía Fernández', 'Andrea Morales', 'Paola Cárdenas'], ventasLabel: 'Ventas', cellH: 40 },
+      essenziale: { key: 'essenziale', name: 'ESSENZIALE', num: '02', img2: 'assets/essenziale-frente.jpg', floors: 10, areas: [118, 96, 132], ext: [1, 1, 0], ppm: 7400, seed: 29, pv: .43, ps: .1, terreno: 4100000, terrFecha: '12 mar 2026', m0: 3, nm: 8, gmin: 45000, gmax: 140000, budget: 6800000, ord: 846120, gar: 2105400, sellers: ['Valeria Núñez', 'Daniela Espinoza', 'Katherine Lozano'], ventasLabel: 'Ingresos', cellH: 54 }
+    };
+    const out = {};
+    for (const k in cfg) {
+      const c = cfg[k], r = this.rng(c.seed), units = [], months = [];
+      for (let f = 1; f <= c.floors; f++) for (let j = 0; j < c.areas.length; j++) {
+        const x = r(), h = Math.floor(r() * 1e6), m2 = c.areas[j], ext = !!c.ext[j];
+        units.push({ id: String(f * 100 + j + 1), f, m2, vista: ext ? 'Externa' : 'Interna', price: Math.round(m2 * c.ppm * (1 + f * .006) * (ext ? 1.06 : 1) / 500) * 500, st: x < c.pv ? 'v' : x < c.pv + c.ps ? 's' : 'd', h });
+      }
+      for (let i = 0; i < c.nm; i++) {
+        const g = [], n = i === c.nm - 1 ? 3 : 5;
+        for (let j = 0; j < n; j++) g.push({ dia: 3 + j * 5 + Math.floor(r() * 3), concepto: CON[Math.floor(r() * CON.length)], monto: Math.round((c.gmin + r() * (c.gmax - c.gmin)) / 100) * 100 });
+        months.push({ label: MES[(c.m0 + i) % 12] + ' 2026', g });
+      }
+      const provs = PV.map((p, i) => {
+        const presu = Math.round(c.budget * p[2] / 1000) * 1000, nv = i < 4 ? 2 + Math.floor(r() * 3) : Math.floor(r() * 2), vals = [];
+        for (let j = 0; j < nv; j++) vals.push({ n: j + 1, fecha: (5 + Math.floor(r() * 20)) + ' ' + MES[(c.m0 + 1 + j * 2) % 12] + ' 2026', factura: 'F001-' + String(1000 + Math.floor(r() * 8000)).padStart(6, '0'), monto: Math.round(presu * (.12 + r() * .1) / 100) * 100 });
+        return { nombre: p[0], partida: p[1], presu, vals };
+      });
+      out[k] = { cfg: c, units, months, provs };
+    }
+    return (this._db = out);
+  }
+
+  client(c, u) {
+    if (u._c) return u._c;
+    const h = u.h, MES = this.MES, bol = (n) => 'B001-' + String(n).padStart(6, '0');
+    const ini = Math.round(u.price * (.2 + (h % 5) * .05) / 100) * 100;
+    const n = 6 + (h % 7), cuota = Math.round((u.price - ini) / n / 10) * 10, m0 = 1 + ((h >> 4) % 6), paidN = Math.max(0, Math.min(n, 10 - m0));
+    const letras = [{ c: 'Cuota inicial', vence: '15 ' + MES[m0] + ' 2026', monto: ini, boleta: bol(1200 + h % 6000), paid: true }];
+    for (let i = 1; i <= n; i++) { const mi = m0 + i; letras.push({ c: 'Letra ' + i + ' de ' + n, vence: '15 ' + MES[mi % 12] + ' ' + (2026 + Math.floor(mi / 12)), monto: cuota, boleta: i <= paidN ? bol(1200 + (h + i * 37) % 6000) : '—', paid: i <= paidN }); }
+    return (u._c = { name: this.NOM[h % this.NOM.length] + ' ' + this.APE[(h >> 3) % this.APE.length], seller: c.sellers[(h >> 5) % c.sellers.length], letras, pagado: ini + paidN * cuota, saldo: (n - paidN) * cuota, pend: n - paidN });
+  }
+
+  renderVals() {
+    const pr = this.props, s = { ...this.state, screen: pr.pantalla ?? this.state.screen, proj: pr.proyecto ?? this.state.proj, mod: pr.modulo ?? this.state.mod, email: this.state.email || (pr.embed ? 'usuario@inverplus.pe' : '') }, db = this.db(), D = db[s.proj] || db.eclat, c = D.cfg, $ = (n) => this.money(n);
+    const go = (patch) => () => { this.setState(patch); window.scrollTo(0, 0); };
+    const set = (k) => (e) => this.setState({ [k]: e.target.value });
+    const sum = (a, f) => a.reduce((t, x) => t + f(x), 0);
+    const pc = (x) => Math.max(0, Math.min(100, Math.round(x * 100))) + '%';
+    const lv = String(s.lv ?? this.props.loginVariant ?? '1');
+
+    const cells = [0, 1, 2, 3, 4, 5].map(i => { const on = s.focus && i === Math.min(s.code.length, 5); return { ch: i < s.code.length ? '●' : '', bdD: on ? '#F3F0EA' : 'rgba(243,240,234,.3)', bdL: on ? '#23221F' : '#C9C3B8', caret: on && i >= s.code.length }; });
+    const onSubmit = (e) => { e.preventDefault(); if (!/\S+@\S+\.\S+/.test(s.email) || s.code.length !== 6) return this.setState({ err: true }); this.setState({ screen: 'select', err: false, code: '' }); window.scrollTo(0, 0); };
+    const lvTabs = ['1', '2', '3', '4'].map(n => ({ n, bg: n === lv ? '#F3F0EA' : 'transparent', fg: n === lv ? '#23221F' : '#F3F0EA', go: () => this.setState({ lv: n, err: false }) }));
+
+    const stat = (k) => { const U = db[k].units, v = U.filter(u => u.st === 'v').length, sp = U.filter(u => u.st === 's').length; return { total: U.length, v, s: sp, d: U.length - v - sp, wv: pc(v / U.length), ws: pc(sp / U.length) }; };
+    const line = (k) => { const t = stat(k); return t.total + ' departamentos · ' + t.v + ' vendidos · ' + t.s + ' separados'; };
+    const st = stat(s.proj in db ? s.proj : 'eclat');
+
+    const COL = { d: ['#FBFAF7', '#23221F', '#CFC9BD'], s: ['#D9B36A', '#23221F', '#D9B36A'], v: ['var(--ac,#A9492A)', '#FFFFFF', 'var(--ac,#A9492A)'] };
+    const ACT = { d: ['#23221F', '#FFFFFF', '#23221F'], s: COL.s, v: COL.v }, LBL = { d: 'Disponible', s: 'Separado', v: 'Vendido' };
+    const selId = s.sel[c.key] ?? D.units[Math.floor(D.units.length * .55)].id;
+    const floors = [];
+    for (let f = c.floors; f >= 1; f--) floors.push({ n: f, units: D.units.filter(u => u.f === f).map(u => ({ id: u.id, pk: Math.round(u.price / 1000) + 'k', bg: COL[u.st][0], fg: COL[u.st][1], bd: COL[u.st][2], ring: u.id === selId ? '2px solid #23221F' : 'none', title: 'Dpto ' + u.id + ' · ' + u.m2 + ' m² · ' + $(u.price) + ' · ' + LBL[u.st], sel: () => this.setState({ sel: { ...s.sel, [c.key]: u.id } }) })) });
+    const SU = D.units.find(u => u.id === selId) || D.units[0], suC = this.client(c, SU);
+    const su = { id: SU.id, piso: SU.f, m2: SU.m2 + ' m²', vista: SU.vista, price: $(SU.price), sold: SU.st === 'v', cliente: suC.name, vendedora: suC.seller };
+    const stOpts = ['d', 's', 'v'].map(k => ({ label: LBL[k], bg: SU.st === k ? ACT[k][0] : 'transparent', fg: SU.st === k ? ACT[k][1] : '#23221F', bd: SU.st === k ? ACT[k][2] : '#CFC9BD', set: () => { SU.st = k; this.forceUpdate(); } }));
+
+    const sold = D.units.filter(u => u.st === 'v'), cls = sold.map(u => ({ u, ...this.client(c, u) }));
+    const ventas = sum(sold, u => u.price), pagadoT = sum(cls, x => x.pagado);
+    const openId = s.openClient[c.key] ?? (sold[0] && sold[0].id);
+    const clients = cls.map(x => { const open = x.u.id === openId; return { name: x.name, unit: 'Dpto ' + x.u.id, vista: x.u.vista, seller: x.seller, price: $(x.u.price), m2: x.u.m2, pagado: $(x.pagado), porPagar: x.pend + ' letras · ' + $(x.saldo), open, chev: open ? '−' : '+', bg: open ? '#F3F0EA' : 'transparent', toggle: () => this.setState({ openClient: { ...s.openClient, [c.key]: open ? '' : x.u.id } }), letras: open ? x.letras.map(l => ({ c: l.c, vence: l.vence, monto: $(l.monto), boleta: l.boleta, estado: l.paid ? 'Pagada' : 'Por pagar', fg: l.paid ? '#6A665F' : '#23221F' })) : [] }; });
+
+    const pcts = s.pct[c.key] || {};
+    let comT = 0;
+    const sellers = c.sellers.map(name => { const mine = cls.filter(x => x.seller === name), raw = pcts[name] ?? '2', p = parseFloat(raw) || 0, v = sum(mine, x => x.u.price); comT += v * p / 100; return { name, count: mine.length, ventas: $(v), pct: raw, com: $(v * p / 100), onPct: (e) => this.setState({ pct: { ...s.pct, [c.key]: { ...pcts, [name]: e.target.value } } }), rows: mine.map(x => ({ unit: 'Dpto ' + x.u.id, price: $(x.u.price), com: $(x.u.price * p / 100) })) }; });
+
+    const mSel = Math.min(s.mes[c.key] ?? D.months.length - 1, D.months.length - 1), mt = D.months.map(m => sum(m.g, g => g.monto)), mx = Math.max(...mt);
+    let acc = c.terreno;
+    const months = D.months.map((m, i) => { acc += mt[i]; return { label: m.label, total: $(mt[i]), acum: $(acc), w: pc(mt[i] / mx), bg: i === mSel ? '#EAE5DB' : 'transparent', fw: i === mSel ? 700 : 500, sel: () => this.setState({ mes: { ...s.mes, [c.key]: i } }) }; });
+    const consT = acc - c.terreno, M = D.months[mSel];
+    const cons = { terreno: $(c.terreno), terrFecha: c.terrFecha, months, mesSel: M.label, mesTotal: $(mt[mSel]), gastos: M.g.slice().sort((a, b) => b.dia - a.dia).map(g => ({ fecha: String(g.dia).padStart(2, '0') + ' ' + M.label.slice(0, 3), concepto: g.concepto, monto: $(g.monto) })) };
+    const addGasto = (e) => { e.preventDefault(); const monto = parseFloat(s.gMonto); if (!s.gConcepto.trim() || !(monto > 0)) return; M.g.push({ dia: Math.min(31, Math.max(1, parseInt(s.gDia) || 1)), concepto: s.gConcepto.trim(), monto }); this.setState({ gDia: '', gConcepto: '', gMonto: '' }); };
+
+    const openP = s.openProv[c.key] ?? 0;
+    const provs = D.provs.map((p, i) => { const pag = sum(p.vals, v => v.monto), last = p.vals[p.vals.length - 1], open = openP === i; return { nombre: p.nombre, partida: p.partida, presu: $(p.presu), ultVal: last ? 'N° ' + last.n + ' · ' + $(last.monto) : 'Sin valorizaciones', factura: last ? last.factura : '—', pagado: $(pag), saldo: $(p.presu - pag), w: pc(pag / p.presu), open, chev: open ? '−' : '+', bg: open ? '#F3F0EA' : 'transparent', toggle: () => this.setState({ openProv: { ...s.openProv, [c.key]: open ? -1 : i }, vFactura: '', vMonto: '' }), vals: open ? p.vals.map(v => ({ n: 'Valorización N° ' + v.n, fecha: v.fecha, factura: v.factura, monto: $(v.monto) })) : [], addVal: (e) => { e.preventDefault(); const monto = parseFloat(s.vMonto); if (!(monto > 0)) return; p.vals.push({ n: p.vals.length + 1, fecha: '24 nov 2026', factura: s.vFactura.trim() || '—', monto }); this.setState({ vFactura: '', vMonto: '' }); } }; });
+    const presuT = sum(D.provs, p => p.presu), pagT = sum(D.provs, p => sum(p.vals, v => v.monto));
+    const addProv = (e) => { e.preventDefault(); const presu = parseFloat(s.pPresu); if (!s.pNombre.trim() || !(presu > 0)) return; D.provs.push({ nombre: s.pNombre.trim(), partida: s.pPartida.trim() || 'Partida por definir', presu, vals: [] }); this.setState({ pNombre: '', pPartida: '', pPresu: '', provForm: false, openProv: { ...s.openProv, [c.key]: D.provs.length - 1 } }); };
+
+    const util = ventas - c.terreno - consT;
+    const pe = { label: c.ventasLabel, labelLower: c.ventasLabel.toLowerCase(), ventas: $(ventas), terreno: $(c.terreno), cons: $(consT), util: $(util), margen: (ventas ? util / ventas * 100 : 0).toFixed(1) + '%', wT: pc(c.terreno / ventas), wC: pc(consT / ventas), pT: (c.terreno / ventas * 100).toFixed(1) + '%', pC: (consT / ventas * 100).toFixed(1) + '%' };
+
+    const agg = (k) => { const d = db[k], cf = d.cfg; return { name: cf.name, ing: sum(d.units.filter(u => u.st === 'v'), u => this.client(cf, u).pagado), gas: cf.terreno + sum(d.months, m => sum(m.g, g => g.monto)), ord: cf.ord, gar: cf.gar }; };
+    const A = [agg('eclat'), agg('essenziale')];
+    const blk = (title, f, note, dark) => { const v = A.map(f), top = Math.max(...v); return { title, note, total: $(v[0] + v[1]), bg: dark ? '#1C1B1A' : '#FBFAF7', fg: dark ? '#F3F0EA' : '#23221F', line: dark ? 'rgba(243,240,234,.2)' : '#E6E1D8', bar: dark ? '#F3F0EA' : 'var(--ac,#A9492A)', rows: A.map((a, i) => ({ name: a.name, value: $(v[i]), w: pc(v[i] / top) })) }; };
+    const bal = [blk('Ingresos por Proyecto', a => a.ing, 'Monto pagado por clientes', true), blk('Gastos por Proyecto', a => a.gas, 'Compra de terreno y construcción', true), blk('Saldo Ctas Ordinarias', a => a.ord, '', false), blk('Saldo Ctas Garantias', a => a.gar, '', false)];
+
+    const isBal = s.mod === 'balance';
+    const link = (label, mod, sub) => ({ isLink: true, isGroup: false, label, pl: sub ? '24px' : '12px', bg: s.mod === mod ? 'rgba(243,240,234,.12)' : 'transparent', bar: s.mod === mod ? 'var(--ac,#A9492A)' : 'transparent', fw: s.mod === mod ? 700 : 500, go: go({ screen: 'work', mod }) });
+    const nav = isBal ? [link('Balance Empresa', 'balance')] : [{ isGroup: true, isLink: false, label: 'Ventas' }, link('Lista de Precios', 'precios', 1), link('Clientes', 'clientes', 1), link('Vendedoras', 'vendedoras', 1), { isGroup: true, isLink: false, label: 'Obra y resultado' }, link('Construcción', 'construccion', 1), link('Proveedores', 'proveedores', 1), link('Perfil Económico', 'perfil', 1)];
+    const T = { precios: ['Ventas', 'Lista de Precios'], clientes: ['Ventas', 'Clientes'], vendedoras: ['Ventas', 'Vendedoras'], construccion: ['', 'Construcción'], proveedores: ['', 'Proveedores'], perfil: ['', 'Perfil Económico'], balance: ['', 'Balance Empresa'] }[s.mod] || ['', ''];
+    const K = (label, value, sub) => ({ label, value, sub: sub || '' });
+    const kpis = ({
+      precios: [K('Total departamentos', st.total, c.floors + ' pisos'), K('Disponibles', st.d, pc(st.d / st.total) + ' del total'), K('Separados', st.s, st.ws + ' del total'), K('Vendidos', st.v, st.wv + ' del total')],
+      clientes: [K('Clientes', cls.length), K('Precio de venta', $(ventas)), K('Monto pagado', $(pagadoT)), K('Letras por pagar', $(sum(cls, x => x.saldo)), sum(cls, x => x.pend) + ' letras')],
+      vendedoras: [K('Vendedoras', c.sellers.length), K('Departamentos vendidos', sold.length), K('Ventas', $(ventas)), K('Comisión a pagar', $(comT))],
+      construccion: [K('Compra del terreno', $(c.terreno), c.terrFecha), K('Gastos del mes', $(mt[mSel]), M.label), K('Construcción', $(consT), D.months.length + ' meses de obra'), K('Acumulado', $(acc), 'Terreno + construcción')],
+      proveedores: [K('Contratistas', D.provs.length), K('Presupuesto aprobado', $(presuT)), K('Acumulado pagado', $(pagT), pc(pagT / presuT) + ' del presupuesto'), K('Saldo', $(presuT - pagT))]
+    })[s.mod] || [];
+
+    return {
+      showRail: !pr.embed, isLogin: s.screen === 'login', isSelect: s.screen === 'select', isHub: s.screen === 'hub', isWork: s.screen === 'work',
+      onSubmit,
+      email: s.email, code: s.code, err: s.err,
+      onEmail: (e) => this.setState({ email: e.target.value, err: false }),
+      onCode: (e) => this.setState({ code: e.target.value.replace(/\D/g, '').slice(0, 6), err: false }),
+      logout: go({ screen: 'login', code: '', err: false }), goSelect: go({ screen: 'select' }), goBalance: go({ screen: 'work', mod: 'balance' }),
+      openEclat: go({ screen: 'hub', proj: 'eclat' }), openEss: go({ screen: 'hub', proj: 'essenziale' }),
+      selTarjetas: (this.props.seleccion ?? 'Tarjetas verticales') === 'Tarjetas verticales', selPaneles: this.props.seleccion === 'Paneles a pantalla completa', eS: stat('eclat'), zS: stat('essenziale'), eclatStats: line('eclat'), essStats: line('essenziale'),
+      P: c, st,
+      hub: { precios: st.v + ' / ' + st.total + ' vendidos', clientes: cls.length + ' clientes', vendedoras: c.sellers.length + ' vendedoras', construccion: this.moneyM(acc) + ' acumulado', proveedores: D.provs.length + ' contratistas', perfil: 'Utilidad ' + this.moneyM(util) },
+      goPrecios: go({ screen: 'work', mod: 'precios' }), goClientes: go({ screen: 'work', mod: 'clientes' }), goVendedoras: go({ screen: 'work', mod: 'vendedoras' }), goConstruccion: go({ screen: 'work', mod: 'construccion' }), goProveedores: go({ screen: 'work', mod: 'proveedores' }), goPerfil: go({ screen: 'work', mod: 'perfil' }),
+      ctxGo: isBal ? go({ screen: 'select' }) : go({ screen: 'hub' }), isEclat: c.key === 'eclat', isEss: c.key === 'essenziale', ctxEclat: !isBal && c.key === 'eclat', ctxEss: !isBal && c.key === 'essenziale', ctxKind: isBal ? 'Empresa' : 'Proyecto ' + c.num, ctxName: isBal ? 'Inverplus+' : c.name,
+      nav, crumb: isBal ? 'Empresa' : c.name + (T[0] ? ' · ' + T[0] : ''), modTitle: T[1], kpis, hasKpis: kpis.length > 0,
+      isPrecios: s.mod === 'precios', isClientes: s.mod === 'clientes', isVendedoras: s.mod === 'vendedoras', isConstruccion: s.mod === 'construccion', isProveedores: s.mod === 'proveedores', isPerfil: s.mod === 'perfil', isBalance: isBal,
+      floors, perFloor: c.areas.length, cellH: c.cellH, su, stOpts, clients, sellers, cons, addGasto,
+      gDia: s.gDia, gConcepto: s.gConcepto, gMonto: s.gMonto, onGDia: set('gDia'), onGConcepto: set('gConcepto'), onGMonto: set('gMonto'),
+      provs, provForm: s.provForm, toggleProvForm: () => this.setState({ provForm: !s.provForm }), addProv,
+      pNombre: s.pNombre, pPartida: s.pPartida, pPresu: s.pPresu, onPNombre: set('pNombre'), onPPartida: set('pPartida'), onPPresu: set('pPresu'),
+      vFactura: s.vFactura, vMonto: s.vMonto, onVFactura: set('vFactura'), onVMonto: set('vMonto'),
+      pe, bal
+    };
+  }
+}
+</script>
+</body>
+</html>

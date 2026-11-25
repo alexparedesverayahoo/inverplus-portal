@@ -1,0 +1,10 @@
+# Captura privada (conversación de WhatsApp, caso judicial): no publicar
+Captura de pantalla 2026-11-24 180856.png
+
+# Comprimidos que duplican las carpetas ya incluidas
+*.zip
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
